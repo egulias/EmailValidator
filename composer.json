@@ -1,8 +1,15 @@
 {
-  "name": "egulias/EmailValidator",
-  "description": "A library for validating emails",
-  "license": "MIT",
-  "require": {
+  "name":         "egulias/EmailValidator",
+  "description":  "A library for validating emails",
+  "homepage":     "https://github.com/egulias/EmailValidator",
+  "type":         "Library",
+  "keywords":     ["email", "validation", "validator"],
+  "license":      "MIT",
+  "authors": [
+    {"name": "Eduardo Gulias Davis"}
+  ],
+  "require":      {
+    "php": ">= 5.3.3",
     "jms/parser-lib": "dev-master"
   },
   "autoload": {
