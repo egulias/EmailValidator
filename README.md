@@ -1,13 +1,13 @@
 EmailValidator
 =============================
 
-#Installation#
+##Installation##
 Install via composer.
 
-##Build Status##
+###Build Status###
 [![Build Status](https://travis-ci.org/egulias/EmailValidator.png?branch=master)](https://travis-ci.org/egulias/EmailValidator)
 
-#Usage#
+##Usage##
 
 Simple example:
 
@@ -42,6 +42,13 @@ if ($result) {
 }
 ```
 
-#Licence#
+##Contributors##
+As this is a port from another library and work, here are other people related to the previous:
+
+*Ricard Clau @ricardclau :      Performance against PHP built-in filter_var
+*Josepf Bielawski @stloyd:      For its first re-work of Dominic's lib
+*Domini Sayers @dominicsayers:  The original isemail function
+
+##Licence##
 Released under the MIT Licence attached with this code.
 
