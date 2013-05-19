@@ -2,9 +2,9 @@
 
 namespace egulias\EmailValidator;
 
-use JMS\Parser\AbstractLexer;
+use Doctrine\Common\Lexer;
 
-class EmailLexer extends AbstractLexer
+class EmailLexer extends Lexer
 {
     //ASCII values
     const C_DEL = 127;
@@ -79,6 +79,7 @@ class EmailLexer extends AbstractLexer
      * @param string $type
      *
      * @return string $name
+     * @throws \InvalidArgumentException
      */
     public function getName($type)
     {
@@ -122,7 +123,7 @@ class EmailLexer extends AbstractLexer
 
     public function isNext($type)
     {
-        return null !== $this->next && $type === $this->next[0];
+        return null !== $this->next && $type === $this->next['type'];
     }
 
     public function isNextAny(array $types)
@@ -131,56 +132,58 @@ class EmailLexer extends AbstractLexer
             $types[$i] = array_search($type, $this->charValue);
         }
 
-        return parent::isNextAny($types);
+        return parent::isNextTokenAny($types);
     }
 
     /**
-     * {@inherit}
+     * Lexical catchable patterns.
+     *
+     * @return array
      */
-    protected function getRegex()
+    protected function getCatchablePatterns()
     {
-        return '/
-            # Alphabetic-chars and IPv6 or 4
-            ([a-zA-Z]+[4,6]?)
-
-            # Numbers
-            | ([0-9]+)
-
-            #CRLF
-            | (\r\n)
-
-            #double colon
-            | (::)
-
-            # Whitespace
-            | (\s+)
-
-            #Special
-            | ([\x1-\x1F]+)
-
-            # Anything that is left as single character tokens
-            | (.)
-            /xu';
+        return array(
+            '[a-zA-Z]+[4,6]?',
+            '[0-9]+',
+            '\r\n',
+            '::',
+            '\s+',
+            '[\x1-\x1F]+',
+            '.'
+            );
     }
 
     /**
-     * {@inherit}
+     * Lexical non-catchable patterns.
+     *
+     * @return array
      */
-    protected function determineTypeAndValue($value)
+    protected function getNonCatchablePatterns()
+    {
+        return array('[\x7f-\xff]+');
+    }
+
+    /**
+     * Retrieve token type. Also processes the token value if necessary.
+     *
+     * @param string $value
+     * @throws \InvalidArgumentException
+     * @return integer
+     */
+    protected function getType(&$value)
     {
         if (isset($this->charValue[$value])) {
-            return array($value, $this->charValue[$value]);
+            return $this->charValue[$value];
         }
 
         if (preg_match('/[\x1-\x1F]+/', $value)) {
-            return array($value, self::INVALID);
+            return self::INVALID;
         }
 
         if (preg_match('/[\x7f-\xff]+/', $value)) {
             throw new \InvalidArgumentException(sprintf('There is no token with value %s.', json_encode($value)));
         }
 
-        return array($value, self::GENERIC);
-
+        return  self::GENERIC;
     }
 }

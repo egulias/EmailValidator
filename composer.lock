@@ -79,12 +79,12 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/schmittjoh/parser-lib",
+                "url": "https://github.com/schmittjoh/parser-lib.git",
                 "reference": "4d469a70c6dd03f921cbdeadafbcb261bb23e8b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/schmittjoh/parser-lib/archive/4d469a70c6dd03f921cbdeadafbcb261bb23e8b0.zip",
+                "url": "https://api.github.com/repos/schmittjoh/parser-lib/zipball/4d469a70c6dd03f921cbdeadafbcb261bb23e8b0",
                 "reference": "4d469a70c6dd03f921cbdeadafbcb261bb23e8b0",
                 "shasum": ""
             },
