@@ -1,5 +1,5 @@
 {
-  "name":         "egulias/EmailValidator",
+  "name":         "egulias/email-validator",
   "description":  "A library for validating emails",
   "homepage":     "https://github.com/egulias/EmailValidator",
   "type":         "Library",
