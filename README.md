@@ -11,7 +11,7 @@ Simple example:
 ```php
 <?php
 
-use IsEmail\EmailValidator;
+use egulias\EmailValidator\EmailValidator;
 
 $validator = new EmailValidator;
 if ($validator->isValid($email)) {
@@ -24,7 +24,7 @@ More advanced example (returns detailed diagnostic error codes):
 ```php
 <?php
 
-require_once 'EmailValidator.php';
+use egulias\EmailValidator\EmailValidator;
 
 $validator = new EmailValidator;
 $email = 'dominic@sayers.cc';
@@ -40,5 +40,5 @@ if ($result) {
 ```
 
 #Licence#
-This code is released under the MIT Licence attached with this code.
+Released under the MIT Licence attached with this code.
 
