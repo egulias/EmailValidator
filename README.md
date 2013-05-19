@@ -42,9 +42,9 @@ if ($result) {
 ##Contributors##
 As this is a port from another library and work, here are other people related to the previous:
 
-* Ricard Clau @ricardclau :      Performance against PHP built-in filter_var
-* Josepf Bielawski @stloyd:      For its first re-work of Dominic's lib
-* Domini Sayers @dominicsayers:  The original isemail function
+* Ricard Clau [@ricardclau](http://github.com/ricardclau):      	Performance against PHP built-in filter_var
+* Josepf Bielawski [@stloyd](http://github.com/stloyd):      		For its first re-work of Dominic's lib
+* Dominic Sayers [@dominicsayers](http://github.com/dominicsayers):  	The original isemail function
 
 ##Licence##
 Released under the MIT Licence attached with this code.
