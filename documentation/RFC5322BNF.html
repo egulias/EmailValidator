@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>The BNF from RFC 5322 defining parts of a valid internet message address</title>
+</head>
+
+<body>
+<pre style="font-size:11px;">
+   addr-spec       =   local-part "@" domain
+
+   local-part      =   dot-atom / quoted-string / obs-local-part
+
+   dot-atom        =   [CFWS] dot-atom-text [CFWS]
+
+   CFWS            =   (1*([FWS] comment) [FWS]) / FWS
+
+   FWS             =   ([*WSP CRLF] 1*WSP) /  obs-FWS
+                                          ; Folding white space
+
+   WSP             =   SP / HTAB          ; white space
+
+   obs-FWS         =   1*([CRLF] WSP)     ; As amended in erratum #1908
+
+   ctext           =   %d33-39 /          ; Printable US-ASCII
+                       %d42-91 /          ;  characters not including
+                       %d93-126 /         ;  "(", ")", or "\"
+                       obs-ctext
+
+   obs-ctext       =   obs-NO-WS-CTL
+   ccontent        =   ctext / quoted-pair / comment
+
+   comment         =   "(" *([FWS] ccontent) [FWS] ")"
+
+   dot-atom-text   =   1*atext *("." 1*atext)
+
+   atext           =   ALPHA / DIGIT /    ; Printable US-ASCII
+                       "!" / "#" /        ;  characters not including
+                       "$" / "%" /        ;  specials.  Used for atoms.
+                       "&amp;" / "'" /
+                       "*" / "+" /
+                       "-" / "/" /
+                       "=" / "?" /
+                       "^" / "_" /
+                       "`" / "{" /
+                       "|" / "}" /
+                       "~"
+
+   specials        =   "(" / ")" /        ; Special characters that do
+                       "&lt;" / "&gt;" /        ;  not appear in atext
+                       "[" / "]" /
+                       ":" / ";" /
+                       "@" / "\" /
+                       "," / "." /
+                       DQUOTE
+
+   quoted-string   =   [CFWS]
+                       DQUOTE *([FWS] qcontent) [FWS] DQUOTE
+                       [CFWS]
+
+   qcontent        =   qtext / quoted-pair
+
+   qtext           =   %d33 /             ; Printable US-ASCII
+                       %d35-91 /          ;  characters not including
+                       %d93-126 /         ;  "\" or the quote character
+                       obs-qtext
+
+   obs-qtext       =   obs-NO-WS-CTL
+
+   obs-NO-WS-CTL   =   %d1-8 /            ; US-ASCII control
+                       %d11 /             ;  characters that do not
+                       %d12 /             ;  include the carriage
+                       %d14-31 /          ;  return, line feed, and
+                       %d127              ;  white space characters
+
+   quoted-pair     =   ("\" (VCHAR / WSP)) / obs-qp
+
+   VCHAR           =   %x21-7E            ; visible (printing) characters
+
+   obs-qp          =   "\" (%d0 / obs-NO-WS-CTL / LF / CR)
+
+   obs-local-part  =   word *("." word)
+
+   word            =   atom / quoted-string
+
+   atom            =   [CFWS] 1*atext [CFWS]
+
+   domain          =   dot-atom / domain-literal / obs-domain
+
+   domain-literal  =   [CFWS] "[" *([FWS] dtext) [FWS] "]" [CFWS]
+
+   dtext           =   %d33-90 /          ; Printable US-ASCII
+                       %d94-126 /         ;  characters not including
+                       obs-dtext          ;  "[", "]", or "\"
+
+   obs-dtext       =   obs-NO-WS-CTL / quoted-pair
+
+   obs-domain      =   atom *("." atom)
+
+NB For SMTP mail, the domain-literal is restricted by RFC5321 as follows:
+
+   Mailbox        = Local-part "@" ( Domain / address-literal )
+
+   address-literal  = "[" ( IPv4-address-literal /
+                    IPv6-address-literal /
+                    General-address-literal ) "]"
+
+   IPv4-address-literal  = Snum 3("."  Snum)
+
+   IPv6-address-literal  = "IPv6:" IPv6-addr
+
+   Snum           = 1*3DIGIT
+                  ; representing a decimal integer
+                  ; value in the range 0 through 255
+
+   IPv6-addr      = IPv6-full / IPv6-comp / IPv6v4-full / IPv6v4-comp
+
+   IPv6-hex       = 1*4HEXDIG
+
+   IPv6-full      = IPv6-hex 7(":" IPv6-hex)
+
+   IPv6-comp      = [IPv6-hex *5(":" IPv6-hex)] "::"
+                  [IPv6-hex *5(":" IPv6-hex)]
+                  ; The "::" represents at least 2 16-bit groups of
+                  ; zeros.  No more than 6 groups in addition to the
+                  ; "::" may be present.
+
+   IPv6v4-full    = IPv6-hex 5(":" IPv6-hex) ":" IPv4-address-literal
+
+   IPv6v4-comp    = [IPv6-hex *3(":" IPv6-hex)] "::"
+                  [IPv6-hex *3(":" IPv6-hex) ":"]
+                  IPv4-address-literal
+                  ; The "::" represents at least 2 16-bit groups of
+                  ; zeros.  No more than 4 groups in addition to the
+                  ; "::" and IPv4-address-literal may be present.
+
+</pre>
+</body>
+
+</html>

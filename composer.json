@@ -1,0 +1,13 @@
+{
+  "name": "egulias/EmailValidator",
+  "description": "A library for validating emails",
+  "license": "MIT",
+  "require": {
+    "jms/parser-lib": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "egulias\\": "src/"
+    }
+  }
+}
