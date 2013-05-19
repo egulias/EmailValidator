@@ -226,7 +226,7 @@ class EmailValidator
             !in_array(self::DNSWARN_NO_MX_RECORD, $this->warnings))
         ) {
 
-            if (in_array(RFC5322_DOMAINLITERAL)) {
+            if (in_array($this->warnings, RFC5322_DOMAINLITERAL)) {
                 $this->warnings[] = self::RFC5321_TLD;
             }
 

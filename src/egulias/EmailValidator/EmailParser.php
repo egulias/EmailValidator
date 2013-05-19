@@ -189,7 +189,6 @@ class EmailParser extends AbstractParser
                     $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
                 }
             } catch (\Exception $e) {
-                break;
             }
 
         }
@@ -246,7 +245,6 @@ class EmailParser extends AbstractParser
 
         $maxGroups = 8;
         $matchesIP  = array();
-        $index = 0;
 
         // Extract IPv4 part from the end of the address-literal (if there is one)
         if (preg_match(
@@ -276,7 +274,6 @@ class EmailParser extends AbstractParser
         $matchesIP  = explode(':', $IPv6);
         $groupCount = count($matchesIP);
         $colons     = strpos($IPv6, '::');
-        $matches = array();
 
         if (count(preg_grep('/^[0-9A-Fa-f]{0,4}$/', $matchesIP, PREG_GREP_INVERT)) !== 0) {
             // Check for unmatched characters

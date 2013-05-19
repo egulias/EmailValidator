@@ -4,6 +4,9 @@ EmailValidator
 #Installation#
 Install via composer.
 
+##Build Status##
+[![Build Status](https://travis-ci.org/egulias/EmailValidator.png?branch=master)](https://travis-ci.org/egulias/EmailValidator)
+
 #Usage#
 
 Simple example:
