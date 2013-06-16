@@ -7,9 +7,8 @@ use Doctrine\Common\Lexer;
 class EmailLexer extends Lexer
 {
     //ASCII values
-    const C_DEL = 127;
-    const C_NUL = 0;
-
+    const C_DEL              = 127;
+    const C_NUL              = 0;
     const S_AT               = 64;//'@';
     const S_BACKSLASH        = 92;//'\\';
     const S_DOT              = 46;//'.';
@@ -97,6 +96,11 @@ class EmailLexer extends Lexer
     {
         $search = clone $this;
         $search->skipUntil($type);
+
+        if (!$search->lookahead) {
+            throw new \UnexpectedValueException($type . ' not found');
+        }
+
     }
 
     /**
@@ -121,20 +125,6 @@ class EmailLexer extends Lexer
         return parent::moveNext();
     }
 
-    public function isNext($type)
-    {
-        return null !== $this->next && $type === $this->next['type'];
-    }
-
-    public function isNextAny(array $types)
-    {
-        foreach ($types as $i => $type) {
-            $types[$i] = array_search($type, $this->charValue);
-        }
-
-        return parent::isNextTokenAny($types);
-    }
-
     /**
      * Lexical catchable patterns.
      *
@@ -143,7 +133,7 @@ class EmailLexer extends Lexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-zA-Z]+[4,6]?',
+            '[a-zA-Z_]+[4,6]?',
             '[0-9]+',
             '\r\n',
             '::',
