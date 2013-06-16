@@ -23,31 +23,15 @@ class EmailParser
     }
 
     /**
-     * Parses the given input.
+     * parse
      *
      * @param string $str
-     * @param string $context parsing context (allows to produce better error messages)
      *
-     * @return mixed
+     * @return array
      */
     public function parse($str)
     {
         $this->lexer->setInput($str);
-
-        $rs = $this->parseInternal();
-
-        if (null !== $this->lexer->glimpse()) {
-            throw new \Exception('Endo of input');
-        }
-
-        return $rs;
-    }
-
-    /**
-     *  {@inherit}
-     */
-    protected function parseInternal()
-    {
         $this->lexer->moveNext();
         $this->lexer->moveNext();
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {

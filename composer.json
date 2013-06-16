@@ -10,7 +10,6 @@
   ],
   "require":      {
     "php": ">= 5.3.3",
-    "jms/parser-lib": "dev-master",
     "doctrine/common": "~2.2"
   },
   "autoload": {

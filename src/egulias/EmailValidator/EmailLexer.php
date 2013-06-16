@@ -73,25 +73,12 @@ class EmailLexer extends Lexer
     protected $previous;
 
     /**
-     * getName
+     * find
      *
-     * @param string $type
+     * @param mixed $type
      *
-     * @return string $name
-     * @throws \InvalidArgumentException
+     * @throws UnexpectedValueException
      */
-    public function getName($type)
-    {
-        $ref = new \ReflectionClass($this);
-        foreach ($ref->getConstants() as $name => $value) {
-            if ($value === $type) {
-                return $name;
-            }
-        }
-
-        throw new \InvalidArgumentException(sprintf('There is no token with value %s.', json_encode($type)));
-    }
-
     public function find($type)
     {
         $search = clone $this;
