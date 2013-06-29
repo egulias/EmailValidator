@@ -10,11 +10,12 @@
   ],
   "require":      {
     "php": ">= 5.3.3",
-    "doctrine/common": "~2.2"
+    "doctrine/common": "~2.2",
+    "symfony/validator": "dev-master"
   },
   "autoload": {
     "psr-0": {
-      "egulias\\": "src/"
+      "Egulias\\": "src/"
     }
   }
 }

@@ -1,8 +1,6 @@
 <?php
 
-namespace egulias\EmailValidator;
-
-use JMS\Parser\AbstractParser;
+namespace Egulias\EmailValidator;
 
 /**
  * EmailParser

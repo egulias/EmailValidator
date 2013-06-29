@@ -1,6 +1,6 @@
 <?php
 
-namespace egulias\EmailValidator;
+namespace Egulias\EmailValidator;
 
 /**
  * EmailValidator

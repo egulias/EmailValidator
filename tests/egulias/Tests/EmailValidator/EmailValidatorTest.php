@@ -1,8 +1,8 @@
 <?php
 
-namespace egulias\Tests\EmailValidator;
+namespace Egulias\Tests\EmailValidator;
 
-use egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\EmailValidator;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
 {
