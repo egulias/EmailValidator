@@ -11,9 +11,7 @@ class EmailParser
 {
 
     protected $warnings = array();
-    protected $localPart = '';
     protected $domainPart = '';
-    protected $index = 0;
 
     public function __construct(EmailLexer $lexer)
     {
@@ -37,8 +35,9 @@ class EmailParser
         }
         $this->parseLocalPart();
         $this->parseDomainPart();
+        $parts = explode('@', $str);
 
-        if (strlen($this->localPart . '@' . $this->domainPart) > 254) {
+        if (strlen($parts[0] . '@' . $this->domainPart) > 254) {
             // http://tools.ietf.org/html/rfc5321#section-4.1.2
             //   Forward-path   = Path
             //
@@ -49,7 +48,7 @@ class EmailParser
             $this->warnings[] = EmailValidator::RFC5322_TOOLONG;
         }
 
-        return array('local' => $this->localPart, 'domain' => $this->domainPart);
+        return array('local' => $parts[0], 'domain' => $this->domainPart);
     }
 
     /**
