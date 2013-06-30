@@ -45,19 +45,6 @@ class EmailParser
             //   Path           = "<" [ A-d-l ":" ] Mailbox ">"
             //
             // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.3
-            //   The maximum total length of a reverse-path or forward-path is 256
-            //   octets (including the punctuation and element separators).
-            //
-            // Thus, even without (obsolete) routing information, the Mailbox can
-            // only be 254 characters long. This is confirmed by this verified
-            // erratum to RFC 3696:
-            //
-            // http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
-            //   However, there is a restriction in RFC 2821 on the length of an
-            //   address in MAIL and RCPT commands of 254 characters.  Since addresses
-            //   that do not fit in those fields are not normally useful, the upper
-            //   limit on address lengths should normally be considered to be 254.
-            //
             // http://tools.ietf.org/html/rfc1035#section-2.3.4
             $this->warnings[] = EmailValidator::RFC5322_TOOLONG;
         }
@@ -91,9 +78,11 @@ class EmailParser
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
             throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
         }
+
         if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
             throw new \InvalidArgumentException('ERR_DOT_START');
         }
+
         if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
             throw new \InvalidArgumentException('ERR_NODOMAIN');
         }
@@ -107,6 +96,10 @@ class EmailParser
 
         do {
             $prev = $this->lexer->getPrevious();
+
+            if ($this->lexer->token['type'] === EmailLexer::S_AT) {
+                throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
+            }
             if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
                 throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
             }
@@ -331,7 +324,8 @@ class EmailParser
     private function parseLocalPart()
     {
         $closingQuote = false;
-        while ($this->lexer->token['type'] !== EmailLexer::S_AT) {
+        while ($this->lexer->token['type'] !== EmailLexer::S_AT && $this->lexer->token) {
+
             $previous = $this->lexer->getPrevious();
             if ($this->lexer->token['type'] === EmailLexer::S_DOT && !$this->lexer->getPrevious()) {
                 throw new \InvalidArgumentException('ERR_DOT_START');
@@ -426,7 +420,7 @@ class EmailParser
         }
 
         $this->lexer->moveNext();
-        if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC) || EmailLexer::S_EMPTY === $this->lexer->peek()) {
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
 

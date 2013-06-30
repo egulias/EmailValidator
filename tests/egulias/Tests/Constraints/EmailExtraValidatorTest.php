@@ -65,6 +65,7 @@ class EmailExtraValidatorTest extends \PHPUnit_Framework_TestCase
             array('fabien@symfony.com'),
             array('example@example.co.uk'),
             array('fabien_potencier@example.fr'),
+            array('example@localhost'),
         );
     }
 
@@ -91,9 +92,8 @@ class EmailExtraValidatorTest extends \PHPUnit_Framework_TestCase
     public function getInvalidEmails()
     {
         return array(
-            //array('example'),
+            array('example'),
             array('example@'),
-            //array('example@localhost'),
             array('example@example.com@example.com'),
         );
     }
