@@ -1,8 +1,8 @@
 <?php
 
-namespace egulias\Tests\EmailValidator;
+namespace Egulias\EmailValidator\Tests;
 
-use egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\EmailLexer;
 
 class EmailLexerTests extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
     public function testLexerExtendsLib()
     {
         $lexer = new EmailLexer();
-        $this->assertInstanceOf('JMS\Parser\AbstractLexer', $lexer);
+        $this->assertInstanceOf('Doctrine\Common\Lexer', $lexer);
     }
 
     /**
@@ -22,16 +22,18 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         $lexer = new EmailLexer();
         $lexer->setInput($str);
         $lexer->moveNext();
-        $this->assertEquals($token, $lexer->token[0]);
+        $lexer->moveNext();
+        $this->assertEquals($token, $lexer->token['type']);
     }
 
     public function testLexerForTab()
     {
         $lexer = new EmailLexer();
         $lexer->setInput("foo\tbar");
+        $lexer->moveNext();
         $lexer->skipUntil(EmailLexer::S_HTAB);
         $lexer->moveNext();
-        $this->assertEquals(EmailLexer::S_HTAB, $lexer->token[0]);
+        $this->assertEquals(EmailLexer::S_HTAB, $lexer->token['type']);
     }
 
     public function getTokens()

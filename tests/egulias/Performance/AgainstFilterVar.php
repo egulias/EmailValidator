@@ -1,6 +1,6 @@
 <?php
 
-use egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\EmailValidator;
 
 require __DIR__ . '/../../bootstrap.php';
 
@@ -31,5 +31,3 @@ for ($i = 0; $i < $iterations; $i++) {
 }
 $b = microtime(true);
 echo ($b - $a) . ' seconds with EmailValidator once instanced' . PHP_EOL;
-
-
