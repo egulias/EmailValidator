@@ -1,15 +1,14 @@
 <?php
 
-namespace egulias\EmailValidator;
+namespace Egulias\EmailValidator;
 
-use JMS\Parser\AbstractLexer;
+use Doctrine\Common\Lexer;
 
-class EmailLexer extends AbstractLexer
+class EmailLexer extends Lexer
 {
     //ASCII values
-    const C_DEL = 127;
-    const C_NUL = 0;
-
+    const C_DEL              = 127;
+    const C_NUL              = 0;
     const S_AT               = 64;//'@';
     const S_BACKSLASH        = 92;//'\\';
     const S_DOT              = 46;//'.';
@@ -74,28 +73,21 @@ class EmailLexer extends AbstractLexer
     protected $previous;
 
     /**
-     * getName
+     * find
      *
-     * @param string $type
+     * @param mixed $type
      *
-     * @return string $name
+     * @throws UnexpectedValueException
      */
-    public function getName($type)
-    {
-        $ref = new \ReflectionClass($this);
-        foreach ($ref->getConstants() as $name => $value) {
-            if ($value === $type) {
-                return $name;
-            }
-        }
-
-        throw new \InvalidArgumentException(sprintf('There is no token with value %s.', json_encode($type)));
-    }
-
     public function find($type)
     {
         $search = clone $this;
         $search->skipUntil($type);
+
+        if (!$search->lookahead) {
+            throw new \UnexpectedValueException($type . ' not found');
+        }
+
     }
 
     /**
@@ -120,67 +112,55 @@ class EmailLexer extends AbstractLexer
         return parent::moveNext();
     }
 
-    public function isNext($type)
+    /**
+     * Lexical catchable patterns.
+     *
+     * @return array
+     */
+    protected function getCatchablePatterns()
     {
-        return null !== $this->next && $type === $this->next[0];
-    }
-
-    public function isNextAny(array $types)
-    {
-        foreach ($types as $i => $type) {
-            $types[$i] = array_search($type, $this->charValue);
-        }
-
-        return parent::isNextAny($types);
+        return array(
+            '[a-zA-Z_]+[4,6]?',
+            '[0-9]+',
+            '\r\n',
+            '::',
+            '\s+',
+            '[\x1-\x1F]+',
+            '.'
+            );
     }
 
     /**
-     * {@inherit}
+     * Lexical non-catchable patterns.
+     *
+     * @return array
      */
-    protected function getRegex()
+    protected function getNonCatchablePatterns()
     {
-        return '/
-            # Alphabetic-chars and IPv6 or 4
-            ([a-zA-Z]+[4,6]?)
-
-            # Numbers
-            | ([0-9]+)
-
-            #CRLF
-            | (\r\n)
-
-            #double colon
-            | (::)
-
-            # Whitespace
-            | (\s+)
-
-            #Special
-            | ([\x1-\x1F]+)
-
-            # Anything that is left as single character tokens
-            | (.)
-            /xu';
+        return array('[\x7f-\xff]+');
     }
 
     /**
-     * {@inherit}
+     * Retrieve token type. Also processes the token value if necessary.
+     *
+     * @param string $value
+     * @throws \InvalidArgumentException
+     * @return integer
      */
-    protected function determineTypeAndValue($value)
+    protected function getType(&$value)
     {
         if (isset($this->charValue[$value])) {
-            return array($value, $this->charValue[$value]);
+            return $this->charValue[$value];
         }
 
         if (preg_match('/[\x1-\x1F]+/', $value)) {
-            return array($value, self::INVALID);
+            return self::INVALID;
         }
 
         if (preg_match('/[\x7f-\xff]+/', $value)) {
             throw new \InvalidArgumentException(sprintf('There is no token with value %s.', json_encode($value)));
         }
 
-        return array($value, self::GENERIC);
-
+        return  self::GENERIC;
     }
 }

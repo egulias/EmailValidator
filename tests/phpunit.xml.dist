@@ -13,7 +13,14 @@
 >
 <testsuites>
   <testsuite name="EmailValidator Test Suite">
-    <directory>./IsEmail/</directory>
+    <directory>./tests/egulias/Tests/*.Test.php</directory>
+    <exclude>./vendor/</exclude>
   </testsuite>
 </testsuites>
+
+<filter>
+  <blacklist>
+    <directory>../vendor</directory>
+  </blacklist>
+</filter>
 </phpunit>
