@@ -10,8 +10,7 @@
   ],
   "require":      {
     "php": ">= 5.3.3",
-    "doctrine/common": "~2.2",
-    "symfony/validator": "dev-master"
+    "doctrine/common": "~2.2"
   },
   "autoload": {
     "psr-0": {
