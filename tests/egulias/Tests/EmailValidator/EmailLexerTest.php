@@ -10,7 +10,7 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
     public function testLexerExtendsLib()
     {
         $lexer = new EmailLexer();
-        $this->assertInstanceOf('Doctrine\Common\Lexer', $lexer);
+        $this->assertInstanceOf('Doctrine\Common\Lexer\AbstractLexer', $lexer);
     }
 
     /**

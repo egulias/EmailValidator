@@ -2,9 +2,9 @@
 
 namespace Egulias\EmailValidator;
 
-use Doctrine\Common\Lexer;
+use Doctrine\Common\Lexer\AbstractLexer;
 
-class EmailLexer extends Lexer
+class EmailLexer extends AbstractLexer
 {
     //ASCII values
     const C_DEL              = 127;
