@@ -10,7 +10,7 @@
   ],
   "require":      {
     "php": ">= 5.3.3",
-    "doctrine/common": "~2.2",
+    "doctrine/lexer": "~1.0",
     "symfony/validator": "dev-master"
   },
   "autoload": {
