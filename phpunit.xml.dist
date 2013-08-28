@@ -9,18 +9,18 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="bootstrap.php"
+         bootstrap="tests/bootstrap.php"
 >
 <testsuites>
   <testsuite name="EmailValidator Test Suite">
-    <directory>./tests/egulias/Tests/*.Test.php</directory>
+    <directory>./tests/egulias/Tests/</directory>
     <exclude>./vendor/</exclude>
   </testsuite>
 </testsuites>
 
 <filter>
   <blacklist>
-    <directory>../vendor</directory>
+    <directory>./vendor</directory>
   </blacklist>
 </filter>
 </phpunit>
