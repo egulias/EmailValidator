@@ -8,6 +8,11 @@
   "authors": [
     {"name": "Eduardo Gulias Davis"}
   ],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  },
   "require":      {
     "php": ">= 5.3.3",
     "doctrine/lexer": "~1.0",
