@@ -157,10 +157,6 @@ class EmailLexer extends AbstractLexer
             return self::INVALID;
         }
 
-        if (preg_match('/[\x7f-\xff]+/', $value)) {
-            throw new \InvalidArgumentException(sprintf('There is no token with value %s.', json_encode($value)));
-        }
-
         return  self::GENERIC;
     }
 }
