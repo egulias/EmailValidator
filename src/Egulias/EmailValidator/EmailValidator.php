@@ -230,7 +230,6 @@ class EmailValidator
                 $this->warnings[] = self::RFC5321_TLD;
             }
 
-            //@TODO review how to test TLD
             //if (isset($this->atomList[self::COMPONENT_DOMAIN][$this->elementCount][0]) &&
             //    is_numeric($this->atomList[self::COMPONENT_DOMAIN][$this->elementCount][0])
             //) {

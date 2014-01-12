@@ -1,4 +1,4 @@
-EmailValidator [![Build Status](https://travis-ci.org/egulias/EmailValidator.png?branch=master)](https://travis-ci.org/egulias/EmailValidator)
+EmailValidator [![Build Status](https://travis-ci.org/egulias/EmailValidator.png?branch=master)](https://travis-ci.org/egulias/EmailValidator) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b18d473e-bd5a-4d88-a7b2-7aeaee0ebd7b/small.png)](https://insight.sensiolabs.com/projects/b18d473e-bd5a-4d88-a7b2-7aeaee0ebd7b)
 =============================
 
 ##Installation##

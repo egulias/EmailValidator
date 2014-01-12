@@ -307,8 +307,6 @@ class EmailParser
 
     /**
      * validateQuotedPair
-     *
-     * @TODO This needs to be reviewed
      */
     private function validateQuotedPair()
     {
@@ -330,7 +328,6 @@ class EmailParser
                 throw new \InvalidArgumentException('ERR_DOT_START');
             }
             if ($this->lexer->token['type'] === EmailLexer::S_DQUOTE) {
-                //@TODO this can be improbed
                 if (!$closingQuote) {
                     if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
                         throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
