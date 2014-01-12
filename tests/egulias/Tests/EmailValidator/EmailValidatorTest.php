@@ -38,6 +38,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('example@faked(fake).co.uk'),
             array('fabien+@symfony.com'),
             array('инфо@письмо.рф'),
+
         );
     }
 
@@ -60,6 +61,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('ex\ample@localhost'),
             array('example@local\host'),
             array('example@localhost.'),
+            array('user name@example.com'),
+            array('username@ example . com'),
         );
     }
 

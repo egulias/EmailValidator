@@ -341,7 +341,6 @@ class EmailParser
                     }
                 }
             }
-            //Comments
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
             }
@@ -356,9 +355,9 @@ class EmailParser
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                //if ($this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
-                //    $this->warnings[] = EmailValidator::DEPREC_QP;
-                //}
+                if ($this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
+                    $this->warnings[] = EmailValidator::DEPREC_QP;
+                }
                 if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
                     throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
                 }
@@ -444,9 +443,11 @@ class EmailParser
             $this->lexer->token['type'] === EmailLexer::CRLF ) {
                 throw new \InvalidArgumentException("ERR_FWS_CRLF_END");
         }
-        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $this->lexer->token['type'] !== EmailLexer::S_SP) {
+
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
             throw new \InvalidArgumentException("ERR_ATEXT_AFTER_CFWS");
         }
+
         if ($this->lexer->token['type'] === EmailLexer::S_LF || $this->lexer->token['type'] === EmailLexer::C_NUL) {
             throw new \InvalidArgumentException('ERR_EXPECTING_CTEXT');
         }
@@ -456,6 +457,5 @@ class EmailParser
         } else {
             $this->warnings[] = EmailValidator::CFWS_FWS;
         }
-
     }
 }
