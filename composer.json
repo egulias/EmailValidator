@@ -17,6 +17,9 @@
     "php": ">= 5.3.3",
     "doctrine/lexer": "~1.0"
   },
+  "require-dev" :   {
+    "satooshi/php-coveralls": "dev-master"
+  },
   "autoload": {
     "psr-0": {
       "Egulias\\": "src/"
