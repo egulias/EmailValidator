@@ -1,4 +1,4 @@
-EmailValidator [![Build Status](https://travis-ci.org/egulias/EmailValidator.png?branch=master)](https://travis-ci.org/egulias/EmailValidator) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b18d473e-bd5a-4d88-a7b2-7aeaee0ebd7b/small.png)](https://insight.sensiolabs.com/projects/b18d473e-bd5a-4d88-a7b2-7aeaee0ebd7b)
+EmailValidator [![Build Status](https://travis-ci.org/egulias/EmailValidator.png?branch=master)](https://travis-ci.org/egulias/EmailValidator) [![Coverage Status](https://coveralls.io/repos/egulias/EmailValidator/badge.png?branch=master)](https://coveralls.io/r/egulias/EmailValidator?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/b18d473e-bd5a-4d88-a7b2-7aeaee0ebd7b/small.png)](https://insight.sensiolabs.com/projects/b18d473e-bd5a-4d88-a7b2-7aeaee0ebd7b)
 =============================
 
 ##Installation##
