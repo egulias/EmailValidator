@@ -12,6 +12,7 @@ class EmailParser
 
     protected $warnings = array();
     protected $domainPart = '';
+    protected $lexer;
 
     public function __construct(EmailLexer $lexer)
     {
@@ -76,9 +77,7 @@ class EmailParser
         if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
             throw new \InvalidArgumentException('ERR_NODOMAIN');
         }
-        // Comments at the start of the domain are deprecated in the text
-        // Comments at the start of a subdomain are obs-domain
-        // (http://tools.ietf.org/html/rfc5322#section-3.4.1)
+
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
             $this->warnings[] = EmailValidator::DEPREC_COMMENT;
             $this->parseComments();
@@ -97,9 +96,9 @@ class EmailParser
                 $this->parseComments();
                 $this->lexer->moveNext();
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-                throw new \InvalidArgumentException('ERR_CONSECUTIVEDOTS');
-            }
+
+            $this->checkConsecutiveDots();
+
             if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
                 throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
             }
@@ -168,20 +167,16 @@ class EmailParser
         $IPv6TAG = false;
         $addressLiteral = '';
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
-            // Address starts with a single colon
             $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
         }
         if ($this->lexer->isNextToken(EmailLexer::S_IPV6TAG)) {
-            try {
-                $lexer = clone $this->lexer;
-                $lexer->moveNext();
-                if ($lexer->isNextToken(EmailLexer::S_DOUBLECOLON)) {
-                    $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
-                }
-            } catch (\Exception $e) {
+            $lexer = clone $this->lexer;
+            $lexer->moveNext();
+            if ($lexer->isNextToken(EmailLexer::S_DOUBLECOLON)) {
+                $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
             }
-
         }
+
         do {
             if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
                 throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
@@ -336,10 +331,7 @@ class EmailParser
                 $this->parseComments();
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
-                $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-                throw new \InvalidArgumentException('ERR_CONSECUTIVEDOTS');
-            }
+            $this->checkConsecutiveDots();
 
             if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_AT)) {
                 throw new \InvalidArgumentException('ERR_DOT_END');
@@ -446,6 +438,13 @@ class EmailParser
             $this->warnings[] = EmailValidator::DEPREC_CFWS_NEAR_AT;
         } else {
             $this->warnings[] = EmailValidator::CFWS_FWS;
+        }
+    }
+
+    private function checkConsecutiveDots()
+    {
+        if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+            throw new \InvalidArgumentException('ERR_CONSECUTIVEDOTS');
         }
     }
 }

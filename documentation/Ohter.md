@@ -61,3 +61,9 @@ http://www.rfc-editor.org/errata_search.php?rfc=1123&eid=1353
   However, a valid host name can never have the dotted-decimal
   form #.#.#.#, since this change does not permit the highest-level
   component label to start with a digit even if it is not all-numeric.
+
+Comments
+--------
+Comments at the start of the domain are deprecated in the text
+Comments at the start of a subdomain are obs-domain
+(http://tools.ietf.org/html/rfc5322#section-3.4.1)
