@@ -73,11 +73,8 @@ class EmailLexer extends AbstractLexer
     protected $previous;
 
     /**
-     * find
-     *
-     * @param mixed $type
-     *
-     * @throws UnexpectedValueException
+     * @param $type
+     * @throws \UnexpectedValueException
      */
     public function find($type)
     {

@@ -19,11 +19,9 @@ class EmailParser
     }
 
     /**
-     * parse
-     *
-     * @param string $str
-     *
+     * @param $str
      * @return array
+     * @throws \InvalidArgumentException
      */
     public function parse($str)
     {
@@ -38,13 +36,6 @@ class EmailParser
         $parts = explode('@', $str);
 
         if (strlen($parts[0] . '@' . $this->domainPart) > 254) {
-            // http://tools.ietf.org/html/rfc5321#section-4.1.2
-            //   Forward-path   = Path
-            //
-            //   Path           = "<" [ A-d-l ":" ] Mailbox ">"
-            //
-            // http://tools.ietf.org/html/rfc5321#section-4.5.3.1.3
-            // http://tools.ietf.org/html/rfc1035#section-2.3.4
             $this->warnings[] = EmailValidator::RFC5322_TOOLONG;
         }
 
@@ -391,9 +382,8 @@ class EmailParser
     }
 
     /**
-     * parseComments
-     *
      * @return string the the comment
+     * @throws \InvalidArgumentException
      */
     private function parseComments()
     {
