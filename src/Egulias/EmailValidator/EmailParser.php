@@ -445,6 +445,11 @@ class EmailParser
 
     public function checkIPV6Tag($addressLiteral, $maxGroups = 8)
     {
+        $prev = $this->lexer->getPrevious();
+        if ($prev['type'] === EmailLexer::S_COLON) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
+        }
+
         $IPv6       = substr($addressLiteral, 5);
         //Daniel Marschall's new IPv6 testing strategy
         $matchesIP  = explode(':', $IPv6);
@@ -452,7 +457,6 @@ class EmailParser
         $colons     = strpos($IPv6, '::');
 
         if (count(preg_grep('/^[0-9A-Fa-f]{0,4}$/', $matchesIP, PREG_GREP_INVERT)) !== 0) {
-            // Check for unmatched characters
             $this->warnings[] = EmailValidator::RFC5322_IPV6_BADCHAR;
         }
 
@@ -461,28 +465,24 @@ class EmailParser
             if ($groupCount !== $maxGroups) {
                 $this->warnings[] = EmailValidator::RFC5322_IPV6_GRPCOUNT;
             }
-        } else {
-            if ($colons !== strrpos($IPv6, '::')) {
-                $this->warnings[] = EmailValidator::RFC5322_IPV6_2X2XCOLON;
-            } else {
-                if ($colons === 0 || $colons === (strlen($IPv6) - 2)) {
-                    // RFC 4291 allows :: at the start or end of an address
-                    //with 7 other groups in addition
-                    ++$maxGroups;
-                }
-
-                if ($groupCount > $maxGroups) {
-                    $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
-                } elseif ($groupCount === $maxGroups) {
-                    // Eliding a single "::"
-                    $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
-                }
-            }
+            return;
         }
 
-        $prev = $this->lexer->getPrevious();
-        if ($prev['type'] === EmailLexer::S_COLON) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
+        if ($colons !== strrpos($IPv6, '::')) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_2X2XCOLON;
+            return;
+        }
+
+        if ($colons === 0 || $colons === (strlen($IPv6) - 2)) {
+            // RFC 4291 allows :: at the start or end of an address
+            //with 7 other groups in addition
+            ++$maxGroups;
+        }
+
+        if ($groupCount > $maxGroups) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
+        } elseif ($groupCount === $maxGroups) {
+            $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
         }
     }
 }
