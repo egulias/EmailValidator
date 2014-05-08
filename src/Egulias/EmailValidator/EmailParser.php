@@ -294,24 +294,12 @@ class EmailParser
         $closingQuote = false;
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && $this->lexer->token) {
 
-            $previous = $this->lexer->getPrevious();
             if ($this->lexer->token['type'] === EmailLexer::S_DOT && !$this->lexer->getPrevious()) {
                 throw new \InvalidArgumentException('ERR_DOT_START');
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_DQUOTE) {
-                if (!$closingQuote) {
-                    if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
-                        throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
-                    }
-                    $this->warnings[] = EmailValidator::RFC5321_QUOTEDSTRING;
-                    try {
-                        $this->lexer->find(EmailLexer::S_DQUOTE);
-                        $closingQuote = true;
-                    } catch (\Exception $e) {
-                        throw new \InvalidArgumentException('ERR_UNCLOSEDQUOTEDSTR');
-                    }
-                }
-            }
+
+            $closingQuote = $this->checkDQUOTE($closingQuote);
+
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
             }
@@ -450,4 +438,28 @@ class EmailParser
         return true;
 
     }
+
+    private function checkDQUOTE($hasClosingQuote)
+    {
+        if ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE) {
+            return $hasClosingQuote;
+        }
+        if ($hasClosingQuote) {
+            return $hasClosingQuote;
+        }
+        $previous = $this->lexer->getPrevious();
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+        }
+        $this->warnings[] = EmailValidator::RFC5321_QUOTEDSTRING;
+        try {
+            $this->lexer->find(EmailLexer::S_DQUOTE);
+            $hasClosingQuote = true;
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException('ERR_UNCLOSEDQUOTEDSTR');
+        }
+
+        return $hasClosingQuote;
+    }
+
 }
