@@ -308,30 +308,16 @@ class EmailParser
         do {
             $prev = $this->lexer->getPrevious();
 
-            if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-                throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
-            }
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
                 $this->lexer->moveNext();
             }
 
             $this->checkConsecutiveDots();
-
-            if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-                throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
-            }
+            $this->checkDomainPartExceptions();
 
             if ($this->hasBrackets()) {
                 $this->parseDomainLiteral();
-            }
-
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
-                && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
             }
 
             $this->checkLabelLength($prev);
@@ -502,5 +488,23 @@ class EmailParser
         }
 
         return true;
+    }
+
+    private function checkDomainPartExceptions()
+    {
+        if ($this->lexer->token['type'] === EmailLexer::S_AT) {
+            throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
+        }
+        if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+        }
+        if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+            throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
+        }
+
+        if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
+            && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+        }
     }
 }
