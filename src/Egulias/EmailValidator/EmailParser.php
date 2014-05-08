@@ -314,7 +314,7 @@ class EmailParser
             }
 
             $this->checkConsecutiveDots();
-            $this->checkDomainPartExceptions();
+            $this->checkDomainPartExceptions($prev);
 
             if ($this->hasBrackets()) {
                 $this->parseDomainLiteral();
@@ -490,7 +490,7 @@ class EmailParser
         return true;
     }
 
-    private function checkDomainPartExceptions()
+    private function checkDomainPartExceptions($prev)
     {
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
             throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
