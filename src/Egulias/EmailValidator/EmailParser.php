@@ -339,6 +339,7 @@ class EmailParser
             if ($this->isFWS()) {
                 $this->parseFWS();
             }
+
             $domain .= $this->lexer->token['value'];
             $this->lexer->moveNext();
         } while ($this->lexer->token);
@@ -353,19 +354,26 @@ class EmailParser
         do {
             if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
                 throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
-            } elseif ($this->lexer->token['type'] === EmailLexer::INVALID ||
+            }
+
+            if ($this->lexer->token['type'] === EmailLexer::INVALID ||
                 $this->lexer->token['type'] === EmailLexer::C_DEL   ||
                 $this->lexer->token['type'] === EmailLexer::S_LF
             ) {
                 $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
             }
+
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {
                 throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
             }
-            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_HTAB, EmailLexer::S_SP))) {
+
+            if ($this->lexer->isNextTokenAny(
+                array(EmailLexer::S_HTAB, EmailLexer::S_SP, $this->lexer->token['type'] === EmailLexer::CRLF)
+            )) {
                 $this->warnings[] = EmailValidator::CFWS_FWS;
                 $this->parseFWS();
             }
+
             if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
                 throw new \InvalidArgumentException("ERR_CR_NO_LF");
             }
@@ -381,12 +389,7 @@ class EmailParser
             if ($this->lexer->token['type'] === EmailLexer::S_CLOSEQBRACKET) {
                 break;
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_SP ||
-                $this->lexer->token['type'] === EmailLexer::S_HTAB ||
-                $this->lexer->token['type'] === EmailLexer::CRLF
-            ) {
-                $this->parseFWS();
-            }
+
             $addressLiteral .= $this->lexer->token['value'];
 
         } while ($this->lexer->moveNext());
@@ -488,14 +491,16 @@ class EmailParser
 
     private function hasBrackets()
     {
-        if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
-            try {
-                $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
-            } catch (\RuntimeException $e) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
-            }
-
-            return true;
+        if ($this->lexer->token['type'] !== EmailLexer::S_OPENBRACKET) {
+            return false;
         }
+
+        try {
+            $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
+        } catch (\RuntimeException $e) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
+        }
+
+        return true;
     }
 }
