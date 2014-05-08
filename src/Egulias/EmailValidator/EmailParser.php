@@ -325,12 +325,7 @@ class EmailParser
                 throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
-                try {
-                    $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
-                } catch (\RuntimeException $e) {
-                    throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
-                }
+            if ($this->hasBrackets()) {
                 $this->parseDomainLiteral();
             }
 
@@ -339,12 +334,7 @@ class EmailParser
                 throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
-                $prev['type'] === EmailLexer::GENERIC &&
-                strlen($prev['value']) > 63
-            ) {
-                $this->warnings[] = EmailValidator::RFC5322_LABEL_TOOLONG;
-            }
+            $this->checkLabelLength($prev);
 
             if ($this->isFWS()) {
                 $this->parseFWS();
@@ -483,6 +473,29 @@ class EmailParser
             $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
         } elseif ($groupCount === $maxGroups) {
             $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
+        }
+    }
+
+    private function checkLabelLength($prev)
+    {
+        if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
+            $prev['type'] === EmailLexer::GENERIC &&
+            strlen($prev['value']) > 63
+        ) {
+            $this->warnings[] = EmailValidator::RFC5322_LABEL_TOOLONG;
+        }
+    }
+
+    private function hasBrackets()
+    {
+        if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
+            try {
+                $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
+            } catch (\RuntimeException $e) {
+                throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
+            }
+
+            return true;
         }
     }
 }
