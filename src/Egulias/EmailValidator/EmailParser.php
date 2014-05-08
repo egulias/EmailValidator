@@ -101,8 +101,6 @@ class EmailParser
 
     private function parseDomainLiteral()
     {
-        $IPv6TAG = false;
-        $addressLiteral = '';
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
             $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
         }
@@ -114,116 +112,7 @@ class EmailParser
             }
         }
 
-        do {
-            if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
-            } elseif ($this->lexer->token['type'] === EmailLexer::INVALID ||
-                $this->lexer->token['type'] === EmailLexer::C_DEL   ||
-                $this->lexer->token['type'] === EmailLexer::S_LF
-            ) {
-                $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
-            }
-            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
-            }
-            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_HTAB, EmailLexer::S_SP))) {
-                $this->warnings[] = EmailValidator::CFWS_FWS;
-                $this->parseFWS();
-            }
-            if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
-                throw new \InvalidArgumentException("ERR_CR_NO_LF");
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
-                $addressLiteral .= $this->lexer->token['value'];
-                $this->lexer->moveNext();
-                $this->validateQuotedPair();
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEQBRACKET) {
-                break;
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_SP ||
-                $this->lexer->token['type'] === EmailLexer::S_HTAB ||
-                $this->lexer->token['type'] === EmailLexer::CRLF
-            ) {
-                $this->parseFWS();
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_IPV6TAG) {
-                $IPv6TAG = true;
-            }
-            $addressLiteral .= $this->lexer->token['value'];
-
-        } while ($this->lexer->moveNext());
-        $prev = $this->lexer->getPrevious();
-        if ($prev['type'] === EmailLexer::S_COLON) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
-        }
-
-        $addressLiteral = str_replace('[', '', $addressLiteral);
-
-        $maxGroups = 8;
-        $matchesIP  = array();
-
-        // Extract IPv4 part from the end of the address-literal (if there is one)
-        if (preg_match(
-            '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/',
-            $addressLiteral,
-            $matchesIP
-        ) > 0
-        ) {
-            $index = strrpos($addressLiteral, $matchesIP[0]);
-            if ($index === 0) {
-                $this->warnings[] = EmailValidator::RFC5321_ADDRESSLITERAL;
-                return;
-            }
-            // Convert IPv4 part to IPv6 format for further testing
-            $addressLiteral = substr($addressLiteral, 0, $index) . '0:0';
-        }
-
-        if (!$IPv6TAG) {
-            $this->warnings[] = EmailValidator::RFC5322_DOMAINLITERAL;
-            return;
-        }
-
-        $this->warnings[] = EmailValidator::RFC5321_ADDRESSLITERAL;
-
-        $IPv6       = substr($addressLiteral, 5);
-        //Daniel Marschall's new IPv6 testing strategy
-        $matchesIP  = explode(':', $IPv6);
-        $groupCount = count($matchesIP);
-        $colons     = strpos($IPv6, '::');
-
-        if (count(preg_grep('/^[0-9A-Fa-f]{0,4}$/', $matchesIP, PREG_GREP_INVERT)) !== 0) {
-            // Check for unmatched characters
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_BADCHAR;
-        }
-
-        if ($colons === false) {
-            // We need exactly the right number of groups
-            if ($groupCount !== $maxGroups) {
-                $this->warnings[] = EmailValidator::RFC5322_IPV6_GRPCOUNT;
-            }
-        } else {
-            if ($colons !== strrpos($IPv6, '::')) {
-                $this->warnings[] = EmailValidator::RFC5322_IPV6_2X2XCOLON;
-            } else {
-                if ($colons === 0 || $colons === (strlen($IPv6) - 2)) {
-                    // RFC 4291 allows :: at the start or end of an address
-                    //with 7 other groups in addition
-                    ++$maxGroups;
-                }
-
-                if ($groupCount > $maxGroups) {
-                    $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
-                } elseif ($groupCount === $maxGroups) {
-                    // Eliding a single "::"
-                    $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
-                }
-            }
-        }
-
-
-        return $addressLiteral;
+        return $this->doParseDomainLiteral();
     }
 
     /**
@@ -235,7 +124,7 @@ class EmailParser
             || $this->lexer->token['type'] === EmailLexer::C_DEL)) {
             throw new \InvalidArgumentException('ERR_EXPECTING_QPAIR');
         }
-        // SP & HTAB are allowed
+
         $this->warnings[] = EmailValidator::DEPREC_QP;
     }
 
@@ -312,11 +201,6 @@ class EmailParser
         }
     }
 
-    /**
-     * parseFWS
-     *
-     * @throw InvalidArgumentException
-     */
     private function parseFWS()
     {
         $previous = $this->lexer->getPrevious();
@@ -470,5 +354,135 @@ class EmailParser
         } while ($this->lexer->token);
 
         return $domain;
+    }
+
+    private function doParseDomainLiteral()
+    {
+        $IPv6TAG = false;
+        $addressLiteral = '';
+        do {
+            if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
+                throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
+            } elseif ($this->lexer->token['type'] === EmailLexer::INVALID ||
+                $this->lexer->token['type'] === EmailLexer::C_DEL   ||
+                $this->lexer->token['type'] === EmailLexer::S_LF
+            ) {
+                $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
+            }
+            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {
+                throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
+            }
+            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_HTAB, EmailLexer::S_SP))) {
+                $this->warnings[] = EmailValidator::CFWS_FWS;
+                $this->parseFWS();
+            }
+            if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
+                throw new \InvalidArgumentException("ERR_CR_NO_LF");
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
+                $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
+                $addressLiteral .= $this->lexer->token['value'];
+                $this->lexer->moveNext();
+                $this->validateQuotedPair();
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_IPV6TAG) {
+                $IPv6TAG = true;
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEQBRACKET) {
+                break;
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_SP ||
+                $this->lexer->token['type'] === EmailLexer::S_HTAB ||
+                $this->lexer->token['type'] === EmailLexer::CRLF
+            ) {
+                $this->parseFWS();
+            }
+            $addressLiteral .= $this->lexer->token['value'];
+
+        } while ($this->lexer->moveNext());
+
+        $addressLiteral = str_replace('[', '', $addressLiteral);
+        $addressLiteral = $this->checkIPV4Tag($addressLiteral);
+
+        if (false === $addressLiteral) {
+            return $addressLiteral;
+        }
+
+        if (!$IPv6TAG) {
+            $this->warnings[] = EmailValidator::RFC5322_DOMAINLITERAL;
+            return $addressLiteral;
+        }
+
+        $this->warnings[] = EmailValidator::RFC5321_ADDRESSLITERAL;
+
+        $this->checkIPV6Tag($addressLiteral);
+
+        return $addressLiteral;
+    }
+
+    private function checkIPV4Tag($addressLiteral)
+    {
+        $matchesIP  = array();
+
+        // Extract IPv4 part from the end of the address-literal (if there is one)
+        if (preg_match(
+                '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/',
+                $addressLiteral,
+                $matchesIP
+            ) > 0
+        ) {
+            $index = strrpos($addressLiteral, $matchesIP[0]);
+            if ($index === 0) {
+                $this->warnings[] = EmailValidator::RFC5321_ADDRESSLITERAL;
+                return false;
+            }
+            // Convert IPv4 part to IPv6 format for further testing
+            $addressLiteral = substr($addressLiteral, 0, $index) . '0:0';
+        }
+
+        return $addressLiteral;
+    }
+
+    public function checkIPV6Tag($addressLiteral, $maxGroups = 8)
+    {
+        $IPv6       = substr($addressLiteral, 5);
+        //Daniel Marschall's new IPv6 testing strategy
+        $matchesIP  = explode(':', $IPv6);
+        $groupCount = count($matchesIP);
+        $colons     = strpos($IPv6, '::');
+
+        if (count(preg_grep('/^[0-9A-Fa-f]{0,4}$/', $matchesIP, PREG_GREP_INVERT)) !== 0) {
+            // Check for unmatched characters
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_BADCHAR;
+        }
+
+        if ($colons === false) {
+            // We need exactly the right number of groups
+            if ($groupCount !== $maxGroups) {
+                $this->warnings[] = EmailValidator::RFC5322_IPV6_GRPCOUNT;
+            }
+        } else {
+            if ($colons !== strrpos($IPv6, '::')) {
+                $this->warnings[] = EmailValidator::RFC5322_IPV6_2X2XCOLON;
+            } else {
+                if ($colons === 0 || $colons === (strlen($IPv6) - 2)) {
+                    // RFC 4291 allows :: at the start or end of an address
+                    //with 7 other groups in addition
+                    ++$maxGroups;
+                }
+
+                if ($groupCount > $maxGroups) {
+                    $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
+                } elseif ($groupCount === $maxGroups) {
+                    // Eliding a single "::"
+                    $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
+                }
+            }
+        }
+
+        $prev = $this->lexer->getPrevious();
+        if ($prev['type'] === EmailLexer::S_COLON) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
+        }
     }
 }

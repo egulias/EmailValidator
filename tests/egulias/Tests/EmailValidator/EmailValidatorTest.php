@@ -215,8 +215,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 array(
-                    EmailValidator::RFC5322_IPV6_COLONEND,
                     EmailValidator::RFC5321_ADDRESSLITERAL,
+                    EmailValidator::RFC5322_IPV6_COLONEND,
                     EmailValidator::DNSWARN_NO_RECORD,
                 ),
                 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:]'
