@@ -102,14 +102,6 @@ class EmailParser
             if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
                 throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET) {
-                try {
-                    $this->lexer->find(EmailLexer::S_CLOSEQBRACKET);
-                } catch (\RuntimeException $e) {
-                    throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
-                }
-                $this->parseDomainLiteral();
-            }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
                 try {
@@ -132,12 +124,7 @@ class EmailParser
                 $this->warnings[] = EmailValidator::RFC5322_LABEL_TOOLONG;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_SP ||
-                $this->lexer->token['type'] === EmailLexer::S_HTAB ||
-                $this->lexer->token['type'] === EmailLexer::S_CR ||
-                $this->lexer->token['type'] === EmailLexer::S_LF ||
-                $this->lexer->token['type'] === EmailLexer::CRLF
-            ) {
+            if ($this->isFWS()) {
                 $this->parseFWS();
             }
             $domain .= $this->lexer->token['value'];
@@ -217,10 +204,8 @@ class EmailParser
             $addressLiteral .= $this->lexer->token['value'];
 
         } while ($this->lexer->moveNext());
-        // Revision 2.7: Daniel Marschall's new IPv6 testing strategy
         $prev = $this->lexer->getPrevious();
         if ($prev['type'] === EmailLexer::S_COLON) {
-            // Address ends with a single colon
             $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
         }
 
@@ -337,14 +322,8 @@ class EmailParser
                 throw new \InvalidArgumentException('ERR_DOT_END');
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                if ($this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
-                    $this->warnings[] = EmailValidator::DEPREC_QP;
-                }
-                if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
-                    throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
-                }
-            }
+            $this->warnEscaping();
+
 
             if ($this->lexer->isNextTokenAny(
                 array(
@@ -355,12 +334,7 @@ class EmailParser
                 throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_SP ||
-                $this->lexer->token['type'] === EmailLexer::S_HTAB ||
-                $this->lexer->token['type'] === EmailLexer::S_CR ||
-                $this->lexer->token['type'] === EmailLexer::S_LF ||
-                $this->lexer->token['type'] === EmailLexer::CRLF
-            ) {
+            if ($this->isFWS()) {
                 $this->parseFWS();
             }
 
@@ -387,12 +361,7 @@ class EmailParser
                 throw new \InvalidArgumentException('ERR_UNCLOSEDCOMMENT');
             }
 
-            //scaping in a comment
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                if ($this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
-                    $this->warnings[] = EmailValidator::DEPREC_QP;
-                }
-            }
+            $this->warnEscaping();
             $this->lexer->moveNext();
         }
 
@@ -446,5 +415,38 @@ class EmailParser
         if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
             throw new \InvalidArgumentException('ERR_CONSECUTIVEDOTS');
         }
+    }
+
+    private function isFWS()
+    {
+        if ($this->lexer->token['type'] === EmailLexer::S_SP ||
+            $this->lexer->token['type'] === EmailLexer::S_HTAB ||
+            $this->lexer->token['type'] === EmailLexer::S_CR ||
+            $this->lexer->token['type'] === EmailLexer::S_LF ||
+            $this->lexer->token['type'] === EmailLexer::CRLF
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function warnEscaping()
+    {
+        if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
+            return false;
+        }
+
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+        }
+
+        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
+            return false;
+        }
+
+        $this->warnings[] = EmailValidator::DEPREC_QP;
+        return true;
+
     }
 }
