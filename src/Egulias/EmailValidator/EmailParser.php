@@ -324,7 +324,6 @@ class EmailParser
 
             $this->warnEscaping();
 
-
             if ($this->lexer->isNextTokenAny(
                 array(
                     EmailLexer::INVALID, EmailLexer::S_LOWERTHAN, EmailLexer::S_GREATERTHAN
@@ -384,15 +383,17 @@ class EmailParser
     {
         $previous = $this->lexer->getPrevious();
 
-        if ($this->lexer->token['type'] === EmailLexer::CRLF && $this->lexer->isNextToken(EmailLexer::CRLF)) {
-            throw new \InvalidArgumentException("ERR_FWS_CRLF_X2");
+        if ($this->lexer->token['type'] === EmailLexer::CRLF) {
+            if ($this->lexer->isNextToken(EmailLexer::CRLF)) {
+                throw new \InvalidArgumentException("ERR_FWS_CRLF_X2");
+            }
+            if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
+                throw new \InvalidArgumentException("ERR_FWS_CRLF_END");
+            }
         }
+
         if ($this->lexer->token['type'] === EmailLexer::S_CR) {
             throw new \InvalidArgumentException("ERR_CR_NO_LF");
-        }
-        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB)) &&
-            $this->lexer->token['type'] === EmailLexer::CRLF ) {
-                throw new \InvalidArgumentException("ERR_FWS_CRLF_END");
         }
 
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
