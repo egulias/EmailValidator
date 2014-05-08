@@ -64,11 +64,7 @@ class EmailParser
      */
     private function parseDomainPart()
     {
-        $domain = '';
         $this->lexer->moveNext();
-        if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
-        }
 
         if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
             throw new \InvalidArgumentException('ERR_DOT_START');
@@ -83,53 +79,7 @@ class EmailParser
             $this->parseComments();
         }
 
-        do {
-            $prev = $this->lexer->getPrevious();
-
-            if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-                throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
-            }
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
-                $this->parseComments();
-                $this->lexer->moveNext();
-            }
-
-            $this->checkConsecutiveDots();
-
-            if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-                throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
-            }
-
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
-                try {
-                    $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
-                } catch (\RuntimeException $e) {
-                    throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
-                }
-                $this->parseDomainLiteral();
-            }
-
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
-                && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
-            }
-
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
-                $prev['type'] === EmailLexer::GENERIC &&
-                strlen($prev['value']) > 63
-            ) {
-                $this->warnings[] = EmailValidator::RFC5322_LABEL_TOOLONG;
-            }
-
-            if ($this->isFWS()) {
-                $this->parseFWS();
-            }
-            $domain .= $this->lexer->token['value'];
-            $this->lexer->moveNext();
-        } while ($this->lexer->token);
+        $domain = $this->doParseDomainPart();
 
         $prev = $this->lexer->getPrevious();
         $length = strlen($prev['value']);
@@ -466,5 +416,59 @@ class EmailParser
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
             throw new \InvalidArgumentException("ERR_FWS_CRLF_END");
         }
+    }
+
+    private function doParseDomainPart()
+    {
+        $domain = '';
+        do {
+            $prev = $this->lexer->getPrevious();
+
+            if ($this->lexer->token['type'] === EmailLexer::S_AT) {
+                throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
+                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
+                $this->parseComments();
+                $this->lexer->moveNext();
+            }
+
+            $this->checkConsecutiveDots();
+
+            if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+                throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
+            }
+
+            if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
+                try {
+                    $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
+                } catch (\RuntimeException $e) {
+                    throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
+                }
+                $this->parseDomainLiteral();
+            }
+
+            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
+                && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
+                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            }
+
+            if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
+                $prev['type'] === EmailLexer::GENERIC &&
+                strlen($prev['value']) > 63
+            ) {
+                $this->warnings[] = EmailValidator::RFC5322_LABEL_TOOLONG;
+            }
+
+            if ($this->isFWS()) {
+                $this->parseFWS();
+            }
+            $domain .= $this->lexer->token['value'];
+            $this->lexer->moveNext();
+        } while ($this->lexer->token);
+
+        return $domain;
     }
 }
