@@ -2,6 +2,8 @@
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\Parser\LocalPart;
+
 /**
  * EmailValidator
  *
@@ -166,7 +168,7 @@ class EmailValidator
         return $checked;
     }
 
-    public function addTLDWarnings()
+    protected function addTLDWarnings()
     {
         if (!in_array(self::DNSWARN_NO_RECORD, $this->warnings) &&
             !in_array(self::DNSWARN_NO_MX_RECORD, $this->warnings) &&
