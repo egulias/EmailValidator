@@ -290,13 +290,4 @@ class DomainPart extends Parser
         }
     }
 
-    protected function isUnclosedComment()
-    {
-        try {
-            $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);
-            return true;
-        } catch (\RuntimeException $e) {
-            throw new \InvalidArgumentException('ERR_UNCLOSEDCOMMENT');
-        }
-    }
 }

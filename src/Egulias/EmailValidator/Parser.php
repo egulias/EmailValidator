@@ -39,14 +39,9 @@ abstract class Parser
      */
     protected function parseComments()
     {
+        $this->isUnclosedComment();
         $this->warnings[] = EmailValidator::CFWS_COMMENT;
         while (!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
-            try {
-                $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);
-            } catch (\RuntimeException $e) {
-                throw new \InvalidArgumentException('ERR_UNCLOSEDCOMMENT');
-            }
-
             $this->warnEscaping();
             $this->lexer->moveNext();
         }
@@ -58,6 +53,16 @@ abstract class Parser
 
         if ($this->lexer->isNextToken(EmailLexer::S_AT)) {
             $this->warnings[] = EmailValidator::DEPREC_CFWS_NEAR_AT;
+        }
+    }
+
+    protected function isUnclosedComment()
+    {
+        try {
+            $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);
+            return true;
+        } catch (\RuntimeException $e) {
+            throw new \InvalidArgumentException('ERR_UNCLOSEDCOMMENT');
         }
     }
 
