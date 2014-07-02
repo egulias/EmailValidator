@@ -12,8 +12,11 @@ use Egulias\EmailValidator\Parser\LocalPart;
  */
 class EmailParser
 {
+    const EMAIL_MAX_LENGTH = 254;
+
     protected $warnings = array();
     protected $domainPart = '';
+    protected $localPart = '';
     protected $lexer;
     protected $localPartParser;
     protected $domainPartParser;
@@ -35,23 +38,19 @@ class EmailParser
 
         $this->localPartParser->parse($str);
         $this->domainPartParser->parse($str);
-        $this->domainPart = $this->domainPartParser->getDomainPart($str);
 
-        $parts = explode('@', $str);
+        $this->setParts($str);
 
-        $this->longEmailWarning($parts[0], $this->domainPart);
-
-        return array('local' => $parts[0], 'domain' => $this->domainPart);
+        return array('local' => $this->localPart, 'domain' => $this->domainPart);
     }
 
     public function getWarnings()
     {
-        if (!$this->warnings) {
-            $localPartWarnings = $this->localPartParser->getWarnings();
-            $domainPartWarnings = $this->domainPartParser->getWarnings();
+        $localPartWarnings = $this->localPartParser->getWarnings();
+        $domainPartWarnings = $this->domainPartParser->getWarnings();
 
-            $this->warnings = array_merge($localPartWarnings, $domainPartWarnings);
-        }
+        $this->warnings = array_merge($localPartWarnings, $domainPartWarnings);
+        $this->addLongEmailWarning($this->localPart, $this->domainPart);
 
         return $this->warnings;
     }
@@ -59,6 +58,13 @@ class EmailParser
     public function getParsedDomainPart()
     {
         return $this->domainPart;
+    }
+
+    protected function setParts($email)
+    {
+        $parts = explode('@', $email);
+        $this->domainPart = $this->domainPartParser->getDomainPart();
+        $this->localPart = $parts[0];
     }
 
     protected function hasAtToken()
@@ -72,9 +78,9 @@ class EmailParser
         return true;
     }
 
-    protected function longEmailWarning($localPart, $parsedDomainPart)
+    protected function addLongEmailWarning($localPart, $parsedDomainPart)
     {
-        if (strlen($localPart . '@' . $parsedDomainPart) >254) {
+        if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAIL_MAX_LENGTH) {
             $this->warnings[] = EmailValidator::RFC5322_TOOLONG;
         }
     }

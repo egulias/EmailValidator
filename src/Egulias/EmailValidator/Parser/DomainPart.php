@@ -9,6 +9,7 @@ use Egulias\EmailValidator\EmailValidator;
 
 class DomainPart extends Parser
 {
+    const DOMAIN_MAX_LENGTH = 254;
     protected $domainPart = '';
 
     public function parse($domainPart)
@@ -31,7 +32,7 @@ class DomainPart extends Parser
         $domain = $this->doParseDomainPart();
 
         $prev = $this->lexer->getPrevious();
-        $length = strlen($prev['value']);
+        $length = strlen($domain);
 
         if ($prev['type'] === EmailLexer::S_DOT) {
             throw new \InvalidArgumentException('ERR_DOT_END');
@@ -39,7 +40,7 @@ class DomainPart extends Parser
         if ($prev['type'] === EmailLexer::S_HYPHEN) {
             throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
         }
-        if ($length > 254) {
+        if ($length > self::DOMAIN_MAX_LENGTH) {
             $this->warnings[] = EmailValidator::RFC5322_DOMAIN_TOOLONG;
         }
         if ($prev['type'] === EmailLexer::S_CR) {
@@ -51,6 +52,49 @@ class DomainPart extends Parser
     public function getDomainPart()
     {
         return $this->domainPart;
+    }
+
+    public function checkIPV6Tag($addressLiteral, $maxGroups = 8)
+    {
+        $prev = $this->lexer->getPrevious();
+        if ($prev['type'] === EmailLexer::S_COLON) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
+        }
+
+        $IPv6       = substr($addressLiteral, 5);
+        //Daniel Marschall's new IPv6 testing strategy
+        $matchesIP  = explode(':', $IPv6);
+        $groupCount = count($matchesIP);
+        $colons     = strpos($IPv6, '::');
+
+        if (count(preg_grep('/^[0-9A-Fa-f]{0,4}$/', $matchesIP, PREG_GREP_INVERT)) !== 0) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_BADCHAR;
+        }
+
+        if ($colons === false) {
+            // We need exactly the right number of groups
+            if ($groupCount !== $maxGroups) {
+                $this->warnings[] = EmailValidator::RFC5322_IPV6_GRPCOUNT;
+            }
+            return;
+        }
+
+        if ($colons !== strrpos($IPv6, '::')) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_2X2XCOLON;
+            return;
+        }
+
+        if ($colons === 0 || $colons === (strlen($IPv6) - 2)) {
+            // RFC 4291 allows :: at the start or end of an address
+            //with 7 other groups in addition
+            ++$maxGroups;
+        }
+
+        if ($groupCount > $maxGroups) {
+            $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
+        } elseif ($groupCount === $maxGroups) {
+            $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
+        }
     }
 
     protected function doParseDomainPart()
@@ -187,49 +231,6 @@ class DomainPart extends Parser
         }
 
         return $addressLiteral;
-    }
-
-    public function checkIPV6Tag($addressLiteral, $maxGroups = 8)
-    {
-        $prev = $this->lexer->getPrevious();
-        if ($prev['type'] === EmailLexer::S_COLON) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
-        }
-
-        $IPv6       = substr($addressLiteral, 5);
-        //Daniel Marschall's new IPv6 testing strategy
-        $matchesIP  = explode(':', $IPv6);
-        $groupCount = count($matchesIP);
-        $colons     = strpos($IPv6, '::');
-
-        if (count(preg_grep('/^[0-9A-Fa-f]{0,4}$/', $matchesIP, PREG_GREP_INVERT)) !== 0) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_BADCHAR;
-        }
-
-        if ($colons === false) {
-            // We need exactly the right number of groups
-            if ($groupCount !== $maxGroups) {
-                $this->warnings[] = EmailValidator::RFC5322_IPV6_GRPCOUNT;
-            }
-            return;
-        }
-
-        if ($colons !== strrpos($IPv6, '::')) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_2X2XCOLON;
-            return;
-        }
-
-        if ($colons === 0 || $colons === (strlen($IPv6) - 2)) {
-            // RFC 4291 allows :: at the start or end of an address
-            //with 7 other groups in addition
-            ++$maxGroups;
-        }
-
-        if ($groupCount > $maxGroups) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
-        } elseif ($groupCount === $maxGroups) {
-            $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
-        }
     }
 
     protected function checkDomainPartExceptions($prev)

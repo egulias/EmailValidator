@@ -84,7 +84,6 @@ class EmailLexer extends AbstractLexer
         if (!$search->lookahead) {
             throw new \UnexpectedValueException($type . ' not found');
         }
-
     }
 
     /**
