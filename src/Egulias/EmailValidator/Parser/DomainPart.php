@@ -26,7 +26,7 @@ class DomainPart extends Parser
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
             $this->warnings[] = EmailValidator::DEPREC_COMMENT;
-            $this->parseComments();
+            $this->parseDomainComments();
         }
 
         $domain = $this->doParseDomainPart();
@@ -273,6 +273,30 @@ class DomainPart extends Parser
             strlen($prev['value']) > 63
         ) {
             $this->warnings[] = EmailValidator::RFC5322_LABEL_TOOLONG;
+        }
+    }
+
+    protected function parseDomainComments()
+    {
+        $this->isUnclosedComment();
+        while (!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
+            $this->warnEscaping();
+            $this->lexer->moveNext();
+        }
+
+        $this->lexer->moveNext();
+        if ($this->lexer->isNextToken(EmailLexer::S_DOT)) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+        }
+    }
+
+    protected function isUnclosedComment()
+    {
+        try {
+            $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);
+            return true;
+        } catch (\RuntimeException $e) {
+            throw new \InvalidArgumentException('ERR_UNCLOSEDCOMMENT');
         }
     }
 }

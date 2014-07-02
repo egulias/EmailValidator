@@ -33,7 +33,6 @@ abstract class Parser
         $this->warnings[] = EmailValidator::DEPREC_QP;
     }
 
-
     /**
      * @return string the the comment
      * @throws \InvalidArgumentException
@@ -53,7 +52,7 @@ abstract class Parser
         }
 
         $this->lexer->moveNext();
-        if ($this->lexer->isNextToken(EmailLexer::GENERIC) || EmailLexer::S_EMPTY === $this->lexer->peek()) {
+        if ($this->lexer->isNextTokenAny(array(EmailLexer::GENERIC, EmailLexer::S_EMPTY))) {
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
 
