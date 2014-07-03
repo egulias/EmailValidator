@@ -35,7 +35,6 @@ class EmailValidator
     const ERR_FWS_CRLF_END       = 149;
     const ERR_CR_NO_LF           = 150;
     const ERR_DEPREC_REACHED     = 151;
-
     const RFC5321_TLD             = 9;
     const RFC5321_TLDNUMERIC      = 10;
     const RFC5321_QUOTEDSTRING    = 11;
@@ -70,7 +69,6 @@ class EmailValidator
     protected $warnings = array();
     protected $error;
     protected $threshold = 255;
-    protected $emailParts = array();
 
     public function __construct()
     {
@@ -81,7 +79,6 @@ class EmailValidator
     {
         try {
             $this->parser->parse((string)$email);
-            $this->emailParts = explode('@', $email);
             $this->warnings = $this->parser->getWarnings();
         } catch (\Exception $e) {
             $rClass = new \ReflectionClass($this);
@@ -93,6 +90,7 @@ class EmailValidator
         if ($checkDNS) {
             $dns = $this->checkDNS();
         }
+
         if ($this->hasWarnings() && ((int) max($this->warnings) > $this->threshold)) {
             $this->error = self::ERR_DEPREC_REACHED;
 

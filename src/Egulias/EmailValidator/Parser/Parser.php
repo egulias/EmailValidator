@@ -1,7 +1,9 @@
 <?php
 
+namespace Egulias\EmailValidator\Parser;
 
-namespace Egulias\EmailValidator;
+use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\EmailValidator;
 
 abstract class Parser
 {
