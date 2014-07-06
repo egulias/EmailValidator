@@ -1,16 +1,12 @@
 <?php
 
-
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\EmailValidator;
 
-/**
- * Class LocalPartParser
- * @author Eduardo Gulias Davis <eduardo.gulias@bodaclick.com>
-@copyright 2014 Bodaclick */
+
 class LocalPart extends Parser
 {
     public function parse($localPart)
