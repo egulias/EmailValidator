@@ -86,7 +86,7 @@ class EmailValidator
             return false;
         }
 
-        $dns = false;
+        $dns = true;
         if ($checkDNS) {
             $dns = $this->checkDNS();
         }
