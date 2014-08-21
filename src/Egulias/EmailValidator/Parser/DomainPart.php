@@ -235,12 +235,18 @@ class DomainPart extends Parser
 
     protected function checkDomainPartExceptions($prev)
     {
+        if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
+            throw new \InvalidArgumentException('ERR_COMMA_IN_DOMAIN');
+        }
+
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
             throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
         }
+
         if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
+
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
             throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
         }

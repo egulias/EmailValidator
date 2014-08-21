@@ -116,13 +116,13 @@ class EmailLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-zA-Z_]+[4,6]?',
+            '[a-zA-Z_]+[46]?',
             '[0-9]+',
             '\r\n',
             '::',
             '\s+',
-            '[\x1-\x1F]+',
-            '.'
+            '[\x10-\x1F]+',
+            '.',
             );
     }
 
@@ -149,7 +149,7 @@ class EmailLexer extends AbstractLexer
             return $this->charValue[$value];
         }
 
-        if (preg_match('/[\x1-\x1F]+/', $value)) {
+        if (preg_match('/[\x10-\x1F]+/', $value)) {
             return self::INVALID;
         }
 
