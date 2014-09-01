@@ -34,11 +34,15 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('fabien_potencier@example.fr'),
             array('example@localhost'),
             array('fab\'ien@symfony.com'),
+            array('fab\ ien@symfony.com'),
             array('example((example))@fakedfake.co.uk'),
             array('example@faked(fake).co.uk'),
             array('fabien+@symfony.com'),
             array('инфо@письмо.рф'),
-
+            array('"username"@example.com'),
+            array('"user,name"@example.com'),
+            array('"user name"@example.com'),
+            array('"user@name"@example.com'),
         );
     }
 
@@ -66,6 +70,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('example@(fake).com'),
             array('example@(fake.com'),
             array('username@example,com'),
+            array('usern,ame@example.com'),
+            array('user[na]me@example.com'),
         );
     }
 
@@ -105,14 +111,13 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(EmailValidator::ERR_CR_NO_LF, "example@exa\rmple.co.uk"),
             array(EmailValidator::ERR_CR_NO_LF, "example@[\r]"),
             array(EmailValidator::ERR_CR_NO_LF, "exam\rple@example.co.uk"),
-            array(EmailValidator::ERR_CR_NO_LF, "\"\r\"@localhost"),
         );
     }
 
     /**
      * @dataProvider getInvalidEmailsWithWarnings
      */
-    public function testInvalidEmailsWithWarningsCheck($warnings, $email)
+    public function testValidEmailsWithWarningsCheck($warnings, $email)
     {
         $this->assertTrue($this->validator->isValid($email, true));
 
@@ -138,6 +143,13 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
                     EmailValidator::CFWS_FWS,
                 ),
                 "\"\t\"@example.co.uk"
+            ),
+            array(
+                array(
+                    EmailValidator::RFC5321_QUOTEDSTRING,
+                    EmailValidator::CFWS_FWS,
+                ),
+                "\"\r\"@example.co.uk"
             ),
             array(
                 array(

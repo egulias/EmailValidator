@@ -102,11 +102,30 @@ abstract class Parser
 
     protected function isFWS()
     {
+        if ($this->escaped()) {
+            return false;
+        }
+
         if ($this->lexer->token['type'] === EmailLexer::S_SP ||
             $this->lexer->token['type'] === EmailLexer::S_HTAB ||
             $this->lexer->token['type'] === EmailLexer::S_CR ||
             $this->lexer->token['type'] === EmailLexer::S_LF ||
             $this->lexer->token['type'] === EmailLexer::CRLF
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function escaped()
+    {
+        $previous = $this->lexer->getPrevious();
+
+        if ($previous['type'] === EmailLexer::S_BACKSLASH
+            &&
+            ($this->lexer->token['type'] === EmailLexer::S_SP ||
+            $this->lexer->token['type'] === EmailLexer::S_HTAB)
         ) {
             return true;
         }

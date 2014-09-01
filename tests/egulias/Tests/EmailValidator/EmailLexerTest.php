@@ -36,6 +36,14 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(EmailLexer::S_HTAB, $lexer->token['type']);
     }
 
+    public function testLexerSearchToken()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput("foo\tbar");
+        $lexer->moveNext();
+        $this->assertTrue($lexer->find(EmailLexer::S_HTAB));
+    }
+
     public function getTokens()
     {
         return array(
