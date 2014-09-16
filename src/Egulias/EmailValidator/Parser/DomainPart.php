@@ -295,5 +295,4 @@ class DomainPart extends Parser
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
     }
-
 }

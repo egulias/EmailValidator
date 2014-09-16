@@ -2,8 +2,6 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\Parser\LocalPart;
-
 /**
  * EmailValidator
  *
