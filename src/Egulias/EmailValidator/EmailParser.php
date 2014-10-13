@@ -36,6 +36,10 @@ class EmailParser
             throw new \InvalidArgumentException('ERR_NOLOCALPART');
         }
 
+        if ($this->lexer->hasInvalidTokens()) {
+            throw new \InvalidArgumentException('ERR_INVALID_ATEXT');
+        }
+
         $this->localPartParser->parse($str);
         $this->domainPartParser->parse($str);
 

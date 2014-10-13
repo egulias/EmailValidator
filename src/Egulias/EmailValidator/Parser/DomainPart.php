@@ -23,6 +23,9 @@ class DomainPart extends Parser
         if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
             throw new \InvalidArgumentException('ERR_NODOMAIN');
         }
+        if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
+            throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
+        }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
             $this->warnings[] = EmailValidator::DEPREC_COMMENT;
@@ -102,6 +105,10 @@ class DomainPart extends Parser
         $domain = '';
         do {
             $prev = $this->lexer->getPrevious();
+
+            if ($this->lexer->token['type'] === EmailLexer::S_SLASH) {
+                throw new \InvalidArgumentException('ERR_DOMAIN_CHAR_NOT_ALLOWED');
+            }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
