@@ -24,7 +24,7 @@ More advanced example (returns detailed diagnostic error codes):
 ```php
 <?php
 
-use egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\EmailValidator;
 
 $validator = new EmailValidator;
 $email = 'dominic@sayers.cc';
