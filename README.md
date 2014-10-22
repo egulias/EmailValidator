@@ -2,7 +2,12 @@ EmailValidator [![Build Status](https://travis-ci.org/egulias/EmailValidator.png
 =============================
 
 ##Installation##
-Install via composer. Add to your current composer.json ```require``` key: ```"egulias/email-validator":"~1.0" ```
+
+Run the command below to install via Composer
+
+```shell
+composer require egulias/email-validator
+```
 
 ##Usage##
 
