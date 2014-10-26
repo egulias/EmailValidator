@@ -81,6 +81,12 @@ class EmailLexer extends AbstractLexer
 
     protected $previous;
 
+    public function reset()
+    {
+        $this->hasInvalidTokens = false;
+        parent::reset();
+    }
+
     public function hasInvalidTokens()
     {
         return $this->hasInvalidTokens;
