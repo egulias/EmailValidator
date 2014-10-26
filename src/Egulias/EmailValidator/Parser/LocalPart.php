@@ -23,12 +23,7 @@ class LocalPart extends Parser
             $closingQuote = $this->checkDQUOTE($closingQuote);
             if ($closingQuote && $parseDQuote) {
                 $parseDQuote = $this->parseDoubleQuote();
-//                $closingQuote = false;
             }
-
-//            if ($closingQuote && !$parseDQuote) {
-//                throw new InvalidArgumentException("ERR_DOUBLE_DQUOTE");
-//            }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
