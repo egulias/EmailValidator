@@ -121,7 +121,7 @@ class EmailLexer extends AbstractLexer
     /**
      * moveNext
      *
-     * @return mixed
+     * @return boolean
      */
     public function moveNext()
     {
@@ -133,7 +133,7 @@ class EmailLexer extends AbstractLexer
     /**
      * Lexical catchable patterns.
      *
-     * @return array
+     * @return string[]
      */
     protected function getCatchablePatterns()
     {
@@ -151,7 +151,7 @@ class EmailLexer extends AbstractLexer
     /**
      * Lexical non-catchable patterns.
      *
-     * @return array
+     * @return string[]
      */
     protected function getNonCatchablePatterns()
     {
@@ -184,6 +184,9 @@ class EmailLexer extends AbstractLexer
         return  self::GENERIC;
     }
 
+    /**
+     * @param string $value
+     */
     protected function isNullType($value)
     {
         if ($value === "\0") {
@@ -193,6 +196,9 @@ class EmailLexer extends AbstractLexer
         return false;
     }
 
+    /**
+     * @param string $value
+     */
     protected function isInvalid($value)
     {
         if (preg_match('/[\x10-\x1F]+/', $value)) {

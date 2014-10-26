@@ -28,6 +28,9 @@ class EmailParser
         $this->domainPartParser = new DomainPart($this->lexer);
     }
 
+    /**
+     * @param string $str
+     */
     public function parse($str)
     {
         $this->lexer->setInput($str);
@@ -82,6 +85,10 @@ class EmailParser
         return true;
     }
 
+    /**
+     * @param string $localPart
+     * @param string $parsedDomainPart
+     */
     protected function addLongEmailWarning($localPart, $parsedDomainPart)
     {
         if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAIL_MAX_LENGTH) {

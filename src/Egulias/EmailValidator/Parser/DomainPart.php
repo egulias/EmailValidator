@@ -217,6 +217,9 @@ class DomainPart extends Parser
         return $addressLiteral;
     }
 
+    /**
+     * @param string $addressLiteral
+     */
     protected function checkIPV4Tag($addressLiteral)
     {
         $matchesIP  = array();
