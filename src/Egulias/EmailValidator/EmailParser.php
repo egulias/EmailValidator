@@ -28,12 +28,19 @@ class EmailParser
         $this->domainPartParser = new DomainPart($this->lexer);
     }
 
+    /**
+     * @param string $str
+     */
     public function parse($str)
     {
         $this->lexer->setInput($str);
 
         if (!$this->hasAtToken()) {
             throw new \InvalidArgumentException('ERR_NOLOCALPART');
+        }
+
+        if ($this->lexer->hasInvalidTokens()) {
+            throw new \InvalidArgumentException('ERR_INVALID_ATEXT');
         }
 
         $this->localPartParser->parse($str);
@@ -78,6 +85,10 @@ class EmailParser
         return true;
     }
 
+    /**
+     * @param string $localPart
+     * @param string $parsedDomainPart
+     */
     protected function addLongEmailWarning($localPart, $parsedDomainPart)
     {
         if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAIL_MAX_LENGTH) {

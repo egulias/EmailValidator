@@ -124,8 +124,7 @@ abstract class Parser
 
         if ($previous['type'] === EmailLexer::S_BACKSLASH
             &&
-            ($this->lexer->token['type'] === EmailLexer::S_SP ||
-            $this->lexer->token['type'] === EmailLexer::S_HTAB)
+            $this->lexer->token['type'] !== EmailLexer::GENERIC
         ) {
             return true;
         }
@@ -164,6 +163,7 @@ abstract class Parser
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
+
         $this->warnings[] = EmailValidator::RFC5321_QUOTEDSTRING;
         try {
             $this->lexer->find(EmailLexer::S_DQUOTE);

@@ -44,6 +44,15 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         $this->assertTrue($lexer->find(EmailLexer::S_HTAB));
     }
 
+    public function testLexerHasInvalidTokens()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput(chr(226));
+        $lexer->moveNext();
+        $lexer->moveNext();
+        $this->assertTrue($lexer->hasInvalidTokens());
+    }
+
     public function getTokens()
     {
         return array(
@@ -61,6 +70,7 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
             array("\"", EmailLexer::S_DQUOTE),
             array("-", EmailLexer::S_HYPHEN),
             array("\\", EmailLexer::S_BACKSLASH),
+            array("/", EmailLexer::S_SLASH),
             array("(", EmailLexer::S_OPENPARENTHESIS),
             array(")", EmailLexer::S_CLOSEPARENTHESIS),
             array('<', EmailLexer::S_LOWERTHAN),
@@ -74,7 +84,9 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
             array('{', EmailLexer::S_OPENQBRACKET),
             array('}', EmailLexer::S_CLOSEQBRACKET),
             array('',  EmailLexer::S_EMPTY),
-            array(chr(31),  EmailLexer::INVALID)
+            array(chr(31),  EmailLexer::INVALID),
+            array(chr(226),  EmailLexer::INVALID),
+            array(chr(0),  EmailLexer::C_NUL)
         );
     }
 }
