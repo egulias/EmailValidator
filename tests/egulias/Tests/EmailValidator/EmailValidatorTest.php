@@ -303,4 +303,14 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
+    public function testInvalidEmailsWithDNSAndStrict()
+    {
+        $this->assertFalse($this->validator->isValid('test@test', true, true));
+    }
+
+    public function testInvalidEmailsWithStrict()
+    {
+        $this->assertFalse($this->validator->isValid('"test"@test', false, true));
+    }
 }
