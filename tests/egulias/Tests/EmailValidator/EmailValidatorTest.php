@@ -150,6 +150,16 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($warnings, $this->validator->getWarnings());
     }
 
+    /**
+     * @dataProvider getInvalidEmailsWithWarnings
+     */
+    public function testInvalidEmailsWithDnsCheckAndStrictMode($warnings, $email)
+    {
+        $this->assertFalse($this->validator->isValid($email, true, true));
+
+        $this->assertEquals($warnings, $this->validator->getWarnings());
+    }
+
     public function getInvalidEmailsWithWarnings()
     {
         return array(
@@ -301,12 +311,13 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
             ),
+            array(
+                array(
+                    EmailValidator::DNSWARN_NO_RECORD,
+                ),
+                'test@test'
+            ),
         );
-    }
-
-    public function testInvalidEmailsWithDNSAndStrict()
-    {
-        $this->assertFalse($this->validator->isValid('test@test', true, true));
     }
 
     public function testInvalidEmailsWithStrict()
