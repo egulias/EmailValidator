@@ -84,7 +84,7 @@ class EmailValidator
             return false;
         }
 
-        $dns = false;
+        $dns = true;
         if ($checkDNS) {
             $dns = $this->checkDNS();
         }
@@ -95,12 +95,7 @@ class EmailValidator
             return false;
         }
 
-        return ($strict) ? $this->checkStrict($dns) : true;
-    }
-
-    private function checkStrict($dns)
-    {
-         return !($this->hasWarnings() && !$dns);
+        return !$strict || (!$this->hasWarnings() && $dns);
     }
 
     /**
