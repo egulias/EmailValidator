@@ -6,7 +6,6 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
 use \InvalidArgumentException;
 
-
 class LocalPart extends Parser
 {
     public function parse($localPart)

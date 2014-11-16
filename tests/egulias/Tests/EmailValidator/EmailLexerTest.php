@@ -26,6 +26,17 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals($token, $lexer->token['type']);
     }
 
+    public function testLexerParsesMultipleSpaces()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput('  ');
+        $lexer->moveNext();
+        $lexer->moveNext();
+        $this->assertEquals(EmailLexer::S_SP, $lexer->token['type']);
+        $lexer->moveNext();
+        $this->assertEquals(EmailLexer::S_SP, $lexer->token['type']);
+    }
+
     public function testLexerForTab()
     {
         $lexer = new EmailLexer();
