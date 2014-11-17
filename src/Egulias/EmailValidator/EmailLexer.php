@@ -201,7 +201,7 @@ class EmailLexer extends AbstractLexer
      */
     protected function isInvalid($value)
     {
-        if (preg_match('/[\x10-\x1F]+/', $value)) {
+        if (preg_match('/[\x10-\x1F\x{0001}-\x{000F}\x{0080}-\x{009F}]+/', $value)) {
             return true;
         }
 
@@ -210,5 +210,10 @@ class EmailLexer extends AbstractLexer
         }
 
         return false;
+    }
+
+    protected function getModifiers()
+    {
+        return 'iu';
     }
 }
