@@ -62,6 +62,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     {
         return array(
 
+            array('user  name@example.com'),
+            array('user   name@example.com'),
             array('example.@example.co.uk'),
             array('example@example@example.co.uk'),
             array('(test_exampel@example.fr)'),

@@ -142,7 +142,7 @@ class EmailLexer extends AbstractLexer
             '[0-9]+',
             '\r\n',
             '::',
-            '\s+',
+            '\s+?',
             '[\x10-\x1F]+',
             '.',
             );
