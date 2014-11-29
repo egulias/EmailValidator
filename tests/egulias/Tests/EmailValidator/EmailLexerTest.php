@@ -37,6 +37,62 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(EmailLexer::S_SP, $lexer->token['type']);
     }
 
+    /**
+     * @dataProvider invalidUTF8CharsProvider
+     */
+    public function testLexerParsesInvalidUTF8($char)
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput($char);
+        $lexer->moveNext();
+        $lexer->moveNext();
+
+        $this->assertEquals(EmailLexer::INVALID, $lexer->token['type']);
+    }
+
+    public function invalidUTF8CharsProvider()
+    {
+        $chars = array();
+        for ($i = 0; $i < 0x100; ++$i) {
+            $c = $this->utf8Chr($i);
+            if (preg_match('/(?=\p{Cc})(?=[^\t\n\n\r])/u', $c) && !preg_match('/\x{0000}/u', $c)) {
+                $chars[] = array($c);
+            }
+        }
+
+        return $chars;
+    }
+
+    protected function utf8Chr($code_point)
+    {
+
+        if ($code_point < 0 || 0x10FFFF < $code_point || (0xD800 <= $code_point && $code_point <= 0xDFFF)) {
+            return '';
+        }
+
+        if ($code_point < 0x80) {
+            $hex[0] = $code_point;
+            $ret = chr($hex[0]);
+        } elseif ($code_point < 0x800) {
+            $hex[0] = 0x1C0 | $code_point >> 6;
+            $hex[1] = 0x80  | $code_point & 0x3F;
+            $ret = chr($hex[0]).chr($hex[1]);
+        } elseif ($code_point < 0x10000) {
+            $hex[0] = 0xE0 | $code_point >> 12;
+            $hex[1] = 0x80 | $code_point >> 6 & 0x3F;
+            $hex[2] = 0x80 | $code_point & 0x3F;
+            $ret = chr($hex[0]).chr($hex[1]).chr($hex[2]);
+        } else {
+            $hex[0] = 0xF0 | $code_point >> 18;
+            $hex[1] = 0x80 | $code_point >> 12 & 0x3F;
+            $hex[2] = 0x80 | $code_point >> 6 & 0x3F;
+            $hex[3] = 0x80 | $code_point  & 0x3F;
+            $ret = chr($hex[0]).chr($hex[1]).chr($hex[2]).chr($hex[3]);
+        }
+
+        return $ret;
+    }
+
     public function testLexerForTab()
     {
         $lexer = new EmailLexer();
