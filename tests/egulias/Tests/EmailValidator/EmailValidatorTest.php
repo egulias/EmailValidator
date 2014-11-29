@@ -26,7 +26,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->validator->isValid($email));
     }
 
-    public function testInvalidUTF8Emails()
+    public function testInvalidUTF8Email()
     {
         $validator = new EmailValidator;
         $email     = "\x80\x81\x82@\x83\x84\x85.\x86\x87\x88";

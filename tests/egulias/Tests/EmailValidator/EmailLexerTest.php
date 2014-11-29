@@ -54,8 +54,8 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
     {
         $chars = array();
         for ($i = 0; $i < 0x100; ++$i) {
-            $c = $this->utf8_chr($i);
-            if (preg_match('/[\x{0001}-\x{000F}\x{0080}-\x{009F}]/u', $c)) {
+            $c = $this->utf8Chr($i);
+            if (preg_match('/(?=\p{Cc})(?=[^\t\n\n\r])/u', $c) && !preg_match('/\x{0000}/u', $c)) {
                 $chars[] = array($c);
             }
         }
@@ -63,7 +63,8 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         return $chars;
     }
 
-    protected function utf8_chr($code_point) {
+    protected function utf8Chr($code_point)
+    {
 
         if ($code_point < 0 || 0x10FFFF < $code_point || (0xD800 <= $code_point && $code_point <= 0xDFFF)) {
             return '';
@@ -72,16 +73,16 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         if ($code_point < 0x80) {
             $hex[0] = $code_point;
             $ret = chr($hex[0]);
-        } else if ($code_point < 0x800) {
+        } elseif ($code_point < 0x800) {
             $hex[0] = 0x1C0 | $code_point >> 6;
             $hex[1] = 0x80  | $code_point & 0x3F;
             $ret = chr($hex[0]).chr($hex[1]);
-        } else if ($code_point < 0x10000) {
+        } elseif ($code_point < 0x10000) {
             $hex[0] = 0xE0 | $code_point >> 12;
             $hex[1] = 0x80 | $code_point >> 6 & 0x3F;
             $hex[2] = 0x80 | $code_point & 0x3F;
             $ret = chr($hex[0]).chr($hex[1]).chr($hex[2]);
-        } else  {
+        } else {
             $hex[0] = 0xF0 | $code_point >> 18;
             $hex[1] = 0x80 | $code_point >> 12 & 0x3F;
             $hex[2] = 0x80 | $code_point >> 6 & 0x3F;
