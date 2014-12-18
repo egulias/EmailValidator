@@ -108,6 +108,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('test@iana.org \r\n\r\n'),
             array('test@iana.org  \r\n\r\n '),
             array('test@iana/icann.org'),
+            array('test@foo;bar.com'),
         );
     }
 
