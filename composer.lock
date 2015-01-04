@@ -4,11 +4,11 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7c82c4ea93186526be106a60ea69f6f1",
+    "hash": "9e9dff0cc08c7292600453e681201e13",
     "packages": [
         {
             "name": "doctrine/lexer",
-            "version": "dev-master",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
@@ -575,7 +575,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "doctrine/lexer": 20,
         "satooshi/php-coveralls": 20
     },
     "prefer-stable": false,
