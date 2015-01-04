@@ -69,7 +69,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function getInvalidEmails()
     {
         return array(
-
+            array('test@example.com test'),
             array('user  name@example.com'),
             array('user   name@example.com'),
             array('example.@example.co.uk'),
