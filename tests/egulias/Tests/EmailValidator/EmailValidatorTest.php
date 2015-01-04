@@ -174,13 +174,32 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function getInvalidEmailsWithWarnings()
     {
         return array(
-            array(array( EmailValidator::DEPREC_CFWS_NEAR_AT,), 'example @example.co.uk'),
-            array(array( EmailValidator::DEPREC_CFWS_NEAR_AT,), 'example@ example.co.uk'),
-            array(array( EmailValidator::CFWS_COMMENT,), 'example@example(examplecomment).co.uk'),
+            array(
+                array(
+                    EmailValidator::DEPREC_CFWS_NEAR_AT,
+                    EmailValidator::DNSWARN_NO_RECORD
+                ),
+                'example @example.co.uk'
+            ),
+            array(
+                array(
+                    EmailValidator::DEPREC_CFWS_NEAR_AT,
+                    EmailValidator::DNSWARN_NO_RECORD
+                ),
+                'example@ example.co.uk'
+            ),
+            array(
+                array(
+                    EmailValidator::CFWS_COMMENT,
+                    EmailValidator::DNSWARN_NO_RECORD
+                ),
+                'example@example(examplecomment).co.uk'
+            ),
             array(
                 array(
                     EmailValidator::CFWS_COMMENT,
                     EmailValidator::DEPREC_CFWS_NEAR_AT,
+                    EmailValidator::DNSWARN_NO_RECORD,
                 ),
                 'example(examplecomment)@example.co.uk'
             ),
@@ -188,6 +207,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
                 array(
                     EmailValidator::RFC5321_QUOTEDSTRING,
                     EmailValidator::CFWS_FWS,
+                    EmailValidator::DNSWARN_NO_RECORD,
                 ),
                 "\"\t\"@example.co.uk"
             ),
@@ -195,6 +215,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
                 array(
                     EmailValidator::RFC5321_QUOTEDSTRING,
                     EmailValidator::CFWS_FWS,
+                    EmailValidator::DNSWARN_NO_RECORD
                 ),
                 "\"\r\"@example.co.uk"
             ),
@@ -286,12 +307,14 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     EmailValidator::RFC5321_QUOTEDSTRING,
+                    EmailValidator::DNSWARN_NO_RECORD
                 ),
                 '"example"@example.co.uk'
             ),
             array(
                 array(
                     EmailValidator::RFC5322_LOCAL_TOOLONG,
+                    EmailValidator::DNSWARN_NO_RECORD
                 ),
                 'too_long_localpart_too_long_localpart_too_long_localpart_too_long_localpart@example.co.uk'
             ),
