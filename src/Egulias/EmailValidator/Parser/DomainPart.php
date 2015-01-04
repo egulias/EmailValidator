@@ -104,6 +104,10 @@ class DomainPart extends Parser
     {
         $domain = '';
         do {
+            if ($this->lexer->token['type'] === EmailLexer::S_SEMICOLON) {
+                throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            }
+
             $prev = $this->lexer->getPrevious();
 
             if ($this->lexer->token['type'] === EmailLexer::S_SLASH) {
