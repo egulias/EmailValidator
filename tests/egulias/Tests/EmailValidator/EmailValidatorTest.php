@@ -55,6 +55,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('"test\ test"@iana.org'),
             array('""@iana.org'),
             array('"\""@iana.org'),
+            array('müller@möller.de'),
         );
     }
 
@@ -110,6 +111,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('test@iana/icann.org'),
             array('test@foo;bar.com'),
             array('test;123@foobar.com'),
+            array('test@example..com'),
         );
     }
 
