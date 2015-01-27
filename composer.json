@@ -18,7 +18,8 @@
     "doctrine/lexer": "~1.0"
   },
   "require-dev" :   {
-    "satooshi/php-coveralls": "dev-master"
+    "satooshi/php-coveralls": "dev-master",
+    "phpunit/phpunit": "~4.4"
   },
   "autoload": {
     "psr-0": {
