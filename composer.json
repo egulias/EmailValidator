@@ -15,7 +15,7 @@
   },
   "require":      {
     "php": ">= 5.3.3",
-    "doctrine/lexer": "~1.0"
+    "doctrine/lexer": "~1.0,>=1.0.1"
   },
   "require-dev" :   {
     "satooshi/php-coveralls": "dev-master",
