@@ -103,21 +103,23 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(EmailLexer::S_HTAB, $lexer->token['type']);
     }
 
+    public function testLexerForUTF8()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput("áÇ@bar.com");
+        $lexer->moveNext();
+        $lexer->moveNext();
+        $this->assertEquals(EmailLexer::GENERIC, $lexer->token['type']);
+        $lexer->moveNext();
+        $this->assertEquals(EmailLexer::GENERIC, $lexer->token['type']);
+    }
+
     public function testLexerSearchToken()
     {
         $lexer = new EmailLexer();
         $lexer->setInput("foo\tbar");
         $lexer->moveNext();
         $this->assertTrue($lexer->find(EmailLexer::S_HTAB));
-    }
-
-    public function testLexerHasInvalidTokens()
-    {
-        $lexer = new EmailLexer();
-        $lexer->setInput(chr(226));
-        $lexer->moveNext();
-        $lexer->moveNext();
-        $this->assertTrue($lexer->hasInvalidTokens());
     }
 
     public function getTokens()
@@ -152,7 +154,7 @@ class EmailLexerTests extends \PHPUnit_Framework_TestCase
             array('}', EmailLexer::S_CLOSEQBRACKET),
             array('',  EmailLexer::S_EMPTY),
             array(chr(31),  EmailLexer::INVALID),
-            array(chr(226),  EmailLexer::INVALID),
+            array(chr(226),  EmailLexer::GENERIC),
             array(chr(0),  EmailLexer::C_NUL)
         );
     }

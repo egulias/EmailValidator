@@ -37,6 +37,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function getValidEmails()
     {
         return array(
+            array('â@iana.org'),
             array('fabien@symfony.com'),
             array('example@example.co.uk'),
             array('fabien_potencier@example.fr'),
