@@ -75,8 +75,6 @@ class EmailLexer extends AbstractLexer
         '\0'   => self::C_NUL,
     );
 
-    protected $invalidASCII = array(226 => 1,);
-
     protected $hasInvalidTokens = false;
 
     protected $previous;
@@ -138,7 +136,8 @@ class EmailLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-zA-Z_]+[46]?',
+            '[a-zA-Z_]+[46]?', //ASCII and domain literal
+            '[^\x00-\x7F]',  //UTF-8
             '[0-9]+',
             '\r\n',
             '::',
@@ -179,11 +178,6 @@ class EmailLexer extends AbstractLexer
             return self::INVALID;
         }
 
-        if ($this->isASCIIInvalid($value)) {
-            $this->hasInvalidTokens = true;
-            return self::INVALID;
-        }
-
         return  self::GENERIC;
     }
 
@@ -203,19 +197,6 @@ class EmailLexer extends AbstractLexer
     protected function isNullType($value)
     {
         if ($value === "\0") {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $value
-     * @return bool
-     */
-    protected function isASCIIInvalid($value)
-    {
-        if (isset($this->invalidASCII[ord($value)])) {
             return true;
         }
 
