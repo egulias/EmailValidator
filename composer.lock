@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9426f5a00cf0f71d83c287a7c0ff392b",
+    "hash": "eaf5eb6f0b3811e996fb205760c9dd3f",
     "packages": [
         {
             "name": "doctrine/lexer",
@@ -1492,7 +1492,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 5.3.3"
+        "php": ">= 5.5"
     },
     "platform-dev": []
 }
