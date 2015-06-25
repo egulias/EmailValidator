@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\Exception\NoLocalPart;
 use Egulias\EmailValidator\Parser\DomainPart;
 use Egulias\EmailValidator\Parser\LocalPart;
 
@@ -37,7 +38,7 @@ class EmailParser
         $this->lexer->setInput($str);
 
         if (!$this->hasAtToken()) {
-            throw new \InvalidArgumentException('ERR_NOLOCALPART');
+            throw new NoLocalPart();
         }
 
 
