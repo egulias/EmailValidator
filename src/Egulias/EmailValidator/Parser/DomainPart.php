@@ -6,6 +6,8 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
+use Egulias\EmailValidator\Exception\ExpectedQPair;
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Parser\Parser;
@@ -255,7 +257,7 @@ class DomainPart extends Parser
         );
 
         if (isset($invalidDomainTokens[$this->lexer->token['type']])) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
@@ -267,7 +269,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
@@ -276,7 +278,7 @@ class DomainPart extends Parser
 
         if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
             && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
     }
 
@@ -315,7 +317,7 @@ class DomainPart extends Parser
 
         $this->lexer->moveNext();
         if ($this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
     }
 }

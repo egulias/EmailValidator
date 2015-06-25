@@ -7,6 +7,7 @@ use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\DotAtStart;
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Exception\NoLocalPart;
@@ -153,14 +154,14 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(ConsecutiveAt::CODE, 'example@@example.co.uk'),
             array(ConsecutiveDot::CODE, 'example..example@example.co.uk'),
             array(ConsecutiveDot::CODE, 'example@example..co.uk'),
-            array(EmailValidator::ERR_EXPECTING_ATEXT, '<fabien_potencier>@example.fr'),
+            array(ExpectingATEXT::CODE, '<fabien_potencier>@example.fr'),
             array(DotAtStart::CODE, '.example@localhost'),
             array(DotAtStart::CODE, 'example@.localhost'),
             array(EmailValidator::ERR_DOT_END, 'example@localhost.'),
             array(EmailValidator::ERR_DOT_END, 'example.@example.co.uk'),
             array(EmailValidator::ERR_UNCLOSEDCOMMENT, '(example@localhost'),
             array(EmailValidator::ERR_UNCLOSEDQUOTEDSTR, '"example@localhost'),
-            array(EmailValidator::ERR_EXPECTING_ATEXT, 'exa"mple@localhost'),
+            array(ExpectingATEXT::CODE, 'exa"mple@localhost'),
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
             array(AtextAfterCFWS::CODE, "exampl\ne@example.co.uk"),

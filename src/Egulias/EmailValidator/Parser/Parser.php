@@ -7,6 +7,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
 
 abstract class Parser
 {
@@ -53,7 +54,7 @@ abstract class Parser
 
         $this->lexer->moveNext();
         if ($this->lexer->isNextTokenAny(array(EmailLexer::GENERIC, EmailLexer::S_EMPTY))) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
 
         if ($this->lexer->isNextToken(EmailLexer::S_AT)) {
@@ -142,7 +143,7 @@ abstract class Parser
         }
 
         if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
 
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
@@ -164,7 +165,7 @@ abstract class Parser
         }
         $previous = $this->lexer->getPrevious();
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
 
         $this->warnings[] = EmailValidator::RFC5321_QUOTEDSTRING;

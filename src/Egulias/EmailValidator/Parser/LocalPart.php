@@ -5,6 +5,7 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use \InvalidArgumentException;
 
 class LocalPart extends Parser
@@ -116,7 +117,7 @@ class LocalPart extends Parser
         );
 
         if (in_array($token['type'], $forbidden) && !$closingQuote) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
+            throw new ExpectingATEXT();
         }
     }
 }
