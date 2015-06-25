@@ -7,6 +7,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
+use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\EmailValidator;
 
@@ -24,7 +25,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
-            throw new \InvalidArgumentException('ERR_NODOMAIN');
+            throw new NoDomainPart();
         }
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
             throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');

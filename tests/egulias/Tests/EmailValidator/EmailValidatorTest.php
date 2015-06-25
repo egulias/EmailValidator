@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
+use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Exception\NoLocalPart;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
@@ -144,7 +145,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(NoLocalPart::CODE, '@example.co.uk'),
-            array(EmailValidator::ERR_NODOMAIN, 'example@'),
+            array(NoDomainPart::CODE, 'example@'),
             array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-.co.uk'),
             array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-'),
             array(ConsecutiveAt::CODE, 'example@@example.co.uk'),
