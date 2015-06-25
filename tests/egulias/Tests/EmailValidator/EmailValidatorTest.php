@@ -3,7 +3,9 @@
 namespace Egulias\Tests\EmailValidator;
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
+use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
@@ -149,8 +151,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-.co.uk'),
             array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-'),
             array(ConsecutiveAt::CODE, 'example@@example.co.uk'),
-            array(EmailValidator::ERR_CONSECUTIVEDOTS, 'example..example@example.co.uk'),
-            array(EmailValidator::ERR_CONSECUTIVEDOTS, 'example@example..co.uk'),
+            array(ConsecutiveDot::CODE, 'example..example@example.co.uk'),
+            array(ConsecutiveDot::CODE, 'example@example..co.uk'),
             array(EmailValidator::ERR_EXPECTING_ATEXT, '<fabien_potencier>@example.fr'),
             array(DotAtStart::CODE, '.example@localhost'),
             array(DotAtStart::CODE, 'example@.localhost'),
@@ -161,9 +163,9 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(EmailValidator::ERR_EXPECTING_ATEXT, 'exa"mple@localhost'),
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
-            array(EmailValidator::ERR_ATEXT_AFTER_CFWS, "exampl\ne@example.co.uk"),
+            array(AtextAfterCFWS::CODE, "exampl\ne@example.co.uk"),
             array(ExpectingDTEXT::CODE, "example@[[]"),
-            array(EmailValidator::ERR_ATEXT_AFTER_CFWS, "exampl\te@example.co.uk"),
+            array(AtextAfterCFWS::CODE, "exampl\te@example.co.uk"),
             array(EmailValidator::ERR_CR_NO_LF, "example@exa\rmple.co.uk"),
             array(EmailValidator::ERR_CR_NO_LF, "example@[\r]"),
             array(EmailValidator::ERR_CR_NO_LF, "exam\rple@example.co.uk"),
