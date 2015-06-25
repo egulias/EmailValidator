@@ -11,7 +11,6 @@ use Egulias\EmailValidator\InvalidEmail;
  */
 class EmailValidator
 {
-    const ERR_NODOMAIN           = 131;
     const ERR_CONSECUTIVEDOTS    = 132;
     const ERR_ATEXT_AFTER_CFWS   = 133;
     const ERR_ATEXT_AFTER_QS     = 134;

@@ -4,6 +4,7 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Exception\ConsecutiveDot;
 
 abstract class Parser
 {
@@ -96,7 +97,7 @@ abstract class Parser
     protected function checkConsecutiveDots()
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            throw new \InvalidArgumentException('ERR_CONSECUTIVEDOTS');
+            throw new ConsecutiveDot();
         }
     }
 
