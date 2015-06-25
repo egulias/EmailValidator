@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
+use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
@@ -150,8 +151,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
         return array(
             array(NoLocalPart::CODE, '@example.co.uk'),
             array(NoDomainPart::CODE, 'example@'),
-            array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-.co.uk'),
-            array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-'),
+            array(DomainHyphened::CODE, 'example@example-.co.uk'),
+            array(DomainHyphened::CODE, 'example@example-'),
             array(ConsecutiveAt::CODE, 'example@@example.co.uk'),
             array(ConsecutiveDot::CODE, 'example..example@example.co.uk'),
             array(ConsecutiveDot::CODE, 'example@example..co.uk'),

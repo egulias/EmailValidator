@@ -11,8 +11,6 @@ use Egulias\EmailValidator\InvalidEmail;
  */
 class EmailValidator
 {
-    const ERR_DOMAINHYPHENSTART  = 143;
-    const ERR_DOMAINHYPHENEND    = 144;
     const ERR_UNCLOSEDQUOTEDSTR  = 145;
     const ERR_UNCLOSEDCOMMENT    = 146;
     const ERR_UNCLOSEDDOMLIT     = 147;

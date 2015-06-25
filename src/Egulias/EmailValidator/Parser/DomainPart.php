@@ -5,6 +5,7 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
+use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
@@ -31,7 +32,7 @@ class DomainPart extends Parser
             throw new NoDomainPart();
         }
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
-            throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
+            throw new DomainHyphened();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
@@ -48,7 +49,7 @@ class DomainPart extends Parser
             throw new DotAtEnd();
         }
         if ($prev['type'] === EmailLexer::S_HYPHEN) {
-            throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
+            throw new DomainHyphened();
         }
         if ($length > self::DOMAIN_MAX_LENGTH) {
             $this->warnings[] = EmailValidator::RFC5322_DOMAIN_TOOLONG;
@@ -274,7 +275,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');
+            throw new DomainHyphened();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
