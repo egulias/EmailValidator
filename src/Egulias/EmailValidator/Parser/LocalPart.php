@@ -17,7 +17,7 @@ class LocalPart extends Parser
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && $this->lexer->token) {
 
             if ($this->lexer->token['type'] === EmailLexer::S_DOT && !$this->lexer->getPrevious()) {
-                throw new DotAtStart('local');
+                throw new DotAtStart();
             }
 
             $closingQuote = $this->checkDQUOTE($closingQuote);

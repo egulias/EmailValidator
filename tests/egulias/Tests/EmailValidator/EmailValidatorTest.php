@@ -5,6 +5,7 @@ namespace Egulias\Tests\EmailValidator;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
+use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -159,7 +160,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
             array(EmailValidator::ERR_ATEXT_AFTER_CFWS, "exampl\ne@example.co.uk"),
-            array(EmailValidator::ERR_EXPECTING_DTEXT, "example@[[]"),
+            array(ExpectingDTEXT::CODE, "example@[[]"),
             array(EmailValidator::ERR_ATEXT_AFTER_CFWS, "exampl\te@example.co.uk"),
             array(EmailValidator::ERR_CR_NO_LF, "example@exa\rmple.co.uk"),
             array(EmailValidator::ERR_CR_NO_LF, "example@[\r]"),

@@ -6,6 +6,7 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
+use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\EmailValidator;
 
@@ -19,7 +20,7 @@ class DomainPart extends Parser
         $this->lexer->moveNext();
 
         if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
-            throw new DotAtStart('domain');
+            throw new DotAtStart();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
@@ -160,7 +161,7 @@ class DomainPart extends Parser
         $addressLiteral = '';
         do {
             if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
+                throw new ExpectingDTEXT();
             }
 
             if ($this->lexer->token['type'] === EmailLexer::INVALID ||
@@ -171,7 +172,7 @@ class DomainPart extends Parser
             }
 
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {
-                throw new \InvalidArgumentException('ERR_EXPECTING_DTEXT');
+                throw new ExpectingDTEXT();
             }
 
             if ($this->lexer->isNextTokenAny(
