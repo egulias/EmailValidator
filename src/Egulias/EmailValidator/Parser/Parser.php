@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
+use Egulias\EmailValidator\Exception\ExpectedQPair;
 
 abstract class Parser
 {
@@ -31,7 +32,7 @@ abstract class Parser
     {
         if (!($this->lexer->token['type'] === EmailLexer::INVALID
             || $this->lexer->token['type'] === EmailLexer::C_DEL)) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_QPAIR');
+            throw new ExpectedQPair();
         }
 
         $this->warnings[] = EmailValidator::DEPREC_QP;

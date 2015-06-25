@@ -11,9 +11,6 @@ use Egulias\EmailValidator\InvalidEmail;
  */
 class EmailValidator
 {
-    const ERR_ATEXT_AFTER_QS     = 134;
-    const ERR_ATEXT_AFTER_DOMLIT = 135;
-    const ERR_EXPECTING_QPAIR    = 136;
     const ERR_EXPECTING_ATEXT    = 137;
     const ERR_EXPECTING_QTEXT    = 138;
     const ERR_EXPECTING_CTEXT    = 139;
