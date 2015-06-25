@@ -8,6 +8,7 @@ use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Exception\ExpectingCTEXT;
 
 abstract class Parser
 {
@@ -87,7 +88,7 @@ abstract class Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_LF || $this->lexer->token['type'] === EmailLexer::C_NUL) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_CTEXT');
+            throw new ExpectingCTEXT();
         }
 
         if ($this->lexer->isNextToken(EmailLexer::S_AT) || $previous['type']  === EmailLexer::S_AT) {
