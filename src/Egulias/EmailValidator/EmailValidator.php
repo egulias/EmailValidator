@@ -24,7 +24,6 @@ class EmailValidator
     const ERR_EXPECTING_QTEXT    = 138;
     const ERR_EXPECTING_CTEXT    = 139;
     const ERR_BACKSLASHEND       = 140;
-    const ERR_DOT_START          = 141;
     const ERR_DOT_END            = 142;
     const ERR_DOMAINHYPHENSTART  = 143;
     const ERR_DOMAINHYPHENEND    = 144;
