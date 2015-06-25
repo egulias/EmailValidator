@@ -3,6 +3,7 @@
 namespace Egulias\Tests\EmailValidator;
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
@@ -144,7 +145,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(EmailValidator::ERR_NODOMAIN, 'example@'),
             array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-.co.uk'),
             array(EmailValidator::ERR_DOMAINHYPHENEND, 'example@example-'),
-            array(EmailValidator::ERR_CONSECUTIVEATS, 'example@@example.co.uk'),
+            array(ConsecutiveAt::CODE, 'example@@example.co.uk'),
             array(EmailValidator::ERR_CONSECUTIVEDOTS, 'example..example@example.co.uk'),
             array(EmailValidator::ERR_CONSECUTIVEDOTS, 'example@example..co.uk'),
             array(EmailValidator::ERR_EXPECTING_ATEXT, '<fabien_potencier>@example.fr'),

@@ -4,6 +4,7 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\EmailValidator;
@@ -260,7 +261,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            throw new \InvalidArgumentException('ERR_CONSECUTIVEATS');
+            throw new ConsecutiveAt();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {

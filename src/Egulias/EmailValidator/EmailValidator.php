@@ -11,7 +11,6 @@ use Egulias\EmailValidator\InvalidEmail;
  */
 class EmailValidator
 {
-    const ERR_CONSECUTIVEATS     = 128;
     const ERR_EXPECTING_DTEXT    = 129;
     const ERR_NOLOCALPART        = 130;
     const ERR_NODOMAIN           = 131;
