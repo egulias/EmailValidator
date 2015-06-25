@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
+use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
@@ -157,8 +158,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(ExpectingATEXT::CODE, '<fabien_potencier>@example.fr'),
             array(DotAtStart::CODE, '.example@localhost'),
             array(DotAtStart::CODE, 'example@.localhost'),
-            array(EmailValidator::ERR_DOT_END, 'example@localhost.'),
-            array(EmailValidator::ERR_DOT_END, 'example.@example.co.uk'),
+            array(DotAtEnd::CODE, 'example@localhost.'),
+            array(DotAtEnd::CODE, 'example.@example.co.uk'),
             array(EmailValidator::ERR_UNCLOSEDCOMMENT, '(example@localhost'),
             array(EmailValidator::ERR_UNCLOSEDQUOTEDSTR, '"example@localhost'),
             array(ExpectingATEXT::CODE, 'exa"mple@localhost'),

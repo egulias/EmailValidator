@@ -5,6 +5,7 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
+use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
@@ -44,7 +45,7 @@ class DomainPart extends Parser
         $length = strlen($domain);
 
         if ($prev['type'] === EmailLexer::S_DOT) {
-            throw new \InvalidArgumentException('ERR_DOT_END');
+            throw new DotAtEnd();
         }
         if ($prev['type'] === EmailLexer::S_HYPHEN) {
             throw new \InvalidArgumentException('ERR_DOMAINHYPHENEND');

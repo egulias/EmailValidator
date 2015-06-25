@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator\Parser;
 
+use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
@@ -36,7 +37,7 @@ class LocalPart extends Parser
                 $this->lexer->token['type'] === EmailLexer::S_DOT &&
                 $this->lexer->isNextToken(EmailLexer::S_AT)
             ) {
-                throw new \InvalidArgumentException('ERR_DOT_END');
+                throw new DotAtEnd();
             }
 
             $this->warnEscaping();
