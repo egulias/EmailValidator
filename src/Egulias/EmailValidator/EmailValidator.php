@@ -2,6 +2,8 @@
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\InvalidEmail;
+
 /**
  * EmailValidator
  *
@@ -78,6 +80,9 @@ class EmailValidator
         try {
             $this->parser->parse((string)$email);
             $this->warnings = $this->parser->getWarnings();
+        } catch (InvalidEmail $invalid) {
+            $this->error = $invalid->getCode();
+            return false;
         } catch (\Exception $e) {
             $rClass = new \ReflectionClass($this);
             $this->error = $rClass->getConstant($e->getMessage());

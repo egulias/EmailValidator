@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator\Parser;
 
+use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
 use \InvalidArgumentException;
@@ -16,7 +17,7 @@ class LocalPart extends Parser
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && $this->lexer->token) {
 
             if ($this->lexer->token['type'] === EmailLexer::S_DOT && !$this->lexer->getPrevious()) {
-                throw new \InvalidArgumentException('ERR_DOT_START');
+                throw new DotAtStart('local');
             }
 
             $closingQuote = $this->checkDQUOTE($closingQuote);

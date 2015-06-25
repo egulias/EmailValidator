@@ -4,6 +4,7 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\EmailValidator;
 
@@ -17,7 +18,7 @@ class DomainPart extends Parser
         $this->lexer->moveNext();
 
         if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
-            throw new \InvalidArgumentException('ERR_DOT_START');
+            throw new DotAtStart('domain');
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
