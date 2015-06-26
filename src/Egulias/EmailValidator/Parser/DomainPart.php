@@ -5,6 +5,7 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
+use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
@@ -55,7 +56,7 @@ class DomainPart extends Parser
             $this->warnings[] = EmailValidator::RFC5322_DOMAIN_TOOLONG;
         }
         if ($prev['type'] === EmailLexer::S_CR) {
-            throw new \InvalidArgumentException('ERR_FWS_CRLF_END');
+            throw new CRLFAtTheEnd();
         }
         $this->domainPart = $domain;
     }
