@@ -9,6 +9,7 @@ use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
+use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 
 abstract class Parser
@@ -70,7 +71,7 @@ abstract class Parser
             $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);
             return true;
         } catch (\RuntimeException $e) {
-            throw new \InvalidArgumentException('ERR_UNCLOSEDCOMMENT');
+            throw new UnclosedComment();
         }
     }
 
