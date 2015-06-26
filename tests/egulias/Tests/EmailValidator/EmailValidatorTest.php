@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
+use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
@@ -171,9 +172,9 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(AtextAfterCFWS::CODE, "exampl\ne@example.co.uk"),
             array(ExpectingDTEXT::CODE, "example@[[]"),
             array(AtextAfterCFWS::CODE, "exampl\te@example.co.uk"),
-            array(EmailValidator::ERR_CR_NO_LF, "example@exa\rmple.co.uk"),
-            array(EmailValidator::ERR_CR_NO_LF, "example@[\r]"),
-            array(EmailValidator::ERR_CR_NO_LF, "exam\rple@example.co.uk"),
+            array(CRNoLF::CODE, "example@exa\rmple.co.uk"),
+            array(CRNoLF::CODE, "example@[\r]"),
+            array(CRNoLF::CODE, "exam\rple@example.co.uk"),
         );
     }
 

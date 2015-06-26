@@ -6,6 +6,7 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
+use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
@@ -189,7 +190,7 @@ class DomainPart extends Parser
             }
 
             if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
-                throw new \InvalidArgumentException("ERR_CR_NO_LF");
+                throw new CRNoLF();
             }
             if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
                 $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;

@@ -8,6 +8,7 @@ use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRLFX2;
+use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
@@ -84,7 +85,7 @@ abstract class Parser
         $this->checkCRLFInFWS();
 
         if ($this->lexer->token['type'] === EmailLexer::S_CR) {
-            throw new \InvalidArgumentException("ERR_CR_NO_LF");
+            throw new CRNoLF();
         }
 
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
