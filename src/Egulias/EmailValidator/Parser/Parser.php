@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
+use Egulias\EmailValidator\Exception\CRLFX2;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
@@ -188,7 +189,7 @@ abstract class Parser
             return;
         }
         if ($this->lexer->isNextToken(EmailLexer::CRLF)) {
-            throw new \InvalidArgumentException("ERR_FWS_CRLF_X2");
+            throw new CRLFX2();
         }
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
             throw new \InvalidArgumentException("ERR_FWS_CRLF_END");
