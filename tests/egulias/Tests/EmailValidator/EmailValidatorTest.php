@@ -13,6 +13,7 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Exception\NoLocalPart;
+use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
 {
@@ -162,7 +163,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array(DotAtEnd::CODE, 'example@localhost.'),
             array(DotAtEnd::CODE, 'example.@example.co.uk'),
             array(EmailValidator::ERR_UNCLOSEDCOMMENT, '(example@localhost'),
-            array(EmailValidator::ERR_UNCLOSEDQUOTEDSTR, '"example@localhost'),
+            array(UnclosedQuotedString::CODE, '"example@localhost'),
             array(ExpectingATEXT::CODE, 'exa"mple@localhost'),
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),

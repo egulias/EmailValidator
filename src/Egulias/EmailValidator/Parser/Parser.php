@@ -9,6 +9,7 @@ use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
+use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 
 abstract class Parser
 {
@@ -174,7 +175,7 @@ abstract class Parser
             $this->lexer->find(EmailLexer::S_DQUOTE);
             $hasClosingQuote = true;
         } catch (\Exception $e) {
-            throw new \InvalidArgumentException('ERR_UNCLOSEDQUOTEDSTR');
+            throw new UnclosedQuotedString();
         }
 
         return $hasClosingQuote;
