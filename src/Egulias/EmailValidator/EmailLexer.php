@@ -67,8 +67,6 @@ class EmailLexer extends AbstractLexer
         "\n"   => self::S_LF,
         "\r\n" => self::CRLF,
         'IPv6' => self::S_IPV6TAG,
-        '<'    => self::S_LOWERTHAN,
-        '>'    => self::S_GREATERTHAN,
         '{'    => self::S_OPENQBRACKET,
         '}'    => self::S_CLOSEQBRACKET,
         ''     => self::S_EMPTY,
