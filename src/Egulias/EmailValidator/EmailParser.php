@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\NoLocalPart;
 use Egulias\EmailValidator\Parser\DomainPart;
 use Egulias\EmailValidator\Parser\LocalPart;
@@ -48,7 +49,7 @@ class EmailParser
         $this->setParts($str);
 
         if ($this->lexer->hasInvalidTokens()) {
-            throw new \InvalidArgumentException('ERR_INVALID_ATEXT');
+            throw new ExpectingATEXT();
         }
 
         return array('local' => $this->localPart, 'domain' => $this->domainPart);
