@@ -24,7 +24,8 @@ class LocalPart extends Parser
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
-                $this->parseComments($openedParenthesis);
+                $this->parseComments();
+                $openedParenthesis += $this->getOpenedParenthesis();
             }
             if ($this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
                 if ($openedParenthesis === 0) {

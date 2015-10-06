@@ -9,6 +9,7 @@ abstract class Parser
 {
     protected $warnings = array();
     protected $lexer;
+    protected $openedParenthesis = 0;
 
     public function __construct(EmailLexer $lexer)
     {
@@ -21,6 +22,12 @@ abstract class Parser
     }
 
     abstract public function parse($str);
+
+    /** @return int */
+    public function getOpenedParenthesis()
+    {
+        return $this->openedParenthesis;
+    }
 
     /**
      * validateQuotedPair
@@ -35,18 +42,14 @@ abstract class Parser
         $this->warnings[] = EmailValidator::DEPREC_QP;
     }
 
-    /**
-     * @param int $openedParenthesis
-     * @return string the comment
-     */
-    protected function parseComments(&$openedParenthesis = 0)
+    protected function parseComments()
     {
-        $openedParenthesis++;
+        $this->openedParenthesis = 1;
         $this->isUnclosedComment();
         $this->warnings[] = EmailValidator::CFWS_COMMENT;
         while (!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
             if ($this->lexer->isNextToken(EmailLexer::S_OPENPARENTHESIS)) {
-                $openedParenthesis++;
+                $this->openedParenthesis++;
             }
             $this->warnEscaping();
             $this->lexer->moveNext();
@@ -164,7 +167,7 @@ abstract class Parser
             return $hasClosingQuote;
         }
         $previous = $this->lexer->getPrevious();
-        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
+        if ($previous['type'] === EmailLexer::GENERIC && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
 
