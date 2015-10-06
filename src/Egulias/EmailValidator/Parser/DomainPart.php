@@ -111,7 +111,8 @@ class DomainPart extends Parser
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
-                $this->parseComments($openedParenthesis);
+                $this->parseComments();
+                $openedParenthesis += $this->getOpenedParenthesis();
                 $this->lexer->moveNext();
                 $tmpPrev = $this->lexer->getPrevious();
                 if ($tmpPrev['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
