@@ -10,12 +10,11 @@ use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
-use Egulias\EmailValidator\Exception\ExpectedQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
-use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Exception\UnopenedComment;
 
 class DomainPart extends Parser
 {
@@ -113,8 +112,8 @@ class DomainPart extends Parser
     protected function doParseDomainPart()
     {
         $domain = '';
+        $openedParenthesis = 0;
         do {
-
             $prev = $this->lexer->getPrevious();
 
             if ($this->lexer->token['type'] === EmailLexer::S_SLASH) {
@@ -123,7 +122,19 @@ class DomainPart extends Parser
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
+                $openedParenthesis += $this->getOpenedParenthesis();
                 $this->lexer->moveNext();
+                $tmpPrev = $this->lexer->getPrevious();
+                if ($tmpPrev['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
+                    $openedParenthesis--;
+                }
+            }
+            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
+                if ($openedParenthesis === 0) {
+                    throw new UnopenedComment();
+                } else {
+                    $openedParenthesis--;
+                }
             }
 
             $this->checkConsecutiveDots();
@@ -192,6 +203,7 @@ class DomainPart extends Parser
             if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
                 throw new CRNoLF();
             }
+
             if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
                 $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
                 $addressLiteral .= $this->lexer->token['value'];

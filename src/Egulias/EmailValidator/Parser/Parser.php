@@ -19,6 +19,7 @@ abstract class Parser
 {
     protected $warnings = array();
     protected $lexer;
+    protected $openedParenthesis = 0;
 
     public function __construct(EmailLexer $lexer)
     {
@@ -30,7 +31,13 @@ abstract class Parser
         return $this->warnings;
     }
 
-    abstract function parse($str);
+    abstract public function parse($str);
+
+    /** @return int */
+    public function getOpenedParenthesis()
+    {
+        return $this->openedParenthesis;
+    }
 
     /**
      * validateQuotedPair
@@ -45,15 +52,15 @@ abstract class Parser
         $this->warnings[] = EmailValidator::DEPREC_QP;
     }
 
-    /**
-     * @return string the the comment
-     * @throws \InvalidArgumentException
-     */
     protected function parseComments()
     {
+        $this->openedParenthesis = 1;
         $this->isUnclosedComment();
         $this->warnings[] = EmailValidator::CFWS_COMMENT;
         while (!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
+            if ($this->lexer->isNextToken(EmailLexer::S_OPENPARENTHESIS)) {
+                $this->openedParenthesis++;
+            }
             $this->warnEscaping();
             $this->lexer->moveNext();
         }
@@ -190,9 +197,11 @@ abstract class Parser
         if ($this->lexer->token['type'] !== EmailLexer::CRLF) {
             return;
         }
-        if ($this->lexer->isNextToken(EmailLexer::CRLF)) {
+
+        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
             throw new CRLFX2();
         }
+
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
             throw new CRLFAtTheEnd();
         }

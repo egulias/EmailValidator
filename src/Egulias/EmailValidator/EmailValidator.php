@@ -12,6 +12,7 @@ use Egulias\EmailValidator\InvalidEmail;
 class EmailValidator
 {
     const ERR_DEPREC_REACHED     = 151;
+    const ERR_UNOPENEDCOMMENT    = 152;
     const RFC5321_TLD             = 9;
     const RFC5321_TLDNUMERIC      = 10;
     const RFC5321_QUOTEDSTRING    = 11;
