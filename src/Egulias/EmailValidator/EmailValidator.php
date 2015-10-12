@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\InvalidEmail;
+use Egulias\EmailValidator\Warning\TLD;
 
 /**
  * EmailValidator
@@ -13,7 +13,6 @@ class EmailValidator
 {
     const ERR_DEPREC_REACHED     = 151;
     const ERR_UNOPENEDCOMMENT    = 152;
-    const RFC5321_TLD             = 9;
     const RFC5321_TLDNUMERIC      = 10;
     const RFC5321_QUOTEDSTRING    = 11;
     const RFC5321_ADDRESSLITERAL  = 12;
@@ -146,7 +145,7 @@ class EmailValidator
             !in_array(self::DNSWARN_NO_MX_RECORD, $this->warnings) &&
             in_array(self::RFC5322_DOMAINLITERAL, $this->warnings)
         ) {
-            $this->warnings[] = self::RFC5321_TLD;
+            $this->warnings[] = new TLD();
         }
     }
 }
