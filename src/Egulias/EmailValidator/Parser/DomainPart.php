@@ -103,6 +103,7 @@ class DomainPart extends Parser
     {
         $domain = '';
         $openedParenthesis = 0;
+        $openBrackets = false;
         do {
             $prev = $this->lexer->getPrevious();
 
@@ -130,7 +131,7 @@ class DomainPart extends Parser
             $this->checkConsecutiveDots();
             $this->checkDomainPartExceptions($prev);
 
-            if ($this->hasBrackets()) {
+            if ($openBrackets = $this->hasBrackets($openBrackets)) {
                 $this->parseDomainLiteral();
             }
 
@@ -287,8 +288,12 @@ class DomainPart extends Parser
         }
     }
 
-    protected function hasBrackets()
+    protected function hasBrackets($openBrackets)
     {
+        if ($this->lexer->token['type'] === EmailLexer::S_CLOSEBRACKET && !$openBrackets) {
+            throw new \InvalidArgumentException('ERR_EXPECTING_OPENBRACKET');
+        }
+
         if ($this->lexer->token['type'] !== EmailLexer::S_OPENBRACKET) {
             return false;
         }

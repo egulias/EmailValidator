@@ -63,6 +63,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('test@email^'),
             array('test@email%'),
             array('test@email$'),
+            array('test@email.com.au'),
         );
     }
 
@@ -123,6 +124,8 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
             array('test@email>'),
             array('test@email<'),
             array('test@email{'),
+            array('test@email.com]'),
+            array('test@ema[il.com'),
         );
     }
 
