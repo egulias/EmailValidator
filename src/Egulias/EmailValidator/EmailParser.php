@@ -6,6 +6,7 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\NoLocalPart;
 use Egulias\EmailValidator\Parser\DomainPart;
 use Egulias\EmailValidator\Parser\LocalPart;
+use Egulias\EmailValidator\Warning\EmailTooLong;
 
 /**
  * EmailParser
@@ -16,7 +17,7 @@ class EmailParser
 {
     const EMAIL_MAX_LENGTH = 254;
 
-    protected $warnings = array();
+    protected $warnings;
     protected $domainPart = '';
     protected $localPart = '';
     protected $lexer;
@@ -28,6 +29,7 @@ class EmailParser
         $this->lexer = $lexer;
         $this->localPartParser = new LocalPart($this->lexer);
         $this->domainPartParser = new DomainPart($this->lexer);
+        $this->warnings = new \SplObjectStorage();
     }
 
     /**
@@ -59,8 +61,8 @@ class EmailParser
     {
         $localPartWarnings = $this->localPartParser->getWarnings();
         $domainPartWarnings = $this->domainPartParser->getWarnings();
-
         $this->warnings = array_merge($localPartWarnings, $domainPartWarnings);
+
         $this->addLongEmailWarning($this->localPart, $this->domainPart);
 
         return $this->warnings;
@@ -96,7 +98,7 @@ class EmailParser
     protected function addLongEmailWarning($localPart, $parsedDomainPart)
     {
         if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAIL_MAX_LENGTH) {
-            $this->warnings[] = EmailValidator::RFC5322_TOOLONG;
+            $this->warnings[EmailTooLong::CODE] = new EmailTooLong();
         }
     }
 }

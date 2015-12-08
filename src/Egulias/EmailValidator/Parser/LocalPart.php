@@ -8,6 +8,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Warning\CFWSWithFWS;
 
 class LocalPart extends Parser
 {
@@ -85,7 +86,7 @@ class LocalPart extends Parser
         while ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE && $this->lexer->token) {
             $parseAgain = false;
             if (isset($special[$this->lexer->token['type']]) && $setSpecialsWarning) {
-                $this->warnings[] = EmailValidator::CFWS_FWS;
+                $this->warnings[] = new CFWSWithFWS();
                 $setSpecialsWarning = false;
             }
 

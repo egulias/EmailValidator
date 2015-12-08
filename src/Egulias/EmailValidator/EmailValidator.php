@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\Warning\NoDNSRecord;
 use Egulias\EmailValidator\Warning\TLD;
 
 /**
@@ -43,7 +44,7 @@ class EmailValidator
     const DNSWARN_NO_RECORD       = 6;
 
     protected $parser;
-    protected $warnings = array();
+    protected $warnings;
     protected $error;
     protected $threshold = 255;
 
@@ -71,11 +72,11 @@ class EmailValidator
             $dns = $this->checkDNS();
         }
 
-        if ($this->hasWarnings() && ((int) max($this->warnings) > $this->threshold)) {
-            $this->error = self::ERR_DEPREC_REACHED;
-
-            return false;
-        }
+//        if ($this->hasWarnings() && ((int) max($this->warnings) > $this->threshold)) {
+//            $this->error = self::ERR_DEPREC_REACHED;
+//
+//            return false;
+//        }
 
         return !$strict || (!$this->hasWarnings() && $dns);
     }
@@ -131,7 +132,7 @@ class EmailValidator
         $result = checkdnsrr(trim($this->parser->getParsedDomainPart()), 'MX');
 
         if (!$result) {
-            $this->warnings[] = self::DNSWARN_NO_RECORD;
+            $this->warnings[NoDNSRecord::CODE] = new NoDNSRecord();
             $checked = false;
             $this->addTLDWarnings();
         }
@@ -141,11 +142,11 @@ class EmailValidator
 
     protected function addTLDWarnings()
     {
-        if (!in_array(self::DNSWARN_NO_RECORD, $this->warnings) &&
-            !in_array(self::DNSWARN_NO_MX_RECORD, $this->warnings) &&
-            in_array(self::RFC5322_DOMAINLITERAL, $this->warnings)
+        if (!isset($this->warnings[self::DNSWARN_NO_RECORD]) &&
+            !isset($this->warnings[self::DNSWARN_NO_MX_RECORD]) &&
+            isset($this->warnings[self::RFC5322_DOMAINLITERAL])
         ) {
-            $this->warnings[] = new TLD();
+            $this->warnings[TLD::CODE] = new TLD();
         }
     }
 }

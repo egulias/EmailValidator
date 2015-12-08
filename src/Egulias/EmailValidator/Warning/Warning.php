@@ -4,16 +4,22 @@ namespace Egulias\EmailValidator\Warning;
 
 abstract class Warning
 {
+    const CODE = 0;
     protected $message;
-    protected $code;
-
-    public function code()
-    {
-        return $this->code;
-    }
+    protected $rfcNumber;
 
     public function message()
     {
         return $this->message;
+    }
+
+    public function code()
+    {
+        return self::CODE;
+    }
+
+    public function RFCNumber()
+    {
+        return $this->rfcNumber;
     }
 }
