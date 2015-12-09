@@ -17,6 +17,14 @@ use Egulias\EmailValidator\Exception\NoLocalPart;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Warning\AddressLiteral;
+use Egulias\EmailValidator\Warning\CFWSNearAt;
+use Egulias\EmailValidator\Warning\CFWSWithFWS;
+use Egulias\EmailValidator\Warning\Comment;
+use Egulias\EmailValidator\Warning\IPV6Deprecated;
+use Egulias\EmailValidator\Warning\IPV6DoubleColon;
+use Egulias\EmailValidator\Warning\IPV6MaxGroups;
+use Egulias\EmailValidator\Warning\NoDNSRecord;
 use Egulias\EmailValidator\Warning\QuotedString;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
@@ -219,79 +227,50 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             [
-                [EmailValidator::DEPREC_CFWS_NEAR_AT, EmailValidator::DNSWARN_NO_RECORD],
+                [CFWSNearAt::CODE, NoDNSRecord::CODE],
                 'example @example.co.uk'
             ],
             [
-                [EmailValidator::DEPREC_CFWS_NEAR_AT, EmailValidator::DNSWARN_NO_RECORD],
+                [CFWSNearAt::CODE, NoDNSRecord::CODE],
                 'example@ example.co.uk'
             ],
             [
-                [EmailValidator::CFWS_COMMENT, EmailValidator::DNSWARN_NO_RECORD],
+                [Comment::CODE, NoDNSRecord::CODE],
                 'example@example(examplecomment).co.uk'
             ],
             [
-                [
-                    EmailValidator::CFWS_COMMENT,
-                    EmailValidator::DEPREC_CFWS_NEAR_AT,
-                    EmailValidator::DNSWARN_NO_RECORD,
-                ],
+                [Comment::CODE, CFWSNearAt::CODE, NoDNSRecord::CODE],
                 'example(examplecomment)@example.co.uk'
             ],
-            array(
-                array(
-                    QuotedString::CODE,
-                    EmailValidator::CFWS_FWS,
-                    EmailValidator::DNSWARN_NO_RECORD,
-                ),
+            [
+                [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSRecord::CODE],
                 "\"\t\"@example.co.uk"
-            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_QUOTEDSTRING,
-//                    EmailValidator::CFWS_FWS,
-//                    EmailValidator::DNSWARN_NO_RECORD
-//                ),
-//                "\"\r\"@example.co.uk"
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[127.0.0.1]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::RFC5321_IPV6DEPRECATED,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370::]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::RFC5322_IPV6_MAXGRPS,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334::]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::RFC5322_IPV6_2X2XCOLON,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6:1::1::1]'
-//            ),
+            ],
+            [
+                [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSRecord::CODE],
+                "\"\r\"@example.co.uk"
+            ],
+            [
+                [AddressLiteral::CODE, NoDNSRecord::CODE],
+                'example@[127.0.0.1]'
+            ],
+            [
+                [AddressLiteral::CODE, NoDNSRecord::CODE],
+                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
+            ],
+            [
+                [AddressLiteral::CODE, IPV6Deprecated::CODE, NoDNSRecord::CODE],
+                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370::]'
+            ],
+            [
+                [AddressLiteral::CODE, IPV6MaxGroups::CODE, NoDNSRecord::CODE],
+                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334::]'
+            ],
+            [
+
+                [AddressLiteral::CODE, IPV6DoubleColon::CODE, NoDNSRecord::CODE],
+                'example@[IPv6:1::1::1]'
+            ],
 //            array(
 //                array(
 //                    EmailValidator::RFC5322_DOMLIT_OBSDTEXT,

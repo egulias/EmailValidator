@@ -21,6 +21,8 @@ use Egulias\EmailValidator\Warning\DeprecatedComment;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\DomainTooLong;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
+use Egulias\EmailValidator\Warning\IPV6Deprecated;
+use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 
@@ -111,9 +113,9 @@ class DomainPart extends Parser
         }
 
         if ($groupCount > $maxGroups) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_MAXGRPS;
+            $this->warnings[] = new IPV6MaxGroups();
         } elseif ($groupCount === $maxGroups) {
-            $this->warnings[] = EmailValidator::RFC5321_IPV6DEPRECATED;
+            $this->warnings[] = new IPV6Deprecated();
         }
     }
 
