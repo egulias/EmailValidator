@@ -35,9 +35,6 @@ class EmailValidator
     const RFC5322_DOMAINLITERAL   = 70;
     const RFC5322_DOMLIT_OBSDTEXT = 71;
     const RFC5322_IPV6_GRPCOUNT   = 72;
-    const RFC5322_IPV6_2X2XCOLON  = 73;
-    const RFC5322_IPV6_BADCHAR    = 74;
-    const RFC5322_IPV6_MAXGRPS    = 75;
     const RFC5322_IPV6_COLONSTRT  = 76;
     const RFC5322_IPV6_COLONEND   = 77;
     const DNSWARN_NO_MX_RECORD    = 5;

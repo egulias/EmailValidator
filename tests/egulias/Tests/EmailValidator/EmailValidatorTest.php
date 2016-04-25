@@ -228,27 +228,27 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
         return array(
             [
                 [CFWSNearAt::CODE, NoDNSRecord::CODE],
-                'example @example.co.uk'
+                'example @invalid.example.com'
             ],
             [
                 [CFWSNearAt::CODE, NoDNSRecord::CODE],
-                'example@ example.co.uk'
+                'example@ invalid.example.com'
             ],
             [
                 [Comment::CODE, NoDNSRecord::CODE],
-                'example@example(examplecomment).co.uk'
+                'example@invalid.example(examplecomment).com'
             ],
             [
                 [Comment::CODE, CFWSNearAt::CODE, NoDNSRecord::CODE],
-                'example(examplecomment)@example.co.uk'
+                'example(examplecomment)@invalid.example.com'
             ],
             [
                 [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSRecord::CODE],
-                "\"\t\"@example.co.uk"
+                "\"\t\"@invalid.example.com"
             ],
             [
                 [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSRecord::CODE],
-                "\"\r\"@example.co.uk"
+                "\"\r\"@invalid.example.com"
             ],
             [
                 [AddressLiteral::CODE, NoDNSRecord::CODE],
