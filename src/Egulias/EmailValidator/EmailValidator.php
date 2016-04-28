@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Warning\NoDNSRecord;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\TLD;
@@ -14,8 +15,6 @@ use Egulias\EmailValidator\Warning\TLD;
 class EmailValidator
 {
     const ERR_DEPREC_REACHED     = 151;
-    const DNSWARN_NO_MX_RECORD    = 5;
-    const DNSWARN_NO_RECORD       = 6;
 
     protected $parser;
     protected $warnings;
@@ -102,22 +101,24 @@ class EmailValidator
     protected function checkDNS()
     {
         $checked = true;
+        $MXresult = checkdnsrr(trim($this->parser->getParsedDomainPart()), 'MX');
 
-        $result = checkdnsrr(trim($this->parser->getParsedDomainPart()), 'MX');
-
-        if (!$result) {
-            $this->warnings[NoDNSRecord::CODE] = new NoDNSRecord();
-            $checked = false;
-            $this->addTLDWarnings();
+        if (!$MXresult) {
+            $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
+            $Aresult = checkdnsrr(trim($this->parser->getParsedDomainPart()), 'A');
+            if (!$Aresult) {
+                $this->warnings[NoDNSRecord::CODE] = new NoDNSRecord();
+                $checked = false;
+                $this->addTLDWarnings();
+            }
         }
-
         return $checked;
     }
 
     protected function addTLDWarnings()
     {
-        if (!isset($this->warnings[NoDNSRecord::CODE]) &&
-            !isset($this->warnings[self::DNSWARN_NO_MX_RECORD]) &&
+        if (!isset($this->warnings[NoDNSMXRecord::CODE]) &&
+            !isset($this->warnings[NoDNSRecord::CODE]) &&
             isset($this->warnings[DomainLiteral::CODE])
         ) {
             $this->warnings[TLD::CODE] = new TLD();

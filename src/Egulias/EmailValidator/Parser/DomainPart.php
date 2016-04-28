@@ -84,7 +84,7 @@ class DomainPart extends Parser
     {
         $prev = $this->lexer->getPrevious();
         if ($prev['type'] === EmailLexer::S_COLON) {
-            $this->warnings[] = new IPV6ColonEnd();
+            $this->warnings[IPV6ColonEnd::CODE] = new IPV6ColonEnd();
         }
 
         $IPv6       = substr($addressLiteral, 5);
@@ -100,13 +100,13 @@ class DomainPart extends Parser
         if ($colons === false) {
             // We need exactly the right number of groups
             if ($groupCount !== $maxGroups) {
-                $this->warnings[] = new IPV6GroupCount();
+                $this->warnings[IPV6GroupCount::CODE] = new IPV6GroupCount();
             }
             return;
         }
 
         if ($colons !== strrpos($IPv6, '::')) {
-            $this->warnings[] = new IPV6DoubleColon();
+            $this->warnings[IPV6DoubleColon::CODE] = new IPV6DoubleColon();
             return;
         }
 
@@ -117,9 +117,9 @@ class DomainPart extends Parser
         }
 
         if ($groupCount > $maxGroups) {
-            $this->warnings[] = new IPV6MaxGroups();
+            $this->warnings[IPV6MaxGroups::CODE] = new IPV6MaxGroups();
         } elseif ($groupCount === $maxGroups) {
-            $this->warnings[] = new IPV6Deprecated();
+            $this->warnings[IPV6Deprecated::CODE] = new IPV6Deprecated();
         }
     }
 
@@ -174,13 +174,13 @@ class DomainPart extends Parser
     protected function parseDomainLiteral()
     {
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
-            $this->warnings[] = new IPV6ColonStart();
+            $this->warnings[IPV6ColonStart::CODE] = new IPV6ColonStart();
         }
         if ($this->lexer->isNextToken(EmailLexer::S_IPV6TAG)) {
             $lexer = clone $this->lexer;
             $lexer->moveNext();
             if ($lexer->isNextToken(EmailLexer::S_DOUBLECOLON)) {
-                $this->warnings[] = new IPV6ColonStart();
+                $this->warnings[IPV6ColonStart::CODE] = new IPV6ColonStart();
             }
         }
 
@@ -200,7 +200,7 @@ class DomainPart extends Parser
                 $this->lexer->token['type'] === EmailLexer::C_DEL   ||
                 $this->lexer->token['type'] === EmailLexer::S_LF
             ) {
-                $this->warnings[] = new ObsoleteDTEXT();
+                $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
             }
 
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {

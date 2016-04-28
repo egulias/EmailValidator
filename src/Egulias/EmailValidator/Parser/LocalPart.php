@@ -61,7 +61,7 @@ class LocalPart extends Parser
 
         $prev = $this->lexer->getPrevious();
         if (strlen($prev['value']) > LocalTooLong::LOCAL_PART_LENGTH) {
-            $this->warnings[] = new LocalTooLong();
+            $this->warnings[LocalTooLong::CODE] = new LocalTooLong();
         }
     }
 
@@ -87,7 +87,7 @@ class LocalPart extends Parser
         while ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE && $this->lexer->token) {
             $parseAgain = false;
             if (isset($special[$this->lexer->token['type']]) && $setSpecialsWarning) {
-                $this->warnings[] = new CFWSWithFWS();
+                $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
                 $setSpecialsWarning = false;
             }
 

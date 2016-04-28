@@ -32,6 +32,7 @@ use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\LocalTooLong;
+use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Warning\NoDNSRecord;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use Egulias\EmailValidator\Warning\QuotedString;
@@ -210,7 +211,10 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->validator->isValid($email, true));
         $warnings = $this->validator->getWarnings();
-        $this->assertTrue(count($warnings) === count($expectedWarnings));
+        $this->assertTrue(
+            count($warnings) === count($expectedWarnings),
+            "Expected: " . implode(",", $expectedWarnings) . " and got " . implode(",", $warnings)
+        );
 
         foreach ($warnings as $warning) {
             $this->assertTrue(isset($expectedWarnings[$warning->code()]));
@@ -225,7 +229,10 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->validator->isValid($email, true, true));
 
         $warnings = $this->validator->getWarnings();
-        $this->assertTrue(count($warnings) === count($expectedWarnings));
+        $this->assertTrue(
+            count($warnings) === count($expectedWarnings),
+            "Expected: " . implode(",", $expectedWarnings) . " and got " . implode(",", $warnings)
+        );
 
         foreach ($warnings as $warning) {
             $this->assertTrue(isset($expectedWarnings[$warning->code()]));
@@ -236,100 +243,101 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             [
-                [CFWSNearAt::CODE, NoDNSRecord::CODE],
+                [CFWSNearAt::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example @invalid.example.com'
             ],
             [
-                [CFWSNearAt::CODE, NoDNSRecord::CODE],
+                [CFWSNearAt::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@ invalid.example.com'
             ],
             [
-                [Comment::CODE, NoDNSRecord::CODE],
+                [Comment::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@invalid.example(examplecomment).com'
             ],
             [
-                [Comment::CODE, CFWSNearAt::CODE, NoDNSRecord::CODE],
+                [Comment::CODE, CFWSNearAt::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example(examplecomment)@invalid.example.com'
             ],
             [
-                [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSRecord::CODE],
+                [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 "\"\t\"@invalid.example.com"
             ],
             [
-                [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSRecord::CODE],
+                [QuotedString::CODE, CFWSWithFWS::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 "\"\r\"@invalid.example.com"
             ],
             [
-                [AddressLiteral::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[127.0.0.1]'
             ],
             [
-                [AddressLiteral::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
             ],
             [
-                [AddressLiteral::CODE, IPV6Deprecated::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, IPV6Deprecated::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370::]'
             ],
             [
-                [AddressLiteral::CODE, IPV6MaxGroups::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, IPV6MaxGroups::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334::]'
             ],
             [
 
-                [AddressLiteral::CODE, IPV6DoubleColon::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, IPV6DoubleColon::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:1::1::1]'
             ],
             [
-                [ObsoleteDTEXT::CODE, DomainLiteral::CODE, NoDNSRecord::CODE ],
+                [ObsoleteDTEXT::CODE, DomainLiteral::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 "example@[\n]"
             ],
             [
-                [DomainLiteral::CODE, NoDNSRecord::CODE ],
+                [DomainLiteral::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[::1]'
             ],
             [
-                [DomainLiteral::CODE, NoDNSRecord::CODE ],
+                [DomainLiteral::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[::123.45.67.178]'
             ],
             [
-                [IPV6ColonStart::CODE, AddressLiteral::CODE, IPV6GroupCount::CODE, NoDNSRecord::CODE],
+                [IPV6ColonStart::CODE, AddressLiteral::CODE, IPV6GroupCount::CODE, NoDNSMXRecord::CODE,
+                    NoDNSRecord::CODE],
                 'example@[IPv6::2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
             ],
             [
-                [AddressLiteral::CODE, IPV6BadChar::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, IPV6BadChar::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:z001:0db8:85a3:0000:0000:8a2e:0370:7334]'
             ],
             [
-                [AddressLiteral::CODE, IPV6ColonEnd::CODE, NoDNSRecord::CODE],
+                [AddressLiteral::CODE, IPV6ColonEnd::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:]'
             ],
             [
-                [QuotedString::CODE, NoDNSRecord::CODE],
+                [QuotedString::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 '"example"@invalid.example.com'
             ],
             [
-                [LocalTooLong::CODE, NoDNSRecord::CODE],
+                [LocalTooLong::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'too_long_localpart_too_long_localpart_too_long_localpart_too_long_localpart@invalid.example.com'
             ],
             [
-                [LabelTooLong::CODE, NoDNSRecord::CODE],
+                [LabelTooLong::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'
             ],
             [
-                [DomainTooLong::CODE, LabelTooLong::CODE, NoDNSRecord::CODE],
+                [DomainTooLong::CODE, LabelTooLong::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example2@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'
             ],
             [
-                [DomainTooLong::CODE, LabelTooLong::CODE, NoDNSRecord::CODE],
+                [DomainTooLong::CODE, LabelTooLong::CODE, NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
             ],
             [
-                [NoDNSRecord::CODE],
+                [NoDNSMXRecord::CODE, NoDNSRecord::CODE],
                 'test@test'
             ],
         );
