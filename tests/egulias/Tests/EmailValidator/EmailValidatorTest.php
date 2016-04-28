@@ -21,10 +21,19 @@ use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\CFWSNearAt;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\Comment;
+use Egulias\EmailValidator\Warning\DomainLiteral;
+use Egulias\EmailValidator\Warning\DomainTooLong;
+use Egulias\EmailValidator\Warning\IPV6BadChar;
+use Egulias\EmailValidator\Warning\IPV6ColonEnd;
+use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
+use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
+use Egulias\EmailValidator\Warning\LabelTooLong;
+use Egulias\EmailValidator\Warning\LocalTooLong;
 use Egulias\EmailValidator\Warning\NoDNSRecord;
+use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use Egulias\EmailValidator\Warning\QuotedString;
 
 class EmailValidatorTest extends \PHPUnit_Framework_TestCase
@@ -271,100 +280,58 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
                 [AddressLiteral::CODE, IPV6DoubleColon::CODE, NoDNSRecord::CODE],
                 'example@[IPv6:1::1::1]'
             ],
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_DOMLIT_OBSDTEXT,
-//                    EmailValidator::RFC5322_DOMAINLITERAL,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                "example@[\n]"
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_DOMAINLITERAL,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[::1]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_DOMAINLITERAL,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[::123.45.67.178]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_IPV6_COLONSTRT,
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::RFC5322_IPV6_GRPCOUNT,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6::2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::RFC5322_IPV6_BADCHAR,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6:z001:0db8:85a3:0000:0000:8a2e:0370:7334]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_ADDRESSLITERAL,
-//                    EmailValidator::RFC5322_IPV6_COLONEND,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:]'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5321_QUOTEDSTRING,
-//                    EmailValidator::DNSWARN_NO_RECORD
-//                ),
-//                '"example"@example.co.uk'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_LOCAL_TOOLONG,
-//                    EmailValidator::DNSWARN_NO_RECORD
-//                ),
-//                'too_long_localpart_too_long_localpart_too_long_localpart_too_long_localpart@example.co.uk'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_LABEL_TOOLONG,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_DOMAIN_TOOLONG,
-//                    EmailValidator::RFC5322_TOOLONG,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
-//                'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
-//                'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::RFC5322_DOMAIN_TOOLONG,
-//                    EmailValidator::RFC5322_TOOLONG,
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
-//                'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
-//                'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
-//            ),
-//            array(
-//                array(
-//                    EmailValidator::DNSWARN_NO_RECORD,
-//                ),
-//                'test@test'
-//            ),
+            [
+                [ObsoleteDTEXT::CODE, DomainLiteral::CODE, NoDNSRecord::CODE ],
+                "example@[\n]"
+            ],
+            [
+                [DomainLiteral::CODE, NoDNSRecord::CODE ],
+                'example@[::1]'
+            ],
+            [
+                [DomainLiteral::CODE, NoDNSRecord::CODE ],
+                'example@[::123.45.67.178]'
+            ],
+            [
+                [IPV6ColonStart::CODE, AddressLiteral::CODE, IPV6GroupCount::CODE, NoDNSRecord::CODE],
+                'example@[IPv6::2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
+            ],
+            [
+                [AddressLiteral::CODE, IPV6BadChar::CODE, NoDNSRecord::CODE],
+                'example@[IPv6:z001:0db8:85a3:0000:0000:8a2e:0370:7334]'
+            ],
+            [
+                [AddressLiteral::CODE, IPV6ColonEnd::CODE, NoDNSRecord::CODE],
+                'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:]'
+            ],
+            [
+                [QuotedString::CODE, NoDNSRecord::CODE],
+                '"example"@invalid.example.com'
+            ],
+            [
+                [LocalTooLong::CODE, NoDNSRecord::CODE],
+                'too_long_localpart_too_long_localpart_too_long_localpart_too_long_localpart@invalid.example.com'
+            ],
+            [
+                [LabelTooLong::CODE, NoDNSRecord::CODE],
+                'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'
+            ],
+            [
+                [DomainTooLong::CODE, LabelTooLong::CODE, NoDNSRecord::CODE],
+                'example2@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
+                'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
+                'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'
+            ],
+            [
+                [DomainTooLong::CODE, LabelTooLong::CODE, NoDNSRecord::CODE],
+                'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
+                'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
+                'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
+            ],
+            [
+                [NoDNSRecord::CODE],
+                'test@test'
+            ],
         );
     }
 

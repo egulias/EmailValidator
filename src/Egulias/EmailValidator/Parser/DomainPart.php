@@ -21,8 +21,11 @@ use Egulias\EmailValidator\Warning\DeprecatedComment;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\DomainTooLong;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
+use Egulias\EmailValidator\Warning\IPV6ColonEnd;
+use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
+use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
@@ -81,7 +84,7 @@ class DomainPart extends Parser
     {
         $prev = $this->lexer->getPrevious();
         if ($prev['type'] === EmailLexer::S_COLON) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONEND;
+            $this->warnings[] = new IPV6ColonEnd();
         }
 
         $IPv6       = substr($addressLiteral, 5);
@@ -97,7 +100,7 @@ class DomainPart extends Parser
         if ($colons === false) {
             // We need exactly the right number of groups
             if ($groupCount !== $maxGroups) {
-                $this->warnings[] = EmailValidator::RFC5322_IPV6_GRPCOUNT;
+                $this->warnings[] = new IPV6GroupCount();
             }
             return;
         }
@@ -171,13 +174,13 @@ class DomainPart extends Parser
     protected function parseDomainLiteral()
     {
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
-            $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
+            $this->warnings[] = new IPV6ColonStart();
         }
         if ($this->lexer->isNextToken(EmailLexer::S_IPV6TAG)) {
             $lexer = clone $this->lexer;
             $lexer->moveNext();
             if ($lexer->isNextToken(EmailLexer::S_DOUBLECOLON)) {
-                $this->warnings[] = EmailValidator::RFC5322_IPV6_COLONSTRT;
+                $this->warnings[] = new IPV6ColonStart();
             }
         }
 
@@ -197,7 +200,7 @@ class DomainPart extends Parser
                 $this->lexer->token['type'] === EmailLexer::C_DEL   ||
                 $this->lexer->token['type'] === EmailLexer::S_LF
             ) {
-                $this->warnings[] = EmailValidator::RFC5322_DOMLIT_OBSDTEXT;
+                $this->warnings[] = new ObsoleteDTEXT();
             }
 
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {

@@ -9,6 +9,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\UnopenedComment;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
+use Egulias\EmailValidator\Warning\LocalTooLong;
 
 class LocalPart extends Parser
 {
@@ -59,8 +60,8 @@ class LocalPart extends Parser
         }
 
         $prev = $this->lexer->getPrevious();
-        if (strlen($prev['value']) > EmailValidator::RFC5322_LOCAL_TOOLONG) {
-            $this->warnings[] = EmailValidator::RFC5322_LOCAL_TOOLONG;
+        if (strlen($prev['value']) > LocalTooLong::LOCAL_PART_LENGTH) {
+            $this->warnings[] = new LocalTooLong();
         }
     }
 
