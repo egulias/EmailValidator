@@ -3,7 +3,6 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
@@ -14,10 +13,15 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
+use Egulias\EmailValidator\Warning\CFWSNearAt;
+use Egulias\EmailValidator\Warning\CFWSWithFWS;
+use Egulias\EmailValidator\Warning\Comment;
+use Egulias\EmailValidator\Warning\QuotedPart;
+use Egulias\EmailValidator\Warning\QuotedString;
 
 abstract class Parser
 {
-    protected $warnings = array();
+    protected $warnings = [];
     protected $lexer;
     protected $openedParenthesis = 0;
 
@@ -49,14 +53,15 @@ abstract class Parser
             throw new ExpectedQPair();
         }
 
-        $this->warnings[] = EmailValidator::DEPREC_QP;
+        $this->warnings[QuotedPart::CODE] =
+            new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
     }
 
     protected function parseComments()
     {
         $this->openedParenthesis = 1;
         $this->isUnclosedComment();
-        $this->warnings[] = EmailValidator::CFWS_COMMENT;
+        $this->warnings[Comment::CODE] = new Comment();
         while (!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
             if ($this->lexer->isNextToken(EmailLexer::S_OPENPARENTHESIS)) {
                 $this->openedParenthesis++;
@@ -71,7 +76,7 @@ abstract class Parser
         }
 
         if ($this->lexer->isNextToken(EmailLexer::S_AT)) {
-            $this->warnings[] = EmailValidator::DEPREC_CFWS_NEAR_AT;
+            $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
         }
     }
 
@@ -104,9 +109,9 @@ abstract class Parser
         }
 
         if ($this->lexer->isNextToken(EmailLexer::S_AT) || $previous['type']  === EmailLexer::S_AT) {
-            $this->warnings[] = EmailValidator::DEPREC_CFWS_NEAR_AT;
+            $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
         } else {
-            $this->warnings[] = EmailValidator::CFWS_FWS;
+            $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
         }
     }
 
@@ -163,7 +168,8 @@ abstract class Parser
             return false;
         }
 
-        $this->warnings[] = EmailValidator::DEPREC_QP;
+        $this->warnings[QuotedPart::CODE] =
+            new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
         return true;
 
     }
@@ -181,13 +187,13 @@ abstract class Parser
             throw new ExpectingATEXT();
         }
 
-        $this->warnings[] = EmailValidator::RFC5321_QUOTEDSTRING;
         try {
             $this->lexer->find(EmailLexer::S_DQUOTE);
             $hasClosingQuote = true;
         } catch (\Exception $e) {
             throw new UnclosedQuotedString();
         }
+        $this->warnings[QuotedString::CODE] = new QuotedString($previous['value'], $this->lexer->token['value']);
 
         return $hasClosingQuote;
     }
