@@ -4,6 +4,8 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\CharNotAllowed;
+use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRNoLF;
@@ -11,6 +13,7 @@ use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Exception\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\EmailValidator;
@@ -131,7 +134,7 @@ class DomainPart extends Parser
             $prev = $this->lexer->getPrevious();
 
             if ($this->lexer->token['type'] === EmailLexer::S_SLASH) {
-                throw new \InvalidArgumentException('ERR_DOMAIN_CHAR_NOT_ALLOWED');
+                throw new CharNotAllowed();
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
@@ -291,7 +294,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
-            throw new \InvalidArgumentException('ERR_COMMA_IN_DOMAIN');
+            throw new CommaInDomain();
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
@@ -321,7 +324,7 @@ class DomainPart extends Parser
         try {
             $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
         } catch (\RuntimeException $e) {
-            throw new \InvalidArgumentException('ERR_EXPECTING_DOMLIT_CLOSE');
+            throw new ExpectingDomainLiteralClose();
         }
 
         return true;

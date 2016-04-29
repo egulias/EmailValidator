@@ -6,44 +6,36 @@ use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Warning\NoDNSRecord;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\TLD;
+use Egulias\EmailValidator\Validation\EmailValidation;
 
-/**
- * EmailValidator
- *
- * @author Eduardo Gulias Davis <me@egulias.com>
- */
 class EmailValidator
 {
     const ERR_DEPREC_REACHED     = 151;
 
-    protected $parser;
+    /**
+     * @var EmailLexer
+     */
+    private $lexer;
     protected $warnings;
     protected $error;
     protected $threshold = 255;
 
     public function __construct()
     {
-        $this->parser = new EmailParser(new EmailLexer());
+        $this->lexer = new EmailLexer();
     }
 
-    public function isValid($email, $checkDNS = false, $strict = false)
+    /**
+     * @param                 $email
+     * @param EmailValidation $emailValidation
+     * @return bool
+     */
+    public function isValid($email, EmailValidation $emailValidation)
     {
-        try {
-            $this->parser->parse((string)$email);
-            $this->warnings = $this->parser->getWarnings();
-        } catch (InvalidEmail $invalid) {
-            $this->error = $invalid->getCode();
-            return false;
-        } catch (\Exception $e) {
-            $rClass = new \ReflectionClass($this);
-            $this->error = $rClass->getConstant($e->getMessage());
-            return false;
-        }
-
-        $dns = true;
-        if ($checkDNS) {
-            $dns = $this->checkDNS();
-        }
+        $isValid = $emailValidation->isValid($email, $this->lexer);
+        $this->warnings = $emailValidation->getWarnings();
+        $this->error = $emailValidation->getError();
+        return $isValid;
 
 //        if ($this->hasWarnings() && ((int) max($this->warnings) > $this->threshold)) {
 //            $this->error = self::ERR_DEPREC_REACHED;
@@ -51,7 +43,6 @@ class EmailValidator
 //            return false;
 //        }
 
-        return !$strict || (!$this->hasWarnings() && $dns);
     }
 
     /**
@@ -76,26 +67,6 @@ class EmailValidator
     public function getError()
     {
         return $this->error;
-    }
-
-    /**
-     * @param int $threshold
-     *
-     * @return EmailValidator
-     */
-    public function setThreshold($threshold)
-    {
-        $this->threshold = (int) $threshold;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getThreshold()
-    {
-        return $this->threshold;
     }
 
     protected function checkDNS()

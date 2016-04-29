@@ -6,7 +6,9 @@ use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Exception\ExpectingAT;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 use Egulias\EmailValidator\Exception\UnopenedComment;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\LocalTooLong;
@@ -94,7 +96,7 @@ class LocalPart extends Parser
             $this->lexer->moveNext();
 
             if (!$this->escaped() && isset($invalid[$this->lexer->token['type']])) {
-                throw new \InvalidArgumentException('ERR_EXPECTED_ATEXT');
+                throw new ExpectingATEXT();
             }
         }
 
@@ -102,12 +104,12 @@ class LocalPart extends Parser
 
         if ($prev['type'] === EmailLexer::S_BACKSLASH) {
             if (!$this->checkDQUOTE(false)) {
-                throw new \InvalidArgumentException('ERR_UNCLOSED_DQUOTE');
+                throw new UnclosedQuotedString();
             }
         }
 
         if (!$this->lexer->isNextToken(EmailLexer::S_AT) && $prev['type'] !== EmailLexer::S_BACKSLASH) {
-            throw new \InvalidArgumentException('ERR_EXPECED_AT');
+            throw new ExpectingAT();
         }
 
         return $parseAgain;

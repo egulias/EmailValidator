@@ -2,8 +2,6 @@
 
 namespace Egulias\EmailValidator\Exception;
 
-use Egulias\EmailValidator\InvalidEmail;
-
 class UnclosedComment extends InvalidEmail
 {
     const CODE = 146;
