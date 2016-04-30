@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\EmailValidator\Tests;
+namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Validation\RFCValidation;
@@ -33,8 +33,6 @@ use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\LocalTooLong;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
-use Egulias\EmailValidator\Warning\NoDNSRecord;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use Egulias\EmailValidator\Warning\QuotedString;
 
@@ -72,32 +70,32 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
     public function getValidEmails()
     {
         return array(
-            array('â@iana.org'),
-            array('fabien@symfony.com'),
-            array('example@example.co.uk'),
-            array('fabien_potencier@example.fr'),
-            array('example@localhost'),
-            array('fab\'ien@symfony.com'),
-            array('fab\ ien@symfony.com'),
-            array('example((example))@fakedfake.co.uk'),
-            array('example@faked(fake).co.uk'),
-            array('fabien+@symfony.com'),
-            array('инфо@письмо.рф'),
-            array('"username"@example.com'),
-            array('"user,name"@example.com'),
-            array('"user name"@example.com'),
-            array('"user@name"@example.com'),
-            array('"\a"@iana.org'),
-            array('"test\ test"@iana.org'),
-            array('""@iana.org'),
-            array('"\""@iana.org'),
-            array('müller@möller.de'),
-            array('test@email*'),
-            array('test@email!'),
-            array('test@email&'),
-            array('test@email^'),
-            array('test@email%'),
-            array('test@email$'),
+            ['â@iana.org'],
+            ['fabien@symfony.com'],
+            ['example@example.co.uk'],
+            ['fabien_potencier@example.fr'],
+            ['example@localhost'],
+            ['fab\'ien@symfony.com'],
+            ['fab\ ien@symfony.com'],
+            ['example((example))@fakedfake.co.uk'],
+            ['example@faked(fake).co.uk'],
+            ['fabien+@symfony.com'],
+            ['инфо@письмо.рф'],
+            ['"username"@example.com'],
+            ['"user,name"@example.com'],
+            ['"user name"@example.com'],
+            ['"user@name"@example.com'],
+            ['"\a"@iana.org'],
+            ['"test\ test"@iana.org'],
+            ['""@iana.org'],
+            ['"\""@iana.org'],
+            ['müller@möller.de'],
+            ['test@email*'],
+            ['test@email!'],
+            ['test@email&'],
+            ['test@email^'],
+            ['test@email%'],
+            ['test@email$'],
         );
     }
 
