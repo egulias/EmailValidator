@@ -9,7 +9,7 @@ interface EmailValidation
     public function isValid($email, EmailLexer $emailLexer);
 
     /**
-     * @return InvalidArgumentException or InvalidEmail
+     * @return InvalidEmail
      */
     public function getError();
 

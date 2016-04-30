@@ -16,7 +16,6 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
-use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\UnopenedComment;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
@@ -32,6 +31,7 @@ use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
+use Egulias\EmailValidator\Warning\TLD;
 
 class DomainPart extends Parser
 {
@@ -351,6 +351,13 @@ class DomainPart extends Parser
         $this->lexer->moveNext();
         if ($this->lexer->isNextToken(EmailLexer::S_DOT)) {
             throw new ExpectingATEXT();
+        }
+    }
+
+    protected function addTLDWarnings()
+    {
+        if ($this->warnings[DomainLiteral::CODE]) {
+            $this->warnings[TLD::CODE] = new TLD();
         }
     }
 }

@@ -8,8 +8,19 @@ use Egulias\EmailValidator\Exception\InvalidEmail;
 
 class RFCValidation implements EmailValidation
 {
+    /**
+     * @var EmailParser
+     */
     private $parser;
+
+    /**
+     * @var array
+     */
     private $warnings = [];
+
+    /**
+     * @var InvalidEmail
+     */
     private $error;
     
     public function isValid($email, EmailLexer $emailLexer)
