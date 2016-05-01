@@ -92,6 +92,9 @@ class LocalPart extends Parser
                 $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
                 $setSpecialsWarning = false;
             }
+            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH && $this->lexer->isNextToken(EmailLexer::S_DQUOTE)) {
+                $this->lexer->moveNext();
+            }
 
             $this->lexer->moveNext();
 
