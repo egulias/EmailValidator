@@ -85,6 +85,7 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
             ['"user,name"@example.com'],
             ['"user name"@example.com'],
             ['"user@name"@example.com'],
+            ['"user\"name"@example.com'],
             ['"\a"@iana.org'],
             ['"test\ test"@iana.org'],
             ['""@iana.org'],
