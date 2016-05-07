@@ -22,8 +22,8 @@
     "phpunit/phpunit": "~4.4"
   },
   "autoload": {
-    "psr-0": {
-      "Egulias\\": "src/"
+    "psr-4": {
+      "Egulias\\EmailValidator\\": "EmailValidator"
     }
   }
 }
