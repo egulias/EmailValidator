@@ -9,46 +9,55 @@ With the help of
 Run the command below to install via Composer
 
 ```shell
-composer require egulias/email-validator
+composer require egulias/email-validator "~2.0"
 ```
 
-##Usage##
+##Getting Started##
+`EmailValidator`requires you to decide which (or combination of them) validation/s strategy/ies you'd like to follow for each [validation](#Available validations).
 
-Simple example:
-
+A basic example with the RFC validation
 ```php
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
 
-$validator = new EmailValidator;
-if ($validator->isValid($email)) {
-	echo $email . ' is a valid email address';
-}
+$validator = new EmailValidator();
+$validator->isValid("example@example.com", new RFCValidation()) //true
 ```
 
-More advanced example (returns detailed diagnostic error codes):
 
+###Available validations###
+
+1. [RFCValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/RFCValidation.php)
+2. [NoWarningsRFCValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/NoRFCWarningsValidation.php)
+3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php)
+4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php)
+5. [MultipleValidationsWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
+6. [Your own validation](#How to extend)
+
+`MultipleValidationsWithAnd`
+It is a validation that operates over other validations performing a logical and (&&) over the result of each validation.
 ```php
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
 
-$validator = new EmailValidator;
-$email = 'dominic@sayers.cc';
-$result = $validator->isValid($email);
-
-if ($result) {
-	echo $email . ' is a valid email address';
-} else if ($validator->hasWarnings()) {
-	echo 'Warning! ' . $email . ' has unusual/deprecated features (result code ' . var_export($validator->getWarnings(), true) . ')';
-} else {
-	echo $email . ' is not a valid email address (result code ' . $validator->getError() . ')';
-}
+$validator = new EmailValidator();
+$multipleValidations = new MultipleValidationsWithAnd([
+    new RFCValidation(),
+    new DNSCheckValidation
+])
+$validator->isValid("example@example.com", $multipleValidations) //true
 ```
 
-##Contributors##
-As this is a port from another library and work, here are other people related to the previous:
+###How to extend###
+
+Is easy! You just need to extend [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
+
+
+##Other Contributors##
+(You can find current contributors [here](https://github.com/egulias/EmailValidator/graphs/contributors))
+As this is a port from another library and work, here are other people related to the previous one:
 
 * Ricard Clau [@ricardclau](http://github.com/ricardclau):      	Performance against PHP built-in filter_var
 * Josepf Bielawski [@stloyd](http://github.com/stloyd):      		For its first re-work of Dominic's lib
