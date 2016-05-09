@@ -13,7 +13,7 @@ composer require egulias/email-validator "~2.0"
 ```
 
 ##Getting Started##
-`EmailValidator`requires you to decide which (or combination of them) validation/s strategy/ies you'd like to follow for each [validation](#Available validations).
+`EmailValidator`requires you to decide which (or combination of them) validation/s strategy/ies you'd like to follow for each [validation](#available-validations).
 
 A basic example with the RFC validation
 ```php
@@ -33,10 +33,12 @@ $validator->isValid("example@example.com", new RFCValidation()) //true
 3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php)
 4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php)
 5. [MultipleValidationsWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
-6. [Your own validation](#How to extend)
+6. [Your own validation](#how-to-extend)
 
 `MultipleValidationsWithAnd`
+
 It is a validation that operates over other validations performing a logical and (&&) over the result of each validation.
+
 ```php
 <?php
 
@@ -45,18 +47,19 @@ use Egulias\EmailValidator\EmailValidator;
 $validator = new EmailValidator();
 $multipleValidations = new MultipleValidationsWithAnd([
     new RFCValidation(),
-    new DNSCheckValidation
+    new DNSCheckValidation()
 ])
 $validator->isValid("example@example.com", $multipleValidations) //true
 ```
 
 ###How to extend###
 
-Is easy! You just need to extend [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
+It's easy! You just need to extend [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
 
 
 ##Other Contributors##
 (You can find current contributors [here](https://github.com/egulias/EmailValidator/graphs/contributors))
+
 As this is a port from another library and work, here are other people related to the previous one:
 
 * Ricard Clau [@ricardclau](http://github.com/ricardclau):      	Performance against PHP built-in filter_var
