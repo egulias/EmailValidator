@@ -2,12 +2,11 @@
 
 use Egulias\EmailValidator\EmailValidator;
 
-require __DIR__ . '/../bootstrap.php';
-require __DIR__ . '/../../../isemail/is_email.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 $iterations = 10000;
 
-$testingMail = 'fabien@symfony.com';
+$testingMail = 'example@example.com';
 echo 'Testing ' . $iterations . ' iterations with ' . $testingMail . PHP_EOL;
 
 $a = microtime(true);

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2c5932404194e3b36ba0393169c080e9",
-    "content-hash": "f690de9ccec7c67ab8552dfc2ddfa49d",
+    "hash": "494e38f91b5ecbb1d8b92d96c3c66883",
+    "content-hash": "b05eb3413f6218b2ea85ba77a2fe6eec",
     "packages": [
         {
             "name": "doctrine/lexer",
@@ -116,6 +116,41 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
+        },
+        {
+            "name": "dominicsayers/isemail",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dominicsayers/isemail",
+                "reference": "64286085b40c39e6f39b1d23276d90635e5b3099"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "is_email.php"
+                ]
+            },
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Dominic Sayers",
+                    "email": "dominic@sayers.cc"
+                }
+            ],
+            "description": "Checks an email address against the following RFCs: 3696, 1123, 4291, 5321, 5322",
+            "homepage": "http://isemail.info",
+            "keywords": [
+                "email",
+                "validation"
+            ],
+            "support": {
+                "source": "https://github.com/dominicsayers/isemail",
+                "issues": "https://github.com/dominicsayers/isemail/issues"
+            },
+            "time": "2014-11-26 12:46:56"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1290,7 +1325,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -1343,7 +1378,7 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -1403,7 +1438,7 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -1511,7 +1546,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
@@ -1560,7 +1595,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -1611,7 +1646,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "satooshi/php-coveralls": 20
+        "satooshi/php-coveralls": 20,
+        "dominicsayers/isemail": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

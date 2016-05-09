@@ -13,7 +13,7 @@
 >
 <testsuites>
   <testsuite name="EmailValidator Test Suite">
-    <directory>./tests/</directory>
+    <directory>./Tests/EmailValidator</directory>
     <exclude>./vendor/</exclude>
   </testsuite>
 </testsuites>

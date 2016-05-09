@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\EmailValidator\Tests;
+namespace Egulias\Tests\EmailValidator;
 
 use Egulias\EmailValidator\EmailLexer;
 
