@@ -15,11 +15,10 @@
   },
   "require":      {
     "php": ">= 5.3.3",
-    "doctrine/lexer": "~1.0,>=1.0.1"
+    "doctrine/lexer": "1.0.1"
   },
   "require-dev" :   {
-    "satooshi/php-coveralls": "dev-master",
-    "phpunit/phpunit": "~4.4"
+    "phpunit/phpunit": "4.8.24"
   },
   "autoload": {
     "psr-0": {
