@@ -12,15 +12,17 @@ php:
 
 env:
   global:
-    - deps=no
+    - deps=high
 
 matrix:
   fast_finish: true
   include:
     - php: 5.3
       env: deps=low
-    - php: 5.6
-      env: deps=high
+    - php: 5.4
+      env: deps=no
+    - php: 5.5
+      env: deps=no
 
 install:
   - if [ "$deps" = "no" ]; then composer install; fi
@@ -30,7 +32,4 @@ install:
 script:
  - mkdir -p build/logs
  - phpunit --coverage-clover build/logs/clover.xml
-
-after_script:
- - php vendor/bin/coveralls
 
