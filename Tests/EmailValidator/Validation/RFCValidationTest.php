@@ -97,6 +97,7 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
             ['test@email^'],
             ['test@email%'],
             ['test@email$'],
+            ["1500111@профи-инвест.рф"],
         );
     }
 
