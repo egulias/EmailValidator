@@ -20,10 +20,9 @@ class SpoofCheckValidation implements EmailValidation
         
         if ($checker->isSuspicious($email)) {
             $this->error = new SpoofEmail();
-            return false;
         }
         
-        return true;
+        return $this->error === null;
     }
 
     public function getError()

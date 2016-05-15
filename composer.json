@@ -1,6 +1,6 @@
 {
   "name":         "egulias/email-validator",
-  "description":  "A library for validating emails",
+  "description":  "A library for validating emails against several RFCs",
   "homepage":     "https://github.com/egulias/EmailValidator",
   "type":         "Library",
   "keywords":     ["email", "validation", "validator", "emailvalidation", "emailvalidator"],
@@ -13,13 +13,20 @@
       "dev-master": "2.0.x-dev"
     }
   },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/dominicsayers/isemail"
+    }
+  ],
   "require":      {
     "php": ">= 5.5",
-    "doctrine/lexer": "~1.0,>=1.0.1"
+    "doctrine/lexer": "^1.0.1"
   },
   "require-dev" :   {
     "satooshi/php-coveralls": "dev-master",
-    "phpunit/phpunit": "~4.4"
+    "phpunit/phpunit": "^4.8.0",
+    "dominicsayers/isemail": "dev-master"
   },
   "autoload": {
     "psr-4": {
