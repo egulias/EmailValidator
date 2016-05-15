@@ -127,6 +127,7 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
             ['.example@localhost'],
             ['ex\ample@localhost'],
             ['example@local\host'],
+            ['example@localhost\\'],
             ['example@localhost.'],
             ['user name@example.com'],
             ['username@ example . com'],

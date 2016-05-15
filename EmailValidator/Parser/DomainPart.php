@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
@@ -133,9 +132,7 @@ class DomainPart extends Parser
         do {
             $prev = $this->lexer->getPrevious();
 
-            if ($this->lexer->token['type'] === EmailLexer::S_SLASH) {
-                throw new CharNotAllowed();
-            }
+            $this->checkNotAllowedChars($this->lexer->token);
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
                 $this->parseComments();
@@ -172,6 +169,14 @@ class DomainPart extends Parser
         } while ($this->lexer->token);
 
         return $domain;
+    }
+    
+    private function checkNotAllowedChars($token)
+    {
+        $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH=> true];
+        if (isset($notAllowed[$token['type']])) {
+            throw new CharNotAllowed();
+        }
     }
 
     protected function parseDomainLiteral()
