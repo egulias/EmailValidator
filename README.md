@@ -32,10 +32,10 @@ $validator->isValid("example@example.com", new RFCValidation()) //true
 2. [NoWarningsRFCValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/NoRFCWarningsValidation.php)
 3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php)
 4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php)
-5. [MultipleValidationsWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
+5. [MultipleValidationWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
 6. [Your own validation](#how-to-extend)
 
-`MultipleValidationsWithAnd`
+`MultipleValidationWithAnd`
 
 It is a validation that operates over other validations performing a logical and (&&) over the result of each validation.
 
@@ -43,9 +43,12 @@ It is a validation that operates over other validations performing a logical and
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\DNSCheckValidation;
+use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 $validator = new EmailValidator();
-$multipleValidations = new MultipleValidationsWithAnd([
+$multipleValidations = new MultipleValidationWithAnd([
     new RFCValidation(),
     new DNSCheckValidation()
 ])
