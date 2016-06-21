@@ -9,10 +9,21 @@ use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 
 class DNSCheckValidationTest extends \PHPUnit_Framework_TestCase
 {
-    public function testValidDNS()
+    public function validEmailsProvider()
+    {
+        return [
+            ["example@example.com"],
+            ["example+foo@example.com"],
+        ];
+    }
+
+    /**
+     * @dataProvider validEmailsProvider
+     */
+    public function testValidDNS($validEmail)
     {
         $validation = new DNSCheckValidation();
-        $this->assertTrue($validation->isValid("example@example.com", new EmailLexer()));
+        $this->assertTrue($validation->isValid($validEmail, new EmailLexer()));
     }
     
     public function testInvalidDNS()

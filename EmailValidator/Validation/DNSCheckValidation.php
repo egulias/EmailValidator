@@ -28,7 +28,7 @@ class DNSCheckValidation implements EmailValidation
         // use the input to check DNS if we cannot extract something similar to a domain
         $host = $email;
         // Arguable pattern to extract the domain. Not aiming to validate the domain nor the email
-        $pattern = "/^[a-z'0-9]+([._-][a-z'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+)+)+$/";
+        $pattern = "/^[a-z'0-9]+([+._-][a-z'0-9]+)*@([a-z0-9]+([._-][a-z0-9]+)+)+$/";
         if (preg_match($pattern, $email, $result)) {
             $host = $this->extractHost($result);
         }
