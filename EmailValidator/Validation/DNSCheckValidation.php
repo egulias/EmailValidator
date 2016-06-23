@@ -3,16 +3,12 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\InvalidEmail;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 
 class DNSCheckValidation implements EmailValidation
 {
-    /**
-     * @var EmailParser
-     */
-    private $parser;
-
     /**
      * @var array
      */
