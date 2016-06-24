@@ -3,6 +3,7 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\InvalidEmail;
 
 interface EmailValidation
 {

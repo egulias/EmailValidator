@@ -58,7 +58,7 @@ class EmailValidator
     }
 
     /**
-     * @return string
+     * @return InvalidEmail
      */
     public function getError()
     {
