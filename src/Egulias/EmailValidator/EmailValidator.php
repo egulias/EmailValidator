@@ -7,7 +7,7 @@ namespace Egulias\EmailValidator;
  *
  * @author Eduardo Gulias Davis <me@egulias.com>
  */
-class EmailValidator
+class EmailValidator implements EmailValidatorInterface
 {
     /**
      * Critical validation errors used to indicate that
@@ -113,26 +113,7 @@ class EmailValidator
     }
 
     /**
-     * Validates an email address against the following standards:
-     *
-     * RFC-5321: Simple Mail Transfer Protocol
-     * RFC-5322: Internet Message Format
-     * RFC-6530: Overview and Framework for Internationalized Email
-     * RFC-6531: SMTP Extension for Internationalized Email
-     * RFC-6532: Internationalized Email Headers
-     * RFC-1123 section 2.1: Requirements for Internet Hosts -- Application and Support
-     * RFC-4291 section 2.2: IP Version 6 Addressing Architecture
-     *
-     * @param string $email    The email address to validate.
-     * @param bool   $checkDNS Whether or not the email address's hostname should
-     *                         be confirmed with a DNS lookup. This only comes
-     *                         into play if strict mode is also enabled.
-     * @param bool   $strict   If this is true, and any informational warnings
-     *                         were raised during validation, the email address
-     *                         will be considered invalid. Additionally, if
-     *                         $checkDNS is true and the DNS lookup failed,
-     *                         the email address will be considered invalid.
-     * @return bool
+     * {@inheritdoc}
      */
     public function isValid($email, $checkDNS = false, $strict = false)
     {
@@ -156,7 +137,7 @@ class EmailValidator
     }
 
     /**
-     * @return boolean
+     * {@inheritdoc}
      */
     public function hasWarnings()
     {
@@ -164,7 +145,7 @@ class EmailValidator
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getWarnings()
     {
@@ -172,7 +153,7 @@ class EmailValidator
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getError()
     {
@@ -180,9 +161,7 @@ class EmailValidator
     }
 
     /**
-     * @param int $threshold
-     *
-     * @return EmailValidator
+     * {@inheritdoc}
      */
     public function setThreshold($threshold)
     {
@@ -192,7 +171,7 @@ class EmailValidator
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getThreshold()
     {
