@@ -12,8 +12,17 @@ class DNSCheckValidationTest extends \PHPUnit_Framework_TestCase
     public function validEmailsProvider()
     {
         return [
-            ["example@example.com"],
-            ["example+foo@example.com"],
+            // dot-atom
+            ['Abc@example.com'],
+            ['ABC@EXAMPLE.COM'],
+            ['Abc.123@example.com'],
+            ['user+mailbox/department=shipping@example.com'],
+            ['!#$%&\'*+-/=?^_`.{|}~@example.com'],
+
+            // quoted string
+            ['"Abc@def"@example.com'],
+            ['"Fred\ Bloggs"@example.com'],
+            ['"Joe.\\Blow"@example.com'],
         ];
     }
 
