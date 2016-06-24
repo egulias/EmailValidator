@@ -7,7 +7,7 @@ namespace Egulias\EmailValidator;
  *
  * @author Eduardo Gulias Davis <me@egulias.com>
  */
-class EmailValidator
+class EmailValidator implements EmailValidatorInterface
 {
     const ERR_CONSECUTIVEATS     = 128;
     const ERR_EXPECTING_DTEXT    = 129;
@@ -73,6 +73,9 @@ class EmailValidator
         $this->parser = new EmailParser(new EmailLexer());
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isValid($email, $checkDNS = false, $strict = false)
     {
         try {
@@ -99,7 +102,7 @@ class EmailValidator
     }
 
     /**
-     * @return boolean
+     * {@inheritdoc}
      */
     public function hasWarnings()
     {
@@ -107,7 +110,7 @@ class EmailValidator
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getWarnings()
     {
@@ -115,7 +118,7 @@ class EmailValidator
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getError()
     {
@@ -123,9 +126,7 @@ class EmailValidator
     }
 
     /**
-     * @param int $threshold
-     *
-     * @return EmailValidator
+     * {@inheritdoc}
      */
     public function setThreshold($threshold)
     {
@@ -135,7 +136,7 @@ class EmailValidator
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getThreshold()
     {
