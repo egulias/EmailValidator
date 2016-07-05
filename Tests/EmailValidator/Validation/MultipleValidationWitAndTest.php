@@ -25,7 +25,7 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Egulias\EmailValidator\Validation\Exception\EmptyValidationList
+     * @expectedException \Egulias\EmailValidator\Validation\Exception\EmptyValidationList
      */
     public function testEmptyListIsNotAllowed()
     {
@@ -76,6 +76,29 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         $validation2->expects($this->once())->method("getError")->willReturn($error2);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2]);
+        $multipleValidation->isValid("example@example.com", $lexer);
+        $this->assertEquals($expectedResult, $multipleValidation->getError());
+    }
+
+    public function testBreakOutOfLoopWhenError()
+    {
+        $error = new CommaInDomain();
+
+        $expectedResult = new MultipleErrors([$error]);
+
+        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
+
+        $validation1 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation1->expects($this->any())->method("isValid")->willReturn(false);
+        $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
+        $validation1->expects($this->once())->method("getError")->willReturn($error);
+
+        $validation2 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation2->expects($this->never())->method("isValid");
+        $validation2->expects($this->never())->method("getWarnings");
+        $validation2->expects($this->never())->method("getError");
+
+        $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], true);
         $multipleValidation->isValid("example@example.com", $lexer);
         $this->assertEquals($expectedResult, $multipleValidation->getError());
     }
