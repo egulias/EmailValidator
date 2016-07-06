@@ -31,7 +31,7 @@ class MultipleValidationWithAnd implements EmailValidation
     private $warnings = [];
 
     /**
-     * @var InvalidEmail
+     * @var MultipleErrors
      */
     private $error;
 
