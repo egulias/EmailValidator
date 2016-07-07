@@ -98,7 +98,7 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         $validation2->expects($this->never())->method("getWarnings");
         $validation2->expects($this->never())->method("getError");
 
-        $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], true);
+        $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], MultipleValidationWithAnd::STOP_ON_ERROR);
         $multipleValidation->isValid("example@example.com", $lexer);
         $this->assertEquals($expectedResult, $multipleValidation->getError());
     }

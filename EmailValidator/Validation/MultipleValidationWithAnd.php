@@ -78,7 +78,7 @@ class MultipleValidationWithAnd implements EmailValidation
 
     private function shouldStop($result)
     {
-        return !$result && $this->mode;
+        return !$result && $this->mode === self::STOP_ON_ERROR;
     }
 
     /**
