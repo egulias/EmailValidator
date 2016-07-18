@@ -4,6 +4,10 @@
 With the help of
 
 ![Powered by PhpStorm](https://www.jetbrains.com/phpstorm/documentation/docs/logo_phpstorm.png)
+
+##Requirements##
+To load this library, you must have [Composer](https://getcomposer.org) installed and operational. The Spoofchecking validation requires that your PHP system have the [PHP Internationalization Libraries](http://php.net/manual/en/book.intl.php) (also known as PHP Intl) insalled.
+
 ##Installation##
 
 Run the command below to install via Composer
@@ -51,8 +55,8 @@ $validator = new EmailValidator();
 $multipleValidations = new MultipleValidationWithAnd([
     new RFCValidation(),
     new DNSCheckValidation()
-])
-$validator->isValid("example@example.com", $multipleValidations) //true
+]);
+$validator->isValid("example@example.com", $multipleValidations); //true
 ```
 
 ###How to extend###
