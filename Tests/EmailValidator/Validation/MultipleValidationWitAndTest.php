@@ -32,6 +32,19 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         new MultipleValidationWithAnd([]);
     }
 
+    public function testValidationIsFine()
+    {
+        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
+
+        $validation = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation->expects($this->any())->method("isValid")->willReturn(true);
+        $validation->expects($this->once())->method("getWarnings")->willReturn([]);
+
+        $multipleValidation = new MultipleValidationWithAnd([$validation]);
+        $this->assertTrue($multipleValidation->isValid("example@example.com", $lexer));
+        $this->assertNull($multipleValidation->getError());
+    }
+
     public function testAccumulatesWarnings()
     {
         $warnings1 = [
