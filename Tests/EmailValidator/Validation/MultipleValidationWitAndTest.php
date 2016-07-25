@@ -32,7 +32,7 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         new MultipleValidationWithAnd([]);
     }
 
-    public function testValidationIsFine()
+    public function testValidationIsValid()
     {
         $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
 

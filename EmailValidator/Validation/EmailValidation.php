@@ -9,7 +9,7 @@ use Egulias\EmailValidator\Warning\Warning;
 interface EmailValidation
 {
     /**
-     * Returns true if the given email is fine.
+     * Returns true if the given email is valid.
      *
      * @param string     $email      The email you want to validate.
      * @param EmailLexer $emailLexer The email lexer.
@@ -20,6 +20,8 @@ interface EmailValidation
 
     /**
      * Returns the validation error.
+     *
+     * Be careful about no-error does not necessarily mean email was valid.
      *
      * @return InvalidEmail|null
      */
