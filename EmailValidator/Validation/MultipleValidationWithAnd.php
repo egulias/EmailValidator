@@ -78,7 +78,8 @@ class MultipleValidationWithAnd implements EmailValidation
         return $result;
     }
 
-    private function addNewError($possibleError, array $errors) {
+    private function addNewError($possibleError, array $errors)
+    {
         if (null !== $possibleError) {
             $errors[] = $possibleError;
         }

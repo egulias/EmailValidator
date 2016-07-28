@@ -21,8 +21,6 @@ interface EmailValidation
     /**
      * Returns the validation error.
      *
-     * Be careful about no-error does not necessarily mean email was valid.
-     *
      * @return InvalidEmail|null
      */
     public function getError();
