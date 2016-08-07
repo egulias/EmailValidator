@@ -28,6 +28,9 @@
     "phpunit/phpunit": "^4.8.0",
     "dominicsayers/isemail": "dev-master"
   },
+  "suggest": {
+    "ext/php-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
+  },
   "autoload": {
     "psr-4": {
       "Egulias\\EmailValidator\\": "EmailValidator"
