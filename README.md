@@ -13,7 +13,7 @@ With the help of [PHPStorm](https://www.jetbrains.com/phpstorm/)
 Run the command below to install via Composer
 
 ```shell
-composer require egulias/email-validator "~2.0"
+composer require egulias/email-validator "~2.1"
 ```
 
 ##Getting Started##
