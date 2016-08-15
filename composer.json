@@ -29,7 +29,7 @@
     "dominicsayers/isemail": "dev-master"
   },
   "suggest": {
-    "ext/php-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
+    "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
   },
   "autoload": {
     "psr-4": {
