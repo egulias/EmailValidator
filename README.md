@@ -24,6 +24,7 @@ A basic example with the RFC validation
 <?php
 
 use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 $validator = new EmailValidator();
 $validator->isValid("example@example.com", new RFCValidation()); //true
