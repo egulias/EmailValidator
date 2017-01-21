@@ -11,7 +11,7 @@ class EmailValidator
      * @var EmailLexer
      */
     private $lexer;
-    
+
     /**
      * @var array
      */
@@ -21,7 +21,7 @@ class EmailValidator
      * @var InvalidEmail
      */
     protected $error;
-    
+
     public function __construct()
     {
         $this->lexer = new EmailLexer();
@@ -37,7 +37,7 @@ class EmailValidator
         $isValid = $emailValidation->isValid($email, $this->lexer);
         $this->warnings = $emailValidation->getWarnings();
         $this->error = $emailValidation->getError();
-        
+
         return $isValid;
     }
 

@@ -54,16 +54,16 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
             DomainLiteral::CODE => new DomainLiteral()
         ];
         $expectedResult = array_merge($warnings1, $warnings2);
-        
+
         $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
         $validation1 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn($warnings1);
-        
+
         $validation2 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn($warnings2);
-        
+
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2]);
         $multipleValidation->isValid("example@example.com", $lexer);
         $this->assertEquals($expectedResult, $multipleValidation->getWarnings());
@@ -73,11 +73,11 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
     {
         $error1 = new CommaInDomain();
         $error2 = new NoDomainPart();
-        
+
         $expectedResult = new MultipleErrors([$error1, $error2]);
 
         $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
-        
+
         $validation1 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);

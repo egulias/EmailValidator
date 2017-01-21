@@ -22,7 +22,7 @@ abstract class Warning
     {
         return $this->rfcNumber;
     }
-    
+
     public function __toString()
     {
         return $this->message() . " rfc: " .  $this->rfcNumber . "interal code: " . static::CODE;

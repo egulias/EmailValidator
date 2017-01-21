@@ -17,7 +17,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($validator->isValid("example@example.com", $validation));
     }
-    
+
     public function testMultipleValidation()
     {
         $validator = new EmailValidator();

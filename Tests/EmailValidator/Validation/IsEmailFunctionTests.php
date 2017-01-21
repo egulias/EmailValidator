@@ -28,8 +28,8 @@ class IsEmailFunctionTests extends \PHPUnit_Framework_TestCase
     public function isEmailTestSuite()
     {
         $testSuite = dirname(__FILE__) . '/../../resources/is_email_tests.xml';
-		$document = new \DOMDocument();
-		$document->load($testSuite);
+        $document = new \DOMDocument();
+        $document->load($testSuite);
         $elements = $document->getElementsByTagName('test');
         $tests = [];
 
@@ -40,5 +40,4 @@ class IsEmailFunctionTests extends \PHPUnit_Framework_TestCase
 
         return $tests;
     }
-
 }

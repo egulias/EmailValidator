@@ -48,7 +48,7 @@ class MultipleValidationWithAnd implements EmailValidation
         if (count($validations) == 0) {
             throw new EmptyValidationList();
         }
-        
+
         $this->validations = $validations;
         $this->mode = $mode;
     }

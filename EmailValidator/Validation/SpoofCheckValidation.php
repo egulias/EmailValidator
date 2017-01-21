@@ -18,11 +18,11 @@ class SpoofCheckValidation implements EmailValidation
     {
         $checker = new Spoofchecker();
         $checker->setChecks(Spoofchecker::SINGLE_SCRIPT);
-        
+
         if ($checker->isSuspicious($email)) {
             $this->error = new SpoofEmail();
         }
-        
+
         return $this->error === null;
     }
 

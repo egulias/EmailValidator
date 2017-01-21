@@ -46,7 +46,7 @@ class DNSCheckValidation implements EmailValidation
     {
         $Aresult = true;
         $MXresult = checkdnsrr($host, 'MX');
-        
+
         if (!$MXresult) {
             $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
             $Aresult = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
