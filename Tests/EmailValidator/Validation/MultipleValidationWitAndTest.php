@@ -61,7 +61,6 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         $validation1->expects($this->once())->method("getWarnings")->willReturn($warnings1);
 
         $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
-
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn($warnings2);
 
