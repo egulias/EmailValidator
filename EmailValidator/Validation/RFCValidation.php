@@ -22,7 +22,7 @@ class RFCValidation implements EmailValidation
      * @var InvalidEmail
      */
     private $error;
-    
+
     public function isValid($email, EmailLexer $emailLexer)
     {
         $this->parser = new EmailParser($emailLexer);
@@ -32,7 +32,7 @@ class RFCValidation implements EmailValidation
             $this->error = $invalid;
             return false;
         }
-        
+
         $this->warnings = $this->parser->getWarnings();
         return true;
     }

@@ -34,13 +34,13 @@ class DNSCheckValidationTest extends \PHPUnit_Framework_TestCase
         $validation = new DNSCheckValidation();
         $this->assertTrue($validation->isValid($validEmail, new EmailLexer()));
     }
-    
+
     public function testInvalidDNS()
     {
         $validation = new DNSCheckValidation();
         $this->assertFalse($validation->isValid("example@invalid.example.com", new EmailLexer()));
     }
-    
+
     public function testDNSWarnings()
     {
         $validation = new DNSCheckValidation();
@@ -48,7 +48,7 @@ class DNSCheckValidationTest extends \PHPUnit_Framework_TestCase
         $validation->isValid("example@invalid.example.com", new EmailLexer());
         $this->assertEquals($expectedWarnings, $validation->getWarnings());
     }
-    
+
     public function testNoDNSError()
     {
         $validation = new DNSCheckValidation();

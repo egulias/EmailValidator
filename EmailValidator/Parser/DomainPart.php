@@ -170,7 +170,7 @@ class DomainPart extends Parser
 
         return $domain;
     }
-    
+
     private function checkNotAllowedChars($token)
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH=> true];

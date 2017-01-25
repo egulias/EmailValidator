@@ -12,7 +12,7 @@ class NoRFCWarningsValidationTest extends \PHPUnit_Framework_TestCase
     public function testInvalidEmailIsInvalid()
     {
         $validation = new NoRFCWarningsValidation();
-        
+
         $this->assertFalse($validation->isValid('non-email-string', new EmailLexer()));
         $this->assertInstanceOf(NoDomainPart::class, $validation->getError());
     }
@@ -24,7 +24,7 @@ class NoRFCWarningsValidationTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validation->isValid(str_repeat('x', 254).'@example.com', new EmailLexer())); // too long email
         $this->assertInstanceOf(RFCWarnings::class, $validation->getError());
     }
-    
+
     public function testEmailWithoutWarningsIsValid()
     {
         $validation = new NoRFCWarningsValidation();

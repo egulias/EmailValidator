@@ -47,7 +47,7 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
      * @var EmailLexer
      */
     protected $lexer;
-    
+
     protected function setUp()
     {
         $this->validator = new RFCValidation();
@@ -106,7 +106,7 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
         $email     = "\x80\x81\x82@\x83\x84\x85.\x86\x87\x88";
         $this->assertFalse($this->validator->isValid($email, $this->lexer));
     }
-    
+
     /**
      * @dataProvider getInvalidEmails
      */
@@ -228,7 +228,7 @@ class RFCValidationTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(isset($expectedWarnings[$warning->code()]));
         }
     }
-    
+
     public function getInvalidEmailsWithWarnings()
     {
         return [
