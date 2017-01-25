@@ -10,7 +10,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function testValidationIsUsed()
     {
         $validator = new EmailValidator();
-        $validation = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation->expects($this->once())->method("isValid")->willReturn(true);
         $validation->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation->expects($this->once())->method("getError")->willReturn(null);
@@ -21,7 +21,7 @@ class EmailValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMultipleValidation()
     {
         $validator = new EmailValidator();
-        $validation = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation->expects($this->once())->method("isValid")->willReturn(true);
         $validation->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation->expects($this->once())->method("getError")->willReturn(null);

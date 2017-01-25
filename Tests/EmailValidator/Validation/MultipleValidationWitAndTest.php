@@ -13,11 +13,11 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
 {
     public function testUsesAndLogicalOperation()
     {
-        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
-        $validationTrue = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $validationTrue = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validationTrue->expects($this->any())->method("isValid")->willReturn(true);
         $validationTrue->expects($this->any())->method("getWarnings")->willReturn([]);
-        $validationFalse = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validationFalse = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validationFalse->expects($this->any())->method("isValid")->willReturn(false);
         $validationFalse->expects($this->any())->method("getWarnings")->willReturn([]);
         $multipleValidation = new MultipleValidationWithAnd([$validationTrue, $validationFalse]);
@@ -34,9 +34,9 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
 
     public function testValidationIsValid()
     {
-        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
+        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
 
-        $validation = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation->expects($this->any())->method("isValid")->willReturn(true);
         $validation->expects($this->once())->method("getWarnings")->willReturn([]);
 
@@ -55,12 +55,12 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         ];
         $expectedResult = array_merge($warnings1, $warnings2);
         
-        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
-        $validation1 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn($warnings1);
         
-        $validation2 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn($warnings2);
         
@@ -76,14 +76,14 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
         
         $expectedResult = new MultipleErrors([$error1, $error2]);
 
-        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
+        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
         
-        $validation1 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation1->expects($this->once())->method("getError")->willReturn($error1);
 
-        $validation2 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation2->expects($this->once())->method("getError")->willReturn($error2);
@@ -99,14 +99,14 @@ class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
 
         $expectedResult = new MultipleErrors([$error]);
 
-        $lexer = $this->getMock("Egulias\\EmailValidator\\EmailLexer");
+        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
 
-        $validation1 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(false);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation1->expects($this->once())->method("getError")->willReturn($error);
 
-        $validation2 = $this->getMock("Egulias\\EmailValidator\\Validation\\EmailValidation");
+        $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation2->expects($this->never())->method("isValid");
         $validation2->expects($this->never())->method("getWarnings");
         $validation2->expects($this->never())->method("getError");
