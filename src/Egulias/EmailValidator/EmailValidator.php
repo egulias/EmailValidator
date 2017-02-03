@@ -184,7 +184,10 @@ class EmailValidator implements EmailValidatorInterface
      */
     protected function checkDNS()
     {
-        $mxRecordExists = checkdnsrr(trim($this->parser->getParsedDomainPart()), 'MX');
+        $host = $this->parser->getParsedDomainPart();
+        $host = rtrim($host, '.') . '.';
+
+        $mxRecordExists = checkdnsrr($host, 'MX');
 
         if (!$mxRecordExists) {
             $this->warnings[] = self::DNSWARN_NO_RECORD;
