@@ -31,6 +31,10 @@ class DomainPart extends Parser
             $this->parseDomainComments();
         }
 
+        if (!$this->isMatchedPattern($domainPart)) {
+            throw new \InvalidArgumentException('INVALID');
+        }
+
         $domain = $this->doParseDomainPart();
 
         $prev = $this->lexer->getPrevious();
@@ -335,5 +339,10 @@ class DomainPart extends Parser
         if ($this->lexer->isNextToken(EmailLexer::S_DOT)) {
             throw new \InvalidArgumentException('ERR_EXPECTING_ATEXT');
         }
+    }
+
+    protected function isMatchedPattern($value)
+    {
+        return preg_match('/^.+\@\S+\.\S+$/', $value);
     }
 }
