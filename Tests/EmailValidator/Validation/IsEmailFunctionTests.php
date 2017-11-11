@@ -7,8 +7,9 @@ use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use PHPUnit\Framework\TestCase;
 
-class IsEmailFunctionTests extends \PHPUnit_Framework_TestCase
+class IsEmailFunctionTests extends TestCase
 {
     /**
      * @dataProvider isEmailTestSuite

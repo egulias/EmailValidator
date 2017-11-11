@@ -24,8 +24,8 @@
     "doctrine/lexer": "^1.0.1"
   },
   "require-dev" :   {
-    "satooshi/php-coveralls": "dev-master",
-    "phpunit/phpunit": "^4.8.0",
+    "satooshi/php-coveralls": "^1.0.1",
+    "phpunit/phpunit": "^4.8.35",
     "dominicsayers/isemail": "dev-master"
   },
   "suggest": {
