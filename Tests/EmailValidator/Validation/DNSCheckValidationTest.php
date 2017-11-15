@@ -6,8 +6,9 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use PHPUnit\Framework\TestCase;
 
-class DNSCheckValidationTest extends \PHPUnit_Framework_TestCase
+class DNSCheckValidationTest extends TestCase
 {
     public function validEmailsProvider()
     {

@@ -8,8 +8,9 @@ use Egulias\EmailValidator\Validation\MultipleErrors;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\DomainLiteral;
+use PHPUnit\Framework\TestCase;
 
-class MultipleValidationWitAndTest extends \PHPUnit_Framework_TestCase
+class MultipleValidationWitAndTest extends TestCase
 {
     public function testUsesAndLogicalOperation()
     {

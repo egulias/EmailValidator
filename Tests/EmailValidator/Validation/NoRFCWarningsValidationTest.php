@@ -6,8 +6,9 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Validation\Error\RFCWarnings;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
+use PHPUnit\Framework\TestCase;
 
-class NoRFCWarningsValidationTest extends \PHPUnit_Framework_TestCase
+class NoRFCWarningsValidationTest extends TestCase
 {
     public function testInvalidEmailIsInvalid()
     {

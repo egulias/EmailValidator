@@ -4,8 +4,9 @@ namespace Egulias\Tests\EmailValidator;
 
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use PHPUnit\Framework\TestCase;
 
-class EmailValidatorTest extends \PHPUnit_Framework_TestCase
+class EmailValidatorTest extends TestCase
 {
     public function testValidationIsUsed()
     {

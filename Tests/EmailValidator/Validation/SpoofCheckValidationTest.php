@@ -4,8 +4,9 @@ namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Validation\SpoofCheckValidation;
+use PHPUnit\Framework\TestCase;
 
-class SpoofCheckValidationTest extends \PHPUnit_Framework_TestCase
+class SpoofCheckValidationTest extends TestCase
 {
     /**
      * @dataProvider validUTF8EmailsProvider

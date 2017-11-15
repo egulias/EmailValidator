@@ -35,8 +35,9 @@ use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\LocalTooLong;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use Egulias\EmailValidator\Warning\QuotedString;
+use PHPUnit\Framework\TestCase;
 
-class RFCValidationTest extends \PHPUnit_Framework_TestCase
+class RFCValidationTest extends TestCase
 {
     /**
      * @var RFCValidation
