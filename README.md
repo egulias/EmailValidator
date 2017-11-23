@@ -6,7 +6,7 @@ With the help of [PHPStorm](https://www.jetbrains.com/phpstorm/)
 ## Requirements ##
 
  * [Composer](https://getcomposer.org) is required for installation
- * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php) validation requires that your PHP system have the [PHP Internationalization Libraries](http://php.net/manual/en/book.intl.php) (also known as PHP Intl)
+ * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php) validation requires that your PHP system have the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
 
 ## Installation ##
 
@@ -70,9 +70,9 @@ It's easy! You just need to extend [EmailValidation](https://github.com/egulias/
 
 As this is a port from another library and work, here are other people related to the previous one:
 
-* Ricard Clau [@ricardclau](http://github.com/ricardclau):      	Performance against PHP built-in filter_var
-* Josepf Bielawski [@stloyd](http://github.com/stloyd):      		For its first re-work of Dominic's lib
-* Dominic Sayers [@dominicsayers](http://github.com/dominicsayers):  	The original isemail function
+* Ricard Clau [@ricardclau](https://github.com/ricardclau):      	Performance against PHP built-in filter_var
+* Josepf Bielawski [@stloyd](https://github.com/stloyd):      		For its first re-work of Dominic's lib
+* Dominic Sayers [@dominicsayers](https://github.com/dominicsayers):  	The original isemail function
 
 ## License ##
 Released under the MIT License attached with this code.
