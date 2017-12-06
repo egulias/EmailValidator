@@ -220,13 +220,13 @@ class RFCValidationTest extends TestCase
     {
         $this->assertTrue($this->validator->isValid($email, $this->lexer));
         $warnings = $this->validator->getWarnings();
-        $this->assertTrue(
-            count($warnings) === count($expectedWarnings),
+        $this->assertCount(
+            count($warnings), $expectedWarnings,
             "Expected: " . implode(",", $expectedWarnings) . " and got " . implode(",", $warnings)
         );
 
         foreach ($warnings as $warning) {
-            $this->assertTrue(isset($expectedWarnings[$warning->code()]));
+            $this->assertArrayHasKey($warning->code(), $expectedWarnings);
         }
     }
 
