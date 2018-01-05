@@ -62,7 +62,7 @@ $validator->isValid("example@example.com", $multipleValidations); //true
 
 ### How to extend ###
 
-It's easy! You just need to extend [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
+It's easy! You just need to implement [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
 
 
 ## Other Contributors ##
