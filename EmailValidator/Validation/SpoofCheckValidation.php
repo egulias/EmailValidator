@@ -13,7 +13,7 @@ class SpoofCheckValidation implements EmailValidation
      * @var InvalidEmail
      */
     private $error;
-    
+
     public function __construct()
     {
         if (!class_exists(Spoofchecker::class)) {
