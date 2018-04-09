@@ -44,7 +44,7 @@ class DNSCheckValidation implements EmailValidation
 
     protected function checkDNS($host)
     {
-        $host = rtrim($host, '.') . '.';
+        $host = rtrim(idn_to_ascii($host), '.') . '.';
 
         $Aresult = true;
         $MXresult = checkdnsrr($host, 'MX');

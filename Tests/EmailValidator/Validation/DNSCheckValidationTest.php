@@ -24,6 +24,9 @@ class DNSCheckValidationTest extends TestCase
             ['"Abc@def"@example.com'],
             ['"Fred\ Bloggs"@example.com'],
             ['"Joe.\\Blow"@example.com'],
+            
+            // unicide
+            ['ñandu.cl'],
         ];
     }
 
