@@ -37,8 +37,9 @@ $validator->isValid("example@example.com", new RFCValidation()); //true
 2. [NoRFCWarningsValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/NoRFCWarningsValidation.php)
 3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php)
 4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php)
-5. [MultipleValidationWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
-6. [Your own validation](#how-to-extend)
+5. [NonLocalValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/NonLocalValidation.php)
+6. [MultipleValidationWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
+7. [Your own validation](#how-to-extend)
 
 `MultipleValidationWithAnd`
 
