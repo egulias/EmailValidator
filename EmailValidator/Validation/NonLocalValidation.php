@@ -5,7 +5,6 @@ namespace Egulias\EmailValidator\Validation;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\InvalidEmail;
 use Egulias\EmailValidator\Validation\Error\LocalEmail;
-use \Spoofchecker;
 
 class NonLocalValidation implements EmailValidation
 {
@@ -13,13 +12,6 @@ class NonLocalValidation implements EmailValidation
      * @var InvalidEmail
      */
     private $error;
-
-    public function __construct()
-    {
-        if (!class_exists(Spoofchecker::class)) {
-            throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
-        }
-    }
 
     public function isValid($email, EmailLexer $emailLexer)
     {
