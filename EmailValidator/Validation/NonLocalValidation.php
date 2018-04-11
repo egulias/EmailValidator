@@ -23,7 +23,7 @@ class NonLocalValidation implements EmailValidation
             $host = substr($email, $lastAtPos + 1);
         }
 
-        if (strpos($host, '.') === false) {
+        if (false === strpos($host, '.')) {
             $this->error = new LocalEmail();
         }
 
