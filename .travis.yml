@@ -39,5 +39,5 @@ install:
 
 script:
  - mkdir -p build/logs
- - phpunit --coverage-clover build/logs/clover.xml
+ - composer test -- --coverage-clover build/logs/clover.xml
 
