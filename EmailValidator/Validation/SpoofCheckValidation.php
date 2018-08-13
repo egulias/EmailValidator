@@ -16,7 +16,7 @@ class SpoofCheckValidation implements EmailValidation
 
     public function __construct()
     {
-        if (!class_exists(Spoofchecker::class)) {
+        if (!extension_loaded('intl')) {
             throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
         }
     }
