@@ -6,7 +6,7 @@ With the help of [PHPStorm](https://www.jetbrains.com/phpstorm/)
 ## Requirements ##
 
  * [Composer](https://getcomposer.org) is required for installation
- * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php) validation requires that your PHP system have the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
+ * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php) and [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php) validation requires that your PHP system have the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
 
 ## Installation ##
 
