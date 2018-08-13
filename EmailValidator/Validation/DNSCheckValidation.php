@@ -45,7 +45,7 @@ class DNSCheckValidation implements EmailValidation
     protected function checkDNS($host)
     {
         if ( defined('INTL_IDNA_VARIANT_UTS46') ) {
-            $variant = INTL_IDNA_VARIANT_UTS46
+            $variant = INTL_IDNA_VARIANT_UTS46;
         } else {
             $variant = INTL_IDNA_VARIANT_2003;
         }
