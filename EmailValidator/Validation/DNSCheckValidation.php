@@ -51,7 +51,11 @@ class DNSCheckValidation implements EmailValidation
 
     protected function checkDNS($host)
     {
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46), '.') . '.';
+        $variant = INTL_IDNA_VARIANT_2003;
+        if ( defined('INTL_IDNA_VARIANT_UTS46') ) {
+            $variant = INTL_IDNA_VARIANT_UTS46;
+        }
+        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
 
         $Aresult = true;
         $MXresult = checkdnsrr($host, 'MX');
