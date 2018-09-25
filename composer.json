@@ -35,5 +35,10 @@
     "psr-4": {
       "Egulias\\EmailValidator\\": "EmailValidator"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Egulias\\Tests\\": "test"
+    }
   }
 }
