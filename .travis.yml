@@ -2,12 +2,17 @@ sudo: false
 
 language: php
 
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
   - 7.0
+  - 7.1
+  - 7.2
   - hhvm
 
 env:
@@ -18,6 +23,9 @@ matrix:
   fast_finish: true
   include:
     - php: 5.3
+      dist: precise
+    - php: 5.3
+      dist: precise
       env: deps=low
     - php: 5.4
       env: deps=no
@@ -31,5 +39,5 @@ install:
 
 script:
  - mkdir -p build/logs
- - phpunit --coverage-clover build/logs/clover.xml
+ - composer test -- --coverage-clover build/logs/clover.xml
 
