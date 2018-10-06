@@ -42,7 +42,6 @@ class NonLocalValidationTest extends TestCase
         $validation = new NonLocalValidation();
         $this->assertFalse($validation->isValid($invalidEmail, new EmailLexer()));
         
-        $expectedError = new LocalEmail();
-        $this->assertEquals($expectedError, $validation->getError());
+        $this->assertInstanceOf(LocalEmail::class, $validation->getError());
     }
 }
