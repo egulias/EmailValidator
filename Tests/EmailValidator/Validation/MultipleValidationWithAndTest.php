@@ -81,12 +81,12 @@ class MultipleValidationWithAndTest extends TestCase
         $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
 
         $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
-        $validation1->expects($this->any())->method("isValid")->willReturn(true);
+        $validation1->expects($this->once())->method("isValid")->willReturn(false);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation1->expects($this->once())->method("getError")->willReturn($error1);
 
         $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
-        $validation2->expects($this->any())->method("isValid")->willReturn(false);
+        $validation2->expects($this->once())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation2->expects($this->once())->method("getError")->willReturn($error2);
 
@@ -105,14 +105,14 @@ class MultipleValidationWithAndTest extends TestCase
         $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
 
         $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
-        $validation1->expects($this->any())->method("isValid")->willReturn(true);
+        $validation1->expects($this->any())->method("isValid")->willReturn(false);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
         $validation1->expects($this->once())->method("getError")->willReturn($error1);
 
         $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
-        $validation2->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation2->expects($this->once())->method("getError")->willReturn($error2);
+        $validation2->expects($this->any())->method("getWarnings")->willReturn([]);
+        $validation2->expects($this->any())->method("getError")->willReturn($error2);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], MultipleValidationWithAnd::STOP_ON_ERROR);
         $multipleValidation->isValid("example@example.com", $lexer);
