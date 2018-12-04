@@ -2,10 +2,13 @@
 
 namespace Egulias\Tests\EmailValidator\Validation;
 
+use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Validation\MultipleErrors;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use PHPUnit\Framework\TestCase;
@@ -111,8 +114,8 @@ class MultipleValidationWithAndTest extends TestCase
 
         $validation2 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
-        $validation2->expects($this->any())->method("getWarnings")->willReturn([]);
-        $validation2->expects($this->any())->method("getError")->willReturn($error2);
+        $validation2->expects($this->never())->method("getWarnings")->willReturn([]);
+        $validation2->expects($this->never())->method("getError")->willReturn($error2);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], MultipleValidationWithAnd::STOP_ON_ERROR);
         $multipleValidation->isValid("example@example.com", $lexer);
@@ -140,5 +143,17 @@ class MultipleValidationWithAndTest extends TestCase
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], MultipleValidationWithAnd::STOP_ON_ERROR);
         $multipleValidation->isValid("example@example.com", $lexer);
         $this->assertEquals($expectedResult, $multipleValidation->getError());
+    }
+
+    public function testBreakoutOnInvalidEmail()
+    {
+        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+
+        $validationNotCalled = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
+        $validationNotCalled->expects($this->never())->method("isValid");
+        $validationNotCalled->expects($this->never())->method("getWarnings");
+        $validationNotCalled->expects($this->never())->method("getError");
+        $multipleValidation = new MultipleValidationWithAnd([new RFCValidation(), $validationNotCalled], MultipleValidationWithAnd::STOP_ON_ERROR);
+        $this->assertFalse($multipleValidation->isValid("invalid-email", $lexer));
     }
 }
