@@ -1,3 +1,4 @@
 report/
 vendor/
 .idea
+composer.lock
