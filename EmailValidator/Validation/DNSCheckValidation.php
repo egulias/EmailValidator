@@ -21,7 +21,7 @@ class DNSCheckValidation implements EmailValidation
     
     public function __construct()
     {
-        if (!extension_loaded('intl')) {
+        if (!function_exists('idn_to_ascii')) {
             throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
         }
     }
