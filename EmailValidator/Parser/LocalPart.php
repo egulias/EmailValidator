@@ -67,6 +67,9 @@ class LocalPart extends Parser
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function parseDoubleQuote()
     {
         $parseAgain = true;
@@ -118,7 +121,10 @@ class LocalPart extends Parser
         return $parseAgain;
     }
 
-    protected function isInvalidToken($token, $closingQuote)
+    /**
+     * @param bool $closingQuote
+     */
+    protected function isInvalidToken(array $token, $closingQuote)
     {
         $forbidden = array(
             EmailLexer::S_COMMA,

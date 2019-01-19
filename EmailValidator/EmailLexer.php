@@ -73,9 +73,15 @@ class EmailLexer extends AbstractLexer
         '\0'   => self::C_NUL,
     );
 
+    /**
+     * @var bool
+     */
     protected $hasInvalidTokens = false;
 
-    protected $previous;
+    /**
+     * @var array
+     */
+    protected $previous = [];
 
     private static $nullToken = [
         'value' => '',
@@ -98,6 +104,9 @@ class EmailLexer extends AbstractLexer
         $this->previous = $this->token = self::$nullToken;
     }
 
+    /**
+     * @return bool
+     */
     public function hasInvalidTokens()
     {
         return $this->hasInvalidTokens;
@@ -107,6 +116,8 @@ class EmailLexer extends AbstractLexer
      * @param string $type
      * @throws \UnexpectedValueException
      * @return boolean
+     *
+     * @psalm-suppress InvalidScalarArgument
      */
     public function find($type)
     {
@@ -122,7 +133,7 @@ class EmailLexer extends AbstractLexer
     /**
      * getPrevious
      *
-     * @return array token
+     * @return array
      */
     public function getPrevious()
     {
@@ -196,6 +207,11 @@ class EmailLexer extends AbstractLexer
         return  self::GENERIC;
     }
 
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
     protected function isValid($value)
     {
         if (isset($this->charValue[$value])) {

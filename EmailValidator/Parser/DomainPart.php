@@ -35,6 +35,10 @@ use Egulias\EmailValidator\Warning\TLD;
 class DomainPart extends Parser
 {
     const DOMAIN_MAX_LENGTH = 254;
+
+    /**
+     * @var string
+     */
     protected $domainPart = '';
 
     public function parse($domainPart)
@@ -95,11 +99,18 @@ class DomainPart extends Parser
         }
     }
 
+    /**
+     * @return string
+     */
     public function getDomainPart()
     {
         return $this->domainPart;
     }
 
+    /**
+     * @param string $addressLiteral
+     * @param int $maxGroups
+     */
     public function checkIPV6Tag($addressLiteral, $maxGroups = 8)
     {
         $prev = $this->lexer->getPrevious();
@@ -143,6 +154,9 @@ class DomainPart extends Parser
         }
     }
 
+    /**
+     * @return string
+     */
     protected function doParseDomainPart()
     {
         $domain = '';
@@ -189,7 +203,7 @@ class DomainPart extends Parser
         return $domain;
     }
 
-    private function checkNotAllowedChars($token)
+    private function checkNotAllowedChars(array $token)
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH=> true];
         if (isset($notAllowed[$token['type']])) {
@@ -197,6 +211,9 @@ class DomainPart extends Parser
         }
     }
 
+    /**
+     * @return string|false
+     */
     protected function parseDomainLiteral()
     {
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
@@ -213,6 +230,9 @@ class DomainPart extends Parser
         return $this->doParseDomainLiteral();
     }
 
+    /**
+     * @return string|false
+     */
     protected function doParseDomainLiteral()
     {
         $IPv6TAG = false;
@@ -280,6 +300,11 @@ class DomainPart extends Parser
         return $addressLiteral;
     }
 
+    /**
+     * @param string $addressLiteral
+     *
+     * @return string|false
+     */
     protected function checkIPV4Tag($addressLiteral)
     {
         $matchesIP  = array();
@@ -297,13 +322,13 @@ class DomainPart extends Parser
                 return false;
             }
             // Convert IPv4 part to IPv6 format for further testing
-            $addressLiteral = substr($addressLiteral, 0, $index) . '0:0';
+            $addressLiteral = substr($addressLiteral, 0, (int) $index) . '0:0';
         }
 
         return $addressLiteral;
     }
 
-    protected function checkDomainPartExceptions($prev)
+    protected function checkDomainPartExceptions(array $prev)
     {
         $invalidDomainTokens = array(
             EmailLexer::S_DQUOTE => true,
@@ -338,6 +363,9 @@ class DomainPart extends Parser
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function hasBrackets()
     {
         if ($this->lexer->token['type'] !== EmailLexer::S_OPENBRACKET) {
@@ -353,7 +381,7 @@ class DomainPart extends Parser
         return true;
     }
 
-    protected function checkLabelLength($prev)
+    protected function checkLabelLength(array $prev)
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
             $prev['type'] === EmailLexer::GENERIC &&

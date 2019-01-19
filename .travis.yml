@@ -8,26 +8,38 @@ matrix:
     - php: 5.5
       dist: trusty
     - php: 5.6
+      env:
+        - psalm=yes
       dist: xenial
     - php: 7.0
+      env:
+        - psalm=yes
       dist: xenial
     - php: 7.1
+      env:
+        - psalm=yes
       dist: bionic
     - php: 7.2
+      env:
+        - psalm=yes
       dist: bionic
     - php: 7.3
       dist: bionic
     - php: 7.4
+      env:
+        - psalm=yes
       dist: bionic
 
 install:
   - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
+  - if [ "$psalm" = "yes" ]; then composer require --dev vimeo/psalm; fi
 
 before_script:
   - mkdir -p build/logs
 
 script:
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+ - if [ "$psalm" = "yes" ]; then vendor/bin/psalm; fi
 
 after_script:
   - php vendor/bin/coveralls

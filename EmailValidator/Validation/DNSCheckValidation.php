@@ -15,10 +15,10 @@ class DNSCheckValidation implements EmailValidation
     private $warnings = [];
 
     /**
-     * @var InvalidEmail
+     * @var InvalidEmail|null
      */
     private $error;
-    
+
     public function __construct()
     {
         if (!extension_loaded('intl')) {
@@ -49,6 +49,11 @@ class DNSCheckValidation implements EmailValidation
         return $this->warnings;
     }
 
+    /**
+     * @param string $host
+     *
+     * @return bool
+     */
     protected function checkDNS($host)
     {
         $variant = INTL_IDNA_VARIANT_2003;
