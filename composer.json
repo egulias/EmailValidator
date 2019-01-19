@@ -14,7 +14,8 @@
   },
   "require": {
     "php": ">=5.5",
-    "doctrine/lexer": "^1.0.1"
+    "doctrine/lexer": "^1.0.1",
+    "symfony/polyfill-intl-idn": "^1.10"
   },
   "require-dev": {
     "satooshi/php-coveralls": "^1.0.1",
