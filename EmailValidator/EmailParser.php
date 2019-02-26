@@ -18,9 +18,9 @@ class EmailParser
     const EMAIL_MAX_LENGTH = 254;
 
     /**
-     * @var \SplObjectStorage|array
+     * @var array
      */
-    protected $warnings;
+    protected $warnings = [];
 
     /**
      * @var string
@@ -51,7 +51,6 @@ class EmailParser
         $this->lexer = $lexer;
         $this->localPartParser = new LocalPart($this->lexer);
         $this->domainPartParser = new DomainPart($this->lexer);
-        $this->warnings = new \SplObjectStorage();
     }
 
     /**
