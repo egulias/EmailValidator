@@ -71,6 +71,8 @@ class RFCValidationTest extends TestCase
     public function getValidEmails()
     {
         return array(
+            ['"Fabien Potencier" <fabien@symfony.com>'],
+            ['<fabien@symfony.com>'],
             ['â@iana.org'],
             ['fabien@symfony.com'],
             ['example@example.co.uk'],
