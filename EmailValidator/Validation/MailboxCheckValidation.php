@@ -4,6 +4,7 @@ namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\InvalidEmail;
+use Egulias\EmailValidator\Helper\SmtpSocketHelper;
 use Egulias\EmailValidator\Validation\Error\IllegalMailbox;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Warning\SocketWarning;
@@ -24,33 +25,34 @@ class MailboxCheckValidation implements EmailValidation
     private $warnings = [];
 
     /**
+     * @var SmtpSocketHelper
+     */
+    private $socketHelper;
+
+    /**
+     * @var string
+     */
+    private $fromEmail;
+
+    /**
      * @var int
      */
     private $lastResponseCode;
 
     /**
-     * @var int
-     */
-    private $port = 25;
-
-    /**
-     * @var int
-     */
-    private $timeout = 10;
-
-    /**
-     * @var string
-     */
-    private $fromEmail = 'test-mailbox@validation.email';
-
-    /**
      * MailboxCheckValidation constructor.
+     *
+     * @param SmtpSocketHelper $socketHelper
+     * @param string $fromEmail
      */
-    public function __construct()
+    public function __construct(SmtpSocketHelper $socketHelper, $fromEmail)
     {
         if (!extension_loaded('intl')) {
             throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
         }
+
+        $this->socketHelper = $socketHelper;
+        $this->fromEmail = $fromEmail;
     }
 
     /**
@@ -70,62 +72,6 @@ class MailboxCheckValidation implements EmailValidation
     }
 
     /**
-     * @return int
-     */
-    public function getLastResponseCode()
-    {
-        return $this->lastResponseCode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return $this->port;
-    }
-
-    /**
-     * @param int $port
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeout()
-    {
-        return $this->timeout;
-    }
-
-    /**
-     * @param int $timeout
-     */
-    public function setTimeout($timeout)
-    {
-        $this->timeout = $timeout;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFromEmail()
-    {
-        return $this->fromEmail;
-    }
-
-    /**
-     * @param string $fromEmail
-     */
-    public function setFromEmail($fromEmail)
-    {
-        $this->fromEmail = $fromEmail;
-    }
-
-    /**
      * @inheritDoc
      */
     public function isValid($email, EmailLexer $emailLexer)
@@ -134,12 +80,13 @@ class MailboxCheckValidation implements EmailValidation
 
         $isValid = false;
         foreach ($mxHosts as $mxHost) {
-            if ( ($isValid = $this->checkMailbox($mxHost, $this->port, $this->timeout, $this->fromEmail, $email)) ) {
+            if ($this->checkMailboxExists($mxHost, $email)) {
+                $isValid = true;
                 break;
             }
         }
 
-        if ( ! $isValid ) {
+        if (!$isValid) {
             $this->error = new IllegalMailbox($this->lastResponseCode);
         }
 
@@ -147,23 +94,18 @@ class MailboxCheckValidation implements EmailValidation
     }
 
     /**
+     * Gets MX Hosts from email
+     *
      * @param string $email
      *
      * @return array
      */
     protected function getMXHosts($email)
     {
-        $variant = defined('INTL_IDNA_VARIANT_UTS46') ? INTL_IDNA_VARIANT_UTS46 : INTL_IDNA_VARIANT_2003;
+        $hostname = $this->extractHostname($email);
 
-        $hostname = $email;
-        if ( false !== ($lastAtPos = strrpos($email, '@')) ) {
-            $hostname = substr($email, $lastAtPos + 1);
-        }
-        $hostname = rtrim(idn_to_ascii($hostname, IDNA_DEFAULT, $variant), '.') . '.';
-
-        $mxHosts = [];
         $result = getmxrr($hostname, $mxHosts);
-        if ( ! $result ) {
+        if (!$result) {
             $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
         }
 
@@ -171,70 +113,69 @@ class MailboxCheckValidation implements EmailValidation
     }
 
     /**
+     * Extracts hostname from email
+     *
+     * @param string $email
+     *
+     * @return string
+     */
+    private function extractHostname($email)
+    {
+        $variant = defined('INTL_IDNA_VARIANT_UTS46') ? INTL_IDNA_VARIANT_UTS46 : INTL_IDNA_VARIANT_2003;
+
+        $lastAtPos = strrpos($email, '@');
+        if ((bool) $lastAtPos) {
+            $hostname = substr($email, $lastAtPos + 1);
+            return rtrim(idn_to_ascii($hostname, IDNA_DEFAULT, $variant), '.') . '.';
+        }
+
+        return rtrim(idn_to_ascii($email, IDNA_DEFAULT, $variant), '.') . '.';
+    }
+
+    /**
+     * Checks mailbox
+     *
      * @param string $hostname
-     * @param int $port
-     * @param int $timeout
-     * @param string $fromEmail
-     * @param string $toEmail
+      * @param string $email
      * @return bool
      */
-    protected function checkMailbox($hostname, $port, $timeout, $fromEmail, $toEmail)
+    private function checkMailboxExists($hostname, $email)
     {
-        $socket = @fsockopen($hostname, $port, $errno, $errstr, $timeout);
+        $this->socketHelper->open($hostname, $errno, $errstr);
 
-        if ( ! $socket ) {
+        if (!$this->socketHelper->isResource()) {
             $this->warnings[SocketWarning::CODE][] = new SocketWarning($hostname, $errno, $errstr);
 
             return false;
         }
 
-        if ( ! ($this->assertResponse($socket, 220) ) ) {
+        $this->lastResponseCode = $this->socketHelper->getResponseCode();
+        if ($this->lastResponseCode !== 220) {
             return false;
         }
 
-        fwrite($socket, "EHLO {$hostname}" . self::END_OF_LINE);
-        if ( ! ($this->assertResponse($socket, 250) ) ) {
+        $this->socketHelper->write("EHLO {$hostname}" . self::END_OF_LINE);
+        $this->lastResponseCode = $this->socketHelper->getResponseCode();
+        if ($this->lastResponseCode !== 250) {
             return false;
         }
 
-        fwrite($socket, "MAIL FROM: <{$fromEmail}>" . self::END_OF_LINE);
-        if ( ! ($this->assertResponse($socket, 250) ) ) {
+        $this->socketHelper->write("MAIL FROM: <{$this->fromEmail}>" . self::END_OF_LINE);
+        $this->lastResponseCode = $this->socketHelper->getResponseCode();
+        if ($this->lastResponseCode !== 250) {
             return false;
         }
 
-        fwrite($socket, "RCPT TO: <{$toEmail}>" . self::END_OF_LINE);
-        if ( ! ($this->assertResponse($socket, 250) ) ) {
+        $this->socketHelper->write("RCPT TO: <{$email}>" . self::END_OF_LINE);
+        $this->lastResponseCode = $this->socketHelper->getResponseCode();
+        if ($this->lastResponseCode !== 250) {
             return false;
         }
 
-        fwrite($socket, 'QUIT' . self::END_OF_LINE);
+        $this->socketHelper->write('QUIT' . self::END_OF_LINE);
 
-        fclose($socket);
+        $this->socketHelper->close();
 
         return true;
-    }
-
-    /**
-     * @param resource $socket
-     * @param int $expectedCode
-     *
-     * @return bool
-     */
-    private function assertResponse($socket, $expectedCode)
-    {
-        if ( ! is_resource($socket) ) {
-            return false;
-        }
-
-        $data = '';
-        while (substr($data, 3, 1) !== ' ') {
-            if ( ! ( $data = @fgets($socket, 256) ) ) {
-                $this->lastResponseCode = -1;
-
-                return false;
-            }
-        }
-
-        return ($this->lastResponseCode = intval( substr($data, 0, 3) )) === $expectedCode;
     }
 }

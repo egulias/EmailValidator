@@ -3,6 +3,7 @@
 namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Helper\SmtpSocketHelper;
 use Egulias\EmailValidator\Validation\Error\IllegalMailbox;
 use Egulias\EmailValidator\Validation\MailboxCheckValidation;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
@@ -12,19 +13,28 @@ class MailboxCheckValidationTest extends TestCase
 {
     public function testValidMailbox()
     {
-        $validation = new MailboxCheckValidation();
-        $this->assertTrue($validation->isValid('no-reply@gmail.com', new EmailLexer()));
-    }
+        $socketHelperMock = $this->createMock(SmtpSocketHelper::class);
 
-    public function testInvalidMailbox()
-    {
-        $validation = new MailboxCheckValidation();
-        $this->assertFalse($validation->isValid('invalid-mailbox@example.com', new EmailLexer()));
+        $socketHelperMock
+            ->expects($this->any())
+            ->method('isResource')
+            ->willReturn(true)
+        ;
+
+        $socketHelperMock
+            ->expects($this->any())
+            ->method('getResponseCode')
+            ->willReturnOnConsecutiveCalls(220, 250, 250, 250)
+        ;
+
+        $validation = new MailboxCheckValidation($socketHelperMock, 'test@validation.email');
+
+        $this->assertTrue($validation->isValid('success@validation.email', new EmailLexer()));
     }
 
     public function testDNSWarnings()
     {
-        $validation = new MailboxCheckValidation();
+        $validation = new MailboxCheckValidation(new SmtpSocketHelper(), 'test@validation.email');
         $expectedWarnings = [NoDNSMXRecord::CODE => new NoDNSMXRecord()];
         $validation->isValid('example@invalid.example.com', new EmailLexer());
         $this->assertEquals($expectedWarnings, $validation->getWarnings());
@@ -32,9 +42,22 @@ class MailboxCheckValidationTest extends TestCase
 
     public function testIllegalMailboxError()
     {
-        $validation = new MailboxCheckValidation();
-        $expectedError = new IllegalMailbox(550);
-        $validation->isValid('invalid-mailbox@gmail.com', new EmailLexer());
-        $this->assertEquals($expectedError, $validation->getError());
+        $socketHelperMock = $this->createMock(SmtpSocketHelper::class);
+
+        $socketHelperMock
+            ->expects($this->any())
+            ->method('isResource')
+            ->willReturn(true)
+        ;
+
+        $socketHelperMock
+            ->expects($this->any())
+            ->method('getResponseCode')
+            ->willReturnOnConsecutiveCalls(220, 250, 250, 550)
+        ;
+
+        $validation = new MailboxCheckValidation($socketHelperMock, 'test@validation.email');
+        $validation->isValid('failure@validation.email', new EmailLexer());
+        $this->assertEquals(new IllegalMailbox(550), $validation->getError());
     }
 }

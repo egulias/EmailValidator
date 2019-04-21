@@ -25,4 +25,12 @@ class IllegalMailbox extends InvalidEmail
 
         $this->responseCode = $responseCode;
     }
+
+    /**
+     * @return int
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
 }
