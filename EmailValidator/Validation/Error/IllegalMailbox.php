@@ -33,4 +33,17 @@ class IllegalMailbox extends InvalidEmail
     {
         return $this->responseCode;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf(
+            "%s SMTP response code: %s. Internal code: %s.",
+            $this->message,
+            $this->responseCode,
+            $this->code
+        );
+    }
 }

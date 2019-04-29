@@ -13,7 +13,9 @@ class MailboxCheckValidationTest extends TestCase
 {
     public function testValidMailbox()
     {
-        $socketHelperMock = $this->createMock(SmtpSocketHelper::class);
+        $socketHelperMock = $this->getMockBuilder(SmtpSocketHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $socketHelperMock
             ->expects($this->any())
@@ -42,7 +44,9 @@ class MailboxCheckValidationTest extends TestCase
 
     public function testIllegalMailboxError()
     {
-        $socketHelperMock = $this->createMock(SmtpSocketHelper::class);
+        $socketHelperMock = $this->getMockBuilder(SmtpSocketHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $socketHelperMock
             ->expects($this->any())
