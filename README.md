@@ -16,7 +16,7 @@ RFC 5321, 5322, 6530, 6531, 6532.
 Run the command below to install via Composer
 
 ```shell
-composer require egulias/email-validator "~2.1"
+composer require egulias/email-validator
 ```
 
 ## Getting Started ##
