@@ -9,7 +9,6 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - hhvm
 
 env:
   global:
@@ -29,8 +28,8 @@ install:
   - if [ "$deps" = "high" ]; then composer update; fi
 
 script:
- - mkdir -p build/logs
- - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - mkdir -p build/logs
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
- - php vendor/bin/coveralls
+  - php vendor/bin/coveralls
