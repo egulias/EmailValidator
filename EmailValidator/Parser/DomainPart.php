@@ -41,21 +41,7 @@ class DomainPart extends Parser
     {
         $this->lexer->moveNext();
 
-        if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
-            throw new DotAtStart();
-        }
-
-        if ($this->lexer->token['type'] === EmailLexer::S_EMPTY) {
-            throw new NoDomainPart();
-        }
-        if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
-            throw new DomainHyphened();
-        }
-
-        if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
-            $this->warnings[DeprecatedComment::CODE] = new DeprecatedComment();
-            $this->parseDomainComments();
-        }
+        $this->performDomainStartChecks();
 
         $domain = $this->doParseDomainPart();
 
@@ -75,6 +61,38 @@ class DomainPart extends Parser
             throw new CRLFAtTheEnd();
         }
         $this->domainPart = $domain;
+    }
+
+    private function performDomainStartChecks()
+    {
+        $this->checkInvalidTokensAfterAT();
+        $this->checkEmptyDomain();
+
+        if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
+            $this->warnings[DeprecatedComment::CODE] = new DeprecatedComment();
+            $this->parseDomainComments();
+        }
+    }
+
+    private function checkEmptyDomain()
+    {
+        $thereIsNoDomain = $this->lexer->token['type'] === EmailLexer::S_EMPTY ||
+            ($this->lexer->token['type'] === EmailLexer::S_SP &&
+            !$this->lexer->isNextToken(EmailLexer::GENERIC));
+
+        if ($thereIsNoDomain) {
+            throw new NoDomainPart();
+        }
+    }
+
+    private function checkInvalidTokensAfterAT()
+    {
+        if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
+            throw new DotAtStart();
+        }
+        if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
+            throw new DomainHyphened();
+        }
     }
 
     public function getDomainPart()
