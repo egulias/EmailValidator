@@ -184,7 +184,7 @@ class DomainPart extends Parser
 
             $domain .= $this->lexer->token['value'];
             $this->lexer->moveNext();
-        } while ($this->lexer->token);
+        } while (null !== $this->lexer->token['type']);
 
         return $domain;
     }

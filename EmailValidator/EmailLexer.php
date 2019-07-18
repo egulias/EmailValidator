@@ -77,10 +77,22 @@ class EmailLexer extends AbstractLexer
 
     protected $previous;
 
+    private static $nullToken = [
+        'value' => '',
+        'type' => null,
+        'position' => 0,
+    ];
+
+    public function __construct()
+    {
+        $this->previous = $this->token = self::$nullToken;
+    }
+
     public function reset()
     {
         $this->hasInvalidTokens = false;
         parent::reset();
+        $this->previous = $this->token = self::$nullToken;
     }
 
     public function hasInvalidTokens()
@@ -122,8 +134,10 @@ class EmailLexer extends AbstractLexer
     public function moveNext()
     {
         $this->previous = $this->token;
+        $hasNext = parent::moveNext();
+        $this->token = $this->token ?: self::$nullToken;
 
-        return parent::moveNext();
+        return $hasNext;
     }
 
     /**
