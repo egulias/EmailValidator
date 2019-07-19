@@ -26,6 +26,7 @@
   "require-dev" :   {
     "satooshi/php-coveralls": "^1.0.1",
     "phpunit/phpunit": "^4.8.35||^5.7||^6.0",
+    "symfony/phpunit-bridge": "^4.4@dev",
     "dominicsayers/isemail": "dev-master"
   },
   "suggest": {

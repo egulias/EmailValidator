@@ -2,6 +2,7 @@
 
 namespace Egulias\Tests\EmailValidator\Validation;
 
+use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Exception\NoDomainPart;
@@ -17,7 +18,7 @@ class MultipleValidationWithAndTest extends TestCase
 {
     public function testUsesAndLogicalOperation()
     {
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
         $validationTrue = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validationTrue->expects($this->any())->method("isValid")->willReturn(true);
         $validationTrue->expects($this->any())->method("getWarnings")->willReturn([]);
@@ -38,7 +39,7 @@ class MultipleValidationWithAndTest extends TestCase
 
     public function testValidationIsValid()
     {
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
 
         $validation = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation->expects($this->any())->method("isValid")->willReturn(true);
@@ -59,7 +60,7 @@ class MultipleValidationWithAndTest extends TestCase
         ];
         $expectedResult = array_merge($warnings1, $warnings2);
 
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
         $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn($warnings1);
@@ -81,7 +82,7 @@ class MultipleValidationWithAndTest extends TestCase
 
         $expectedResult = new MultipleErrors([$error1, $error2]);
 
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
 
         $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->once())->method("isValid")->willReturn(false);
@@ -105,7 +106,7 @@ class MultipleValidationWithAndTest extends TestCase
 
         $expectedResult = new MultipleErrors([$error1]);
 
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
 
         $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(false);
@@ -128,7 +129,7 @@ class MultipleValidationWithAndTest extends TestCase
 
         $expectedResult = new MultipleErrors([$error]);
 
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
 
         $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(false);
@@ -147,7 +148,7 @@ class MultipleValidationWithAndTest extends TestCase
 
     public function testBreakoutOnInvalidEmail()
     {
-        $lexer = $this->getMockBuilder("Egulias\\EmailValidator\\EmailLexer")->getMock();
+        $lexer = new EmailLexer();
 
         $validationNotCalled = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
         $validationNotCalled->expects($this->never())->method("isValid");
