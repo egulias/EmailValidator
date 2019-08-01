@@ -6,38 +6,133 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
-php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - hhvm
-
-env:
-  global:
-    - deps=high
-
 matrix:
+
   fast_finish: true
+
+  allow_failures:
+    - name: Test with PHP 7.4
+    - name: Test with PHP Nightly
+
   include:
-    - php: 5.3
+
+    - name: Test with PHP 5.3
       dist: precise
-    - php: 5.3
+      php: '5.3'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP 5.3 (current dependencies)
       dist: precise
-      env: deps=low
-    - php: 5.4
-      env: deps=no
-    - php: 5.5
-      env: deps=no
+      php: '5.3'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer install
+      script:
+        - composer test
 
-install:
-  - if [ "$deps" = "no" ]; then composer install; fi
-  - if [ "$deps" = "low" ]; then composer update --prefer-lowest; fi
-  - if [ "$deps" = "high" ]; then composer update; fi
+    - name: Test with PHP 5.3 (lowest dependencies)
+      dist: precise
+      php: '5.3'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update --prefer-lowest
+      script:
+        - composer test
 
-script:
- - mkdir -p build/logs
- - composer test -- --coverage-clover build/logs/clover.xml
+    - name: Test with PHP 5.4
+      dist: trusty
+      php: '5.4'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
 
+    - name: Test with PHP 5.5
+      dist: trusty
+      php: '5.5'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP 5.6
+      php: '5.6'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP 5.6 (current dependencies)
+      php: '5.6'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer install
+      script:
+        - composer test
+
+    - name: Test with PHP 7.0
+      php: '7.0'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP 7.1
+      php: '7.1'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP 7.2 (with code coverage)
+      php: '7.2'
+      install:
+        - composer update
+      script:
+        - mkdir -p build/logs
+        - composer test -- --coverage-clover build/logs/clover.xml
+
+    - name: Test with PHP 7.3
+      php: '7.3'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP 7.4
+      php: '7.4snapshot'
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
+
+    - name: Test with PHP Nightly
+      php: nightly
+      before_script:
+        - phpenv config-rm xdebug.ini || true
+      install:
+        - composer update
+      script:
+        - composer test
