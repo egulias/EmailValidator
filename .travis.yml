@@ -16,6 +16,14 @@ matrix:
 
   include:
 
+    - name: Test with PHP 7.2 (with code coverage)
+      php: '7.2'
+      install:
+        - composer update
+      script:
+        - mkdir -p build/logs
+        - composer test -- --coverage-clover build/logs/clover.xml
+
     - name: Test with PHP 5.3
       dist: precise
       php: '5.3'
@@ -101,14 +109,6 @@ matrix:
         - composer update
       script:
         - composer test
-
-    - name: Test with PHP 7.2 (with code coverage)
-      php: '7.2'
-      install:
-        - composer update
-      script:
-        - mkdir -p build/logs
-        - composer test -- --coverage-clover build/logs/clover.xml
 
     - name: Test with PHP 7.3
       php: '7.3'
