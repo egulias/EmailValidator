@@ -133,6 +133,6 @@ matrix:
       before_script:
         - phpenv config-rm xdebug.ini || true
       install:
-        - composer update
+        - composer update --ignore-platform-reqs
       script:
         - composer test
