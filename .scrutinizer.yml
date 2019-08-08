@@ -1,0 +1,8 @@
+filter:
+  excluded_paths:
+    - 'documentation/*'
+    - 'tests/*'
+
+tools:
+    external_code_coverage:
+        runs: 1
