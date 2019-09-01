@@ -95,6 +95,13 @@ class EmailLexer extends AbstractLexer
     public $token;
 
     /**
+     * The next token in the input.
+     *
+     * @var array|null
+     */
+    public $lookahead;
+
+    /**
      * @psalm-var array{value:'', type:null, position:0}
      */
     private static $nullToken = [
@@ -106,6 +113,7 @@ class EmailLexer extends AbstractLexer
     public function __construct()
     {
         $this->previous = $this->token = self::$nullToken;
+        $this->lookahead = null;
     }
 
     /**
