@@ -80,9 +80,23 @@ class EmailLexer extends AbstractLexer
 
     /**
      * @var array
+     *
+     * @psalm-var array{value:string, type:null|int, position:int}|array<empty, empty>
      */
     protected $previous = [];
 
+    /**
+     * The last matched/seen token.
+     *
+     * @var array
+     *
+     * @psalm-var array{value:string, type:null|int, position:int}
+     */
+    public $token;
+
+    /**
+     * @psalm-var array{value:'', type:null, position:0}
+     */
     private static $nullToken = [
         'value' => '',
         'type' => null,
@@ -113,7 +127,7 @@ class EmailLexer extends AbstractLexer
     }
 
     /**
-     * @param string $type
+     * @param int $type
      * @throws \UnexpectedValueException
      * @return boolean
      *
