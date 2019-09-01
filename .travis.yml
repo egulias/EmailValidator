@@ -39,7 +39,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
- - if [ "$psalm" = "yes" ]; then vendor/bin/psalm; fi
+  - if [ "$psalm" = "yes" ]; then vendor/bin/psalm; fi
 
 after_script:
   - php vendor/bin/coveralls
