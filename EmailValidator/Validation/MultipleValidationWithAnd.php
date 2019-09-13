@@ -94,7 +94,9 @@ class MultipleValidationWithAnd implements EmailValidation
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the validation errors.
+     *
+     * @return MultipleErrors|null
      */
     public function getError()
     {
