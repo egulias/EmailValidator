@@ -2,7 +2,6 @@
   "name":         "egulias/email-validator",
   "description":  "A library for validating emails against several RFCs",
   "homepage":     "https://github.com/egulias/EmailValidator",
-  "type":         "Library",
   "keywords":     ["email", "validation", "validator", "emailvalidation", "emailvalidator"],
   "license":      "MIT",
   "authors": [
