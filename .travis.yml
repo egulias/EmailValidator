@@ -1,29 +1,34 @@
-sudo: false
-
-dist: trusty
-
 language: php
 
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
-  - 7.4snapshot
-
-env:
-  global:
-    - deps=no
-
 matrix:
-  fast_finish: true
   include:
     - php: 5.5
+      dist: trusty
+      env: deps=no
+    - php: 5.5
+      dist: trusty
       env: deps=low
     - php: 5.6
+      dist: xenial
+      env: deps=no
+    - php: 5.6
+      dist: xenial
       env: deps=high
+    - php: 7.0
+      dist: xenial
+      env: deps=no
+    - php: 7.1
+      dist: bionic
+      env: deps=no
+    - php: 7.2
+      dist: bionic
+      env: deps=no
+    - php: 7.3
+      dist: bionic
+      env: deps=no
+    - php: 7.4
+      dist: bionic
+      env: deps=no
 
 install:
   - if [ "$deps" = "no" ]; then composer install; fi
