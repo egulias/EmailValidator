@@ -18,15 +18,14 @@
       "url": "https://github.com/dominicsayers/isemail"
     }
   ],
-  "require":      {
-    "php": ">= 5.5",
+  "require": {
+    "php": ">=5.5",
     "doctrine/lexer": "^1.0.1"
   },
-  "require-dev" :   {
+  "require-dev": {
     "satooshi/php-coveralls": "^1.0.1",
-    "phpunit/phpunit": "^4.8.35||^5.7||^6.0",
-    "symfony/phpunit-bridge": "^4.4@dev",
-    "dominicsayers/isemail": "dev-master"
+    "phpunit/phpunit": "^4.8.36|^7.5.15",
+    "dominicsayers/isemail": "^3.0.7"
   },
   "suggest": {
     "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"

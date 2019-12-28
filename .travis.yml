@@ -1,37 +1,32 @@
-sudo: false
-
-dist: trusty
-
 language: php
 
-php:
-  - 5.5
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
-  - 7.4snapshot
-
-env:
-  global:
-    - deps=no
-
 matrix:
-  fast_finish: true
   include:
-    - php: 5.5
+    - php: 5.5.9
+      dist: trusty
       env: deps=low
+    - php: 5.5
+      dist: trusty
     - php: 5.6
-      env: deps=high
+      dist: xenial
+    - php: 7.0
+      dist: xenial
+    - php: 7.1
+      dist: bionic
+    - php: 7.2
+      dist: bionic
+    - php: 7.3
+      dist: bionic
+    - php: 7.4
+      dist: bionic
 
 install:
-  - if [ "$deps" = "no" ]; then composer install; fi
-  - if [ "$deps" = "low" ]; then composer update --prefer-lowest; fi
-  - if [ "$deps" = "high" ]; then composer update; fi
+  - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
+
+before_script:
+  - mkdir -p build/logs
 
 script:
-  - mkdir -p build/logs
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
