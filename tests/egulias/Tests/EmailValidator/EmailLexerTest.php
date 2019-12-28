@@ -3,8 +3,9 @@
 namespace Egulias\EmailValidator\Tests;
 
 use Egulias\EmailValidator\EmailLexer;
+use PHPUnit\Framework\TestCase;
 
-class EmailLexerTests extends \PHPUnit_Framework_TestCase
+class EmailLexerTests extends TestCase
 {
 
     public function testLexerExtendsLib()
