@@ -7,11 +7,12 @@
   "authors": [
     {"name": "Eduardo Gulias Davis"}
   ],
-  "require":      {
+  "require": {
     "php": ">=5.3.3",
     "doctrine/lexer": "^1.0.1"
   },
-  "require-dev" :   {
+  "require-dev": {
+    "satooshi/php-coveralls": "^1.0.1",
     "phpunit/phpunit": "^4.8.36|^7.5.15"
   },
   "autoload": {
