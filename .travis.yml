@@ -1,138 +1,37 @@
-sudo: false
-
 language: php
 
-cache:
-  directories:
-    - $HOME/.composer/cache/files
-
 matrix:
-
-  fast_finish: true
-
-  allow_failures:
-    - name: Test with PHP 7.4
-    - name: Test with PHP Nightly
-
   include:
-
-    - name: Test with PHP 7.2 (with code coverage)
-      php: '7.2'
-      install:
-        - composer update
-      script:
-        - mkdir -p build/logs
-        - composer test -- --coverage-clover build/logs/clover.xml
-
-    - name: Test with PHP 5.3
+    - php: 5.3
       dist: precise
-      php: '5.3'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
-
-    - name: Test with PHP 5.3 (current dependencies)
+      env: deps=low
+    - php: 5.3
       dist: precise
-      php: '5.3'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer install
-      script:
-        - composer test
-
-    - name: Test with PHP 5.3 (lowest dependencies)
-      dist: precise
-      php: '5.3'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update --prefer-lowest
-      script:
-        - composer test
-
-    - name: Test with PHP 5.4
+    - php: 5.4
       dist: trusty
-      php: '5.4'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
-
-    - name: Test with PHP 5.5
+    - php: 5.5
       dist: trusty
-      php: '5.5'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
+    - php: 5.6
+      dist: xenial
+    - php: 7.0
+      dist: xenial
+    - php: 7.1
+      dist: bionic
+    - php: 7.2
+      dist: bionic
+    - php: 7.3
+      dist: bionic
+    - php: 7.4
+      dist: bionic
 
-    - name: Test with PHP 5.6
-      php: '5.6'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
+install:
+  - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
 
-    - name: Test with PHP 5.6 (current dependencies)
-      php: '5.6'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer install
-      script:
-        - composer test
+before_script:
+  - mkdir -p build/logs
 
-    - name: Test with PHP 7.0
-      php: '7.0'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
+script:
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
-    - name: Test with PHP 7.1
-      php: '7.1'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
-
-    - name: Test with PHP 7.3
-      php: '7.3'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
-
-    - name: Test with PHP 7.4
-      php: '7.4snapshot'
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update
-      script:
-        - composer test
-
-    - name: Test with PHP Nightly
-      php: nightly
-      before_script:
-        - phpenv config-rm xdebug.ini || true
-      install:
-        - composer update --ignore-platform-reqs
-      script:
-        - composer test
+after_script:
+  - php vendor/bin/coveralls
