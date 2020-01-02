@@ -19,13 +19,6 @@ class DNSCheckValidation implements EmailValidation
      */
     private $error;
     
-    public function __construct()
-    {
-        if (!extension_loaded('intl')) {
-            throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
-        }
-    }
-
     public function isValid($email, EmailLexer $emailLexer)
     {
         // use the input to check DNS if we cannot extract something similar to a domain
