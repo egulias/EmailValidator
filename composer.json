@@ -12,12 +12,6 @@
       "dev-master": "2.1.x-dev"
     }
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/dominicsayers/isemail"
-    }
-  ],
   "require": {
     "php": ">=5.5",
     "doctrine/lexer": "^1.0.1"
