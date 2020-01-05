@@ -1,4 +1,4 @@
-report/
-vendor/
 .idea
 composer.lock
+report/
+vendor/
