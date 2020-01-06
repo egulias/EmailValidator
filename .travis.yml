@@ -11,8 +11,6 @@ matrix:
       env:
       dist: xenial
     - php: 7.0
-      env:
-        - psalm=yes
       dist: xenial
     - php: 7.1
       env:
