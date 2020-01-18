@@ -22,6 +22,8 @@ matrix:
       dist: bionic
     - php: 7.3
       dist: bionic
+      env:
+        - psalm=yes
     - php: 7.4
       env:
         - psalm=yes
