@@ -10,4 +10,10 @@
       <code>parse</code>
     </MissingReturnType>
   </file>
+  <file src="EmailValidator/Validation/SpoofCheckValidation.php">
+    <UndefinedClass occurrences="2">
+      <code>Spoofchecker</code>
+      <code>Spoofchecker</code>
+    </UndefinedClass>
+  </file>
 </files>
