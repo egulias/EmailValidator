@@ -18,7 +18,6 @@
     "symfony/polyfill-intl-idn": "^1.10"
   },
   "require-dev": {
-    "ext-intl": "*",
     "satooshi/php-coveralls": "^1.0.1",
     "phpunit/phpunit": "^4.8.36|^7.5.15",
     "dominicsayers/isemail": "^3.0.7"
