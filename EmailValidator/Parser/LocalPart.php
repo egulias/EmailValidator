@@ -5,7 +5,6 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\ExpectingAT;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
@@ -67,6 +66,9 @@ class LocalPart extends Parser
         }
     }
 
+    /**
+     * @return bool
+     */
     protected function parseDoubleQuote()
     {
         $parseAgain = true;
@@ -118,7 +120,10 @@ class LocalPart extends Parser
         return $parseAgain;
     }
 
-    protected function isInvalidToken($token, $closingQuote)
+    /**
+     * @param bool $closingQuote
+     */
+    protected function isInvalidToken(array $token, $closingQuote)
     {
         $forbidden = array(
             EmailLexer::S_COMMA,

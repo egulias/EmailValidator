@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="3.8.3@389af1bfc739bfdff3f9e3dc7bd6499aee51a831">
+  <file src="EmailValidator/EmailLexer.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>self::$nullToken</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="EmailValidator/Parser/Parser.php">
+    <MissingReturnType occurrences="1">
+      <code>parse</code>
+    </MissingReturnType>
+  </file>
+  <file src="EmailValidator/Validation/SpoofCheckValidation.php">
+    <UndefinedClass occurrences="2">
+      <code>Spoofchecker</code>
+      <code>Spoofchecker</code>
+    </UndefinedClass>
+  </file>
+</files>

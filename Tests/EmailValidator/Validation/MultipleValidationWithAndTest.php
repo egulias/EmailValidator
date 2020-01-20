@@ -3,13 +3,11 @@
 namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Validation\EmailValidation;
 use Egulias\EmailValidator\Validation\MultipleErrors;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\DomainLiteral;
