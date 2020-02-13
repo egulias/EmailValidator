@@ -266,6 +266,10 @@ class RFCValidationTest extends TestCase
                 'too_long_localpart_too_long_localpart_too_long_localpart_too_long_localpart@invalid.example.com'
             ],
             [
+                [LocalTooLong::CODE],
+                'too_long_localpart_too_long_localpart_123_too_long_localpart_too_long_localpart@example.com'
+            ],
+            [
                 [LabelTooLong::CODE,],
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'
             ],

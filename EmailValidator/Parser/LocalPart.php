@@ -19,6 +19,7 @@ class LocalPart extends Parser
         $parseDQuote = true;
         $closingQuote = false;
         $openedParenthesis = 0;
+        $totalLength = 0;
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type']) {
@@ -34,12 +35,13 @@ class LocalPart extends Parser
                 $this->parseComments();
                 $openedParenthesis += $this->getOpenedParenthesis();
             }
+
             if ($this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
                 if ($openedParenthesis === 0) {
                     throw new UnopenedComment();
-                } else {
-                    $openedParenthesis--;
                 }
+
+                $openedParenthesis--;
             }
 
             $this->checkConsecutiveDots();
@@ -57,11 +59,11 @@ class LocalPart extends Parser
                 $this->parseFWS();
             }
 
+            $totalLength += strlen($this->lexer->token['value']);
             $this->lexer->moveNext();
         }
 
-        $prev = $this->lexer->getPrevious();
-        if (strlen($prev['value']) > LocalTooLong::LOCAL_PART_LENGTH) {
+        if ($totalLength > LocalTooLong::LOCAL_PART_LENGTH) {
             $this->warnings[LocalTooLong::CODE] = new LocalTooLong();
         }
     }
