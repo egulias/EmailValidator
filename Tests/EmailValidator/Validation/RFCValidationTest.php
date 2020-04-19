@@ -49,13 +49,13 @@ class RFCValidationTest extends TestCase
      */
     protected $lexer;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->validator = new RFCValidation();
         $this->lexer = new EmailLexer();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->validator = null;
     }

@@ -9,17 +9,17 @@
   ],
   "extra": {
     "branch-alias": {
-      "dev-master": "2.1.x-dev"
+      "dev-master": "3.0.x-dev"
     }
   },
   "require": {
-    "php": ">=5.5",
-    "doctrine/lexer": "^1.0.1",
-    "symfony/polyfill-intl-idn": "^1.10"
+    "php": ">=7.2",
+    "doctrine/lexer": "^1.2",
+    "symfony/polyfill-intl-idn": "^1.15"
   },
   "require-dev": {
-    "satooshi/php-coveralls": "^1.0.1",
-    "phpunit/phpunit": "^4.8.36|^7.5.15",
+    "php-coveralls/php-coveralls": "^2.2",
+    "phpunit/phpunit": "^8.2",
     "dominicsayers/isemail": "^3.0.7"
   },
   "suggest": {

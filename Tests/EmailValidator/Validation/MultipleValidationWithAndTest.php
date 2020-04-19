@@ -9,6 +9,7 @@ use Egulias\EmailValidator\Validation\EmailValidation;
 use Egulias\EmailValidator\Validation\MultipleErrors;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use PHPUnit\Framework\TestCase;
@@ -28,11 +29,9 @@ class MultipleValidationWithAndTest extends TestCase
         $this->assertFalse($multipleValidation->isValid("exmpale@example.com", $lexer));
     }
 
-    /**
-     * @expectedException \Egulias\EmailValidator\Validation\Exception\EmptyValidationList
-     */
     public function testEmptyListIsNotAllowed()
     {
+        $this->expectException(EmptyValidationList::class);
         new MultipleValidationWithAnd([]);
     }
 
