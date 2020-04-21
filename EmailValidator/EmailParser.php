@@ -2,11 +2,15 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\NoLocalPart;
-use Egulias\EmailValidator\Parser\DomainPart;
+use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Parser\LocalPart;
+use Egulias\EmailValidator\Parser\DomainPart;
+use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\EmailTooLong;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 
 /**
  * EmailParser
@@ -57,14 +61,13 @@ class EmailParser
      * @param string $str
      * @return array
      */
-    public function parse($str)
+    public function parse($str) : Result
     {
         $this->lexer->setInput($str);
 
         if (!$this->hasAtToken()) {
-            throw new NoLocalPart();
+            return new InvalidEmail(new NoLocalPart(), $this->lexer->token["value"]);
         }
-
 
         $this->localPartParser->parse($str);
         $this->domainPartParser->parse($str);
@@ -72,10 +75,11 @@ class EmailParser
         $this->setParts($str);
 
         if ($this->lexer->hasInvalidTokens()) {
-            throw new ExpectingATEXT();
+            return new InvalidEmail(new ExpectingATEXT("Invalid tokens found"), $this->lexer->token["value"]);
         }
 
-        return array('local' => $this->localPart, 'domain' => $this->domainPart);
+        return new ValidEmail();
+        //return array('local' => $this->localPart, 'domain' => $this->domainPart);
     }
 
     /**

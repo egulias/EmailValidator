@@ -27,7 +27,11 @@ class RFCValidation implements EmailValidation
     {
         $this->parser = new EmailParser($emailLexer);
         try {
-            $this->parser->parse((string)$email);
+            $result = $this->parser->parse((string)$email);
+            if (!$result->isValid()) {
+                $this->error = $result;
+                return false;
+            }
         } catch (InvalidEmail $invalid) {
             $this->error = $invalid;
             return false;

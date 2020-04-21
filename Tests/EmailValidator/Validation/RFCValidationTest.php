@@ -2,40 +2,42 @@
 
 namespace Egulias\Tests\EmailValidator\Validation;
 
+use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Validation\RFCValidation;
-use Egulias\EmailValidator\Exception\AtextAfterCFWS;
-use Egulias\EmailValidator\Exception\ConsecutiveAt;
-use Egulias\EmailValidator\Exception\ConsecutiveDot;
-use Egulias\EmailValidator\Exception\CRNoLF;
-use Egulias\EmailValidator\Exception\DomainHyphened;
-use Egulias\EmailValidator\Exception\DotAtEnd;
-use Egulias\EmailValidator\Exception\DotAtStart;
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\ExpectingDTEXT;
-use Egulias\EmailValidator\Exception\NoDomainPart;
-use Egulias\EmailValidator\Exception\NoLocalPart;
-use Egulias\EmailValidator\Exception\UnclosedComment;
-use Egulias\EmailValidator\Exception\UnclosedQuotedString;
-use Egulias\EmailValidator\Exception\UnopenedComment;
-use Egulias\EmailValidator\Warning\AddressLiteral;
-use Egulias\EmailValidator\Warning\CFWSNearAt;
-use Egulias\EmailValidator\Warning\CFWSWithFWS;
+use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Warning\Comment;
-use Egulias\EmailValidator\Warning\DomainLiteral;
-use Egulias\EmailValidator\Warning\DomainTooLong;
+use Egulias\EmailValidator\Exception\CRNoLF;
+use Egulias\EmailValidator\Exception\DotAtEnd;
+use Egulias\EmailValidator\Warning\CFWSNearAt;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
+use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Warning\IPV6ColonEnd;
-use Egulias\EmailValidator\Warning\IPV6ColonStart;
-use Egulias\EmailValidator\Warning\IPV6Deprecated;
-use Egulias\EmailValidator\Warning\IPV6DoubleColon;
-use Egulias\EmailValidator\Warning\IPV6GroupCount;
-use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\LocalTooLong;
-use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use Egulias\EmailValidator\Warning\QuotedString;
-use PHPUnit\Framework\TestCase;
+use Egulias\EmailValidator\Warning\DomainLiteral;
+use Egulias\EmailValidator\Warning\DomainTooLong;
+use Egulias\EmailValidator\Warning\IPV6MaxGroups;
+use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
+use Egulias\EmailValidator\Exception\NoDomainPart;
+use Egulias\EmailValidator\Warning\AddressLiteral;
+use Egulias\EmailValidator\Warning\IPV6ColonStart;
+use Egulias\EmailValidator\Warning\IPV6Deprecated;
+use Egulias\EmailValidator\Warning\IPV6GroupCount;
+use Egulias\EmailValidator\Exception\ConsecutiveAt;
+use Egulias\EmailValidator\Warning\IPV6DoubleColon;
+use Egulias\EmailValidator\Exception\AtextAfterCFWS;
+use Egulias\EmailValidator\Exception\ConsecutiveDot;
+use Egulias\EmailValidator\Exception\DomainHyphened;
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Exception\ExpectingDTEXT;
+use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Exception\UnclosedComment;
+use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Result\Reason\NoLocalPart;
+use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 
 class RFCValidationTest extends TestCase
 {
@@ -182,7 +184,7 @@ class RFCValidationTest extends TestCase
     public function getInvalidEmailsWithErrors()
     {
         return [
-            [new NoLocalPart(), '@example.co.uk'],
+            [new InvalidEmail(new NoLocalPart(), "@"), '@example.co.uk'],
             [new NoDomainPart(), 'example@'],
             [new DomainHyphened(), 'example@example-.co.uk'],
             [new DomainHyphened(), 'example@example-'],
