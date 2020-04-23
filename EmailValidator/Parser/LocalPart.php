@@ -3,18 +3,21 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\Exception\DotAtEnd;
-use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\ExpectingAT;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\DotAtStart;
+use Egulias\EmailValidator\Result\Result;
+use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\LocalTooLong;
 
 class LocalPart extends Parser
 {
-    public function parse($localPart)
+    public function parse($localPart) : Result
     {
         $parseDQuote = true;
         $closingQuote = false;
@@ -22,8 +25,8 @@ class LocalPart extends Parser
         $totalLength = 0;
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type']) {
-                throw new DotAtStart();
+            if ($this->hasDotAtStart()) {
+                return new InvalidEmail(new DotAtStart(), $this->lexer->token['value']);
             }
 
             $closingQuote = $this->checkDQUOTE($closingQuote);
@@ -66,6 +69,13 @@ class LocalPart extends Parser
         if ($totalLength > LocalTooLong::LOCAL_PART_LENGTH) {
             $this->warnings[LocalTooLong::CODE] = new LocalTooLong();
         }
+
+        return new ValidEmail();
+    }
+
+    protected function hasDotAtStart() : bool
+    {
+            return $this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type'];
     }
 
     /**
