@@ -85,7 +85,7 @@ class EmailParser
     /**
      * @return Warning\Warning[]
      */
-    public function getWarnings()
+    public function getWarnings() : array
     {
         $localPartWarnings = $this->localPartParser->getWarnings();
         $domainPartWarnings = $this->domainPartParser->getWarnings();
@@ -99,7 +99,7 @@ class EmailParser
     /**
      * @return string
      */
-    public function getParsedDomainPart()
+    public function getParsedDomainPart() : string
     {
         return $this->domainPart;
     }
@@ -107,7 +107,7 @@ class EmailParser
     /**
      * @param string $email
      */
-    protected function setParts($email)
+    protected function setParts($email) : void
     {
         $parts = explode('@', $email);
         $this->domainPart = $this->domainPartParser->getDomainPart();
@@ -117,7 +117,7 @@ class EmailParser
     /**
      * @return bool
      */
-    protected function hasAtToken()
+    protected function hasAtToken() : bool
     {
         $this->lexer->moveNext();
         $this->lexer->moveNext();
@@ -132,7 +132,7 @@ class EmailParser
      * @param string $localPart
      * @param string $parsedDomainPart
      */
-    protected function addLongEmailWarning($localPart, $parsedDomainPart)
+    protected function addLongEmailWarning($localPart, $parsedDomainPart) : void
     {
         if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAIL_MAX_LENGTH) {
             $this->warnings[EmailTooLong::CODE] = new EmailTooLong();
