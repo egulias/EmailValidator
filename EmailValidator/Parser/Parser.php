@@ -13,6 +13,8 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Warning\CFWSNearAt;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\Comment;
@@ -208,7 +210,7 @@ abstract class Parser
      *
      * @return bool
      */
-    protected function checkDQUOTE($hasClosingQuote)
+    protected function checkDQUOTE($hasClosingQuote) : bool
     {
         if ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE) {
             return $hasClosingQuote;
@@ -218,7 +220,8 @@ abstract class Parser
         }
         $previous = $this->lexer->getPrevious();
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
-            throw new ExpectingATEXT();
+            return new InvalidEmail(new ReasonExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
+      //      throw new ExpectingATEXT();
         }
 
         try {
