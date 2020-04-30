@@ -220,8 +220,9 @@ abstract class Parser
         }
         $previous = $this->lexer->getPrevious();
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
-            return new InvalidEmail(new ReasonExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
-      //      throw new ExpectingATEXT();
+            //https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit
+            //return new InvalidEmail(new ReasonExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
+            throw new ExpectingATEXT();
         }
 
         try {

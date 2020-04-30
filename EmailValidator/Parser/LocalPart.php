@@ -29,8 +29,7 @@ class LocalPart extends Parser
                 return new InvalidEmail(new DotAtStart(), $this->lexer->token['value']);
             }
 
-            $closingQuote = $this->checkDQUOTE($closingQuote);
-            if ($closingQuote && $parseDQuote) {
+            if ($parseDQuote) {
                 $parseDQuote = $this->parseDoubleQuote();
             }
 
@@ -83,6 +82,10 @@ class LocalPart extends Parser
      */
     protected function parseDoubleQuote()
     {
+        if ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE) {
+            return true;
+        }
+        if(!$this->checkDQUOTE(false)) return false;
         $parseAgain = true;
         $special = array(
             EmailLexer::S_CR => true,
