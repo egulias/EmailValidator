@@ -2,7 +2,9 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Parser\Parser;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
+use Egulias\EmailValidator\Warning\QuotedString;
 use Egulias\EmailValidator\Exception\ExpectingAT;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
@@ -62,6 +64,37 @@ class DoubleQuote extends Parser
         }
 
         return $parseAgain;
+    }
+
+    /**
+     * @param bool $hasClosingQuote
+     *
+     * @return bool
+     */
+    protected function checkDQUOTE($hasClosingQuote) : bool
+    {
+        if ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE) {
+            return $hasClosingQuote;
+        }
+        if ($hasClosingQuote) {
+            return $hasClosingQuote;
+        }
+        $previous = $this->lexer->getPrevious();
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
+            //https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit
+            //return new InvalidEmail(new ReasonExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
+            throw new ExpectingATEXT();
+        }
+
+        try {
+            $this->lexer->find(EmailLexer::S_DQUOTE);
+            $hasClosingQuote = true;
+        } catch (\Exception $e) {
+            throw new UnclosedQuotedString();
+        }
+        $this->warnings[QuotedString::CODE] = new QuotedString($previous['value'], $this->lexer->token['value']);
+
+        return $hasClosingQuote;
     }
 
 }
