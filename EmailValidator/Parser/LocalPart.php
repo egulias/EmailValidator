@@ -2,18 +2,19 @@
 
 namespace Egulias\EmailValidator\Parser;
 
-use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\ExpectingAT;
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\UnclosedQuotedString;
-use Egulias\EmailValidator\Exception\UnopenedComment;
-use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Result\Reason\DotAtStart;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Exception\DotAtEnd;
+use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\LocalTooLong;
+use Egulias\EmailValidator\Warning\QuotedString;
+use Egulias\EmailValidator\Exception\ExpectingAT;
+use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\DotAtStart;
+use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 
 class LocalPart extends Parser
 {
@@ -30,7 +31,13 @@ class LocalPart extends Parser
             }
 
             if ($parseDQuote) {
-                $parseDQuote = $this->parseDoubleQuote();
+                $dquoteParser = new DoubleQuote($this->lexer);
+                $parseDQuote = $dquoteParser->parse($localPart);
+                $warns = $dquoteParser->getWarnings();
+                foreach ($warns as $code => $dWarning) {
+                    $this->warnings[$code] = $dWarning;
+                }
+                //$parseDQuote = $this->parseDoubleQuote();
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
