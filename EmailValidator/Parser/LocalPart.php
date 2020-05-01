@@ -26,7 +26,6 @@ class LocalPart extends Parser
                 return new InvalidEmail(new DotAtStart(), $this->lexer->token['value']);
             }
 
-            //if ($parseDQuote) {
             if ($this->lexer->token['type'] === EmailLexer::S_DQUOTE) {
                 $dquoteParsingResult = $this->parseDoubleQuote();
                 $parseDQuote = !$dquoteParsingResult->isValid();
