@@ -3,21 +3,22 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Parser\Parser;
+use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\QuotedString;
-use Egulias\EmailValidator\Exception\ExpectingAT;
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\UnclosedQuotedString;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
+use Egulias\EmailValidator\Result\Result;
 
 class DoubleQuote extends Parser
 {
     public function parse($qouted)
     {
-        if ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE) {
-            return true;
-        }
-        if(!$this->checkDQUOTE(false)) return false;
-        $parseAgain = true;
+
+        $validQuotedString = $this->checkDQUOTE();
+        if(!$validQuotedString->isValid()) return $validQuotedString;
+
         $special = array(
             EmailLexer::S_CR => true,
             EmailLexer::S_HTAB => true,
@@ -35,7 +36,6 @@ class DoubleQuote extends Parser
         $this->lexer->moveNext();
 
         while ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE && null !== $this->lexer->token['type']) {
-            $parseAgain = false;
             if (isset($special[$this->lexer->token['type']]) && $setSpecialsWarning) {
                 $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
                 $setSpecialsWarning = false;
@@ -47,54 +47,41 @@ class DoubleQuote extends Parser
             $this->lexer->moveNext();
 
             if (!$this->escaped() && isset($invalid[$this->lexer->token['type']])) {
-                throw new ExpectingATEXT();
+                return new InvalidEmail(new ExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
             }
         }
 
         $prev = $this->lexer->getPrevious();
 
         if ($prev['type'] === EmailLexer::S_BACKSLASH) {
-            if (!$this->checkDQUOTE(false)) {
-                throw new UnclosedQuotedString();
-            }
+            $validQuotedString = $this->checkDQUOTE();
+            if(!$validQuotedString->isValid()) return $validQuotedString;
         }
 
         if (!$this->lexer->isNextToken(EmailLexer::S_AT) && $prev['type'] !== EmailLexer::S_BACKSLASH) {
-            throw new ExpectingAT();
+            return new InvalidEmail(new ExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
         }
 
-        return $parseAgain;
+        return new ValidEmail();
     }
 
-    /**
-     * @param bool $hasClosingQuote
-     *
-     * @return bool
-     */
-    protected function checkDQUOTE($hasClosingQuote) : bool
+    protected function checkDQUOTE() : Result
     {
-        if ($this->lexer->token['type'] !== EmailLexer::S_DQUOTE) {
-            return $hasClosingQuote;
-        }
-        if ($hasClosingQuote) {
-            return $hasClosingQuote;
-        }
         $previous = $this->lexer->getPrevious();
+
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type'] === EmailLexer::GENERIC) {
-            //https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit
-            //return new InvalidEmail(new ReasonExpectingATEXT("Expecting ATEXT between DQUOTE"), $this->lexer->token['value']);
-            throw new ExpectingATEXT();
+            $description = 'https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit';
+            return new InvalidEmail(new ExpectingATEXT($description), $this->lexer->token['value']);
         }
 
         try {
             $this->lexer->find(EmailLexer::S_DQUOTE);
-            $hasClosingQuote = true;
         } catch (\Exception $e) {
-            throw new UnclosedQuotedString();
+            return new InvalidEmail(new UnclosedQuotedString(), $this->lexer->token['value']);
         }
         $this->warnings[QuotedString::CODE] = new QuotedString($previous['value'], $this->lexer->token['value']);
 
-        return $hasClosingQuote;
+        return new ValidEmail();
     }
 
 }

@@ -26,8 +26,15 @@ class LocalPart extends Parser
                 return new InvalidEmail(new DotAtStart(), $this->lexer->token['value']);
             }
 
-            if ($parseDQuote) {
-                $parseDQuote = $this->parseDoubleQuote();
+            //if ($parseDQuote) {
+            if ($this->lexer->token['type'] === EmailLexer::S_DQUOTE) {
+                $dquoteParsingResult = $this->parseDoubleQuote();
+                $parseDQuote = !$dquoteParsingResult->isValid();
+
+                //Invalid double quote parsing
+                if($parseDQuote) {
+                    return $dquoteParsingResult;
+                }
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
@@ -74,7 +81,7 @@ class LocalPart extends Parser
             return $this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type'];
     }
 
-    protected function parseDoubleQuote() : bool
+    protected function parseDoubleQuote() : Result
     {
         $dquoteParser = new DoubleQuote($this->lexer);
         $parseAgain = $dquoteParser->parse("remove useless arg");

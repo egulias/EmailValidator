@@ -39,6 +39,8 @@ use Egulias\EmailValidator\Exception\UnopenedComment;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 use Egulias\EmailValidator\Exception\UnclosedQuotedString;
 use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString as ReasonUnclosedQuotedString;
 
 class RFCValidationTest extends TestCase
 {
@@ -198,8 +200,13 @@ class RFCValidationTest extends TestCase
             [new DotAtEnd(), 'example@localhost.'],
             [new DotAtEnd(), 'example.@example.co.uk'],
             [new UnclosedComment(), '(example@localhost'],
-            [new UnclosedQuotedString(), '"example@localhost'],
-            [new ExpectingATEXT(), 'exa"mple@localhost'],
+            [new InvalidEmail(new ReasonUnclosedQuotedString(), '"'), '"example@localhost'],
+            [
+                new InvalidEmail(
+                    new ReasonExpectingATEXT('https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit'),
+                    '"'),
+                'exa"mple@localhost'
+            ],
             [new UnclosedComment(), '(example@localhost'],
             [new UnopenedComment(), 'comment)example@localhost'],
             [new UnopenedComment(), 'example(comment))@localhost'],
