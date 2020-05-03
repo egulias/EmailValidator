@@ -6,6 +6,6 @@ class LexerTokensTest extends TestCase
 {
     public function testToken()
     {
-        $this->fail("implement");
+        $this->markTestIncomplete("implement");
     }
 }

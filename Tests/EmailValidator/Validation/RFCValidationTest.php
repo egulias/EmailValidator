@@ -35,12 +35,12 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Exception\UnclosedComment;
-use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Exception\UnopenedComment as ExceptionUnopenedComment;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
-use Egulias\EmailValidator\Exception\UnclosedQuotedString;
+use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
-use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString as ReasonUnclosedQuotedString;
+use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
 
 class RFCValidationTest extends TestCase
 {
@@ -200,7 +200,7 @@ class RFCValidationTest extends TestCase
             [new DotAtEnd(), 'example@localhost.'],
             [new DotAtEnd(), 'example.@example.co.uk'],
             [new UnclosedComment(), '(example@localhost'],
-            [new InvalidEmail(new ReasonUnclosedQuotedString(), '"'), '"example@localhost'],
+            [new InvalidEmail(new UnclosedQuotedString(), '"'), '"example@localhost'],
             [
                 new InvalidEmail(
                     new ReasonExpectingATEXT('https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit'),
@@ -208,11 +208,11 @@ class RFCValidationTest extends TestCase
                 'exa"mple@localhost'
             ],
             [new UnclosedComment(), '(example@localhost'],
-            [new UnopenedComment(), 'comment)example@localhost'],
-            [new UnopenedComment(), 'example(comment))@localhost'],
-            [new UnopenedComment(), 'example@comment)localhost'],
-            [new UnopenedComment(), 'example@localhost(comment))'],
-            [new UnopenedComment(), 'example@(comment))example.com'],
+            [new InvalidEmail(new UnOpenedComment(), ')'), 'comment)example@localhost'],
+            [new InvalidEmail(new UnOpenedComment(), ')'), 'example(comment))@localhost'],
+            [new ExceptionUnopenedComment, 'example@comment)localhost'],
+            [new ExceptionUnopenedComment, 'example@localhost(comment))'],
+            [new ExceptionUnopenedComment, 'example@(comment))example.com'],
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
             [new AtextAfterCFWS(), "exampl\ne@example.co.uk"],

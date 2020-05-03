@@ -8,6 +8,6 @@ class ValidationTest extends TestCase
 {
     public function testValidationReturnsResult()
     {
-        $this->fail("implement return type Validation");
+        $this->markTestIncomplete("implement return type Validation");
     }
 }

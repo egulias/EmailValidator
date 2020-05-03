@@ -10,7 +10,7 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\LocalTooLong;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
-use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 
 class LocalPart extends Parser
 {
@@ -43,7 +43,7 @@ class LocalPart extends Parser
 
             if ($this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
                 if ($openedParenthesis === 0) {
-                    throw new UnopenedComment();
+                    return new InvalidEmail(new UnOpenedComment(), $this->lexer->token['value']);
                 }
 
                 $openedParenthesis--;
