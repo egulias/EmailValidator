@@ -16,10 +16,9 @@ class LocalPart extends Parser
 {
     public function parse($localPart) : Result
     {
-        $parseDQuote = true;
         $closingQuote = false;
-        $openedParenthesis = 0;
         $totalLength = 0;
+        $commentParser = new Comment($this->lexer);
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->hasDotAtStart()) {
@@ -28,25 +27,23 @@ class LocalPart extends Parser
 
             if ($this->lexer->token['type'] === EmailLexer::S_DQUOTE) {
                 $dquoteParsingResult = $this->parseDoubleQuote();
-                $parseDQuote = !$dquoteParsingResult->isValid();
 
                 //Invalid double quote parsing
-                if($parseDQuote) {
+                if(!$dquoteParsingResult->isValid()) {
                     return $dquoteParsingResult;
                 }
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
-                $this->parseComments();
-                $openedParenthesis += $this->getOpenedParenthesis();
-            }
-
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
-                if ($openedParenthesis === 0) {
-                    return new InvalidEmail(new UnOpenedComment(), $this->lexer->token['value']);
+            if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS || 
+                $this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS ) {
+                $result = $commentParser->parse('remove');
+                if(!$result->isValid()) {
+                    return $result;
                 }
-
-                $openedParenthesis--;
+                $warns = $commentParser->getWarnings();
+                foreach ($warns as $code => $dWarning) {
+                    $this->warnings[$code] = $dWarning;
+                }
             }
 
             $this->checkConsecutiveDots();
