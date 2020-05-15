@@ -12,6 +12,10 @@ use Egulias\EmailValidator\Exception\ExpectingQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingCTEXT;
 use Egulias\EmailValidator\Exception\UnclosedComment;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
+use Egulias\EmailValidator\Result\Result;
+use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\CFWSNearAt;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\Comment;
@@ -183,6 +187,7 @@ abstract class Parser
      */
     protected function warnEscaping() : bool
     {
+        //Backslash found
         if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
             return false;
         }
@@ -198,6 +203,28 @@ abstract class Parser
         $this->warnings[QuotedPart::CODE] =
             new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
         return true;
+
+    }
+
+    protected function validateEscaping() : Result
+    {
+        //Backslash found
+        if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
+            return new ValidEmail();
+        }
+
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
+            return new InvalidEmail(new ReasonExpectingATEXT('Found ATOM after escaping'), $this->lexer->token['value']);
+        }
+
+        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
+            return new ValidEmail();
+        }
+
+        $this->warnings[QuotedPart::CODE] =
+            new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
+
+        return new ValidEmail();
 
     }
 

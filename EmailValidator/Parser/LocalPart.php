@@ -53,7 +53,12 @@ class LocalPart extends Parser
                 return new InvalidEmail(new DotAtEnd(), $this->lexer->token['value']);
             }
 
-            $this->warnEscaping();
+            //$this->warnEscaping();
+            $resultEscaping = $this->validateEscaping();
+            if (!$resultEscaping->isValid()) {
+                return $resultEscaping;
+            }
+
             $this->isInvalidToken($this->lexer->token, $closingQuote);
 
             if ($this->isFWS()) {
