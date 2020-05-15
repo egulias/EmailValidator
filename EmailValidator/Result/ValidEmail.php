@@ -9,6 +9,11 @@ class ValidEmail implements Result
         return true;
     }
 
+    public function isInvalid(): bool
+    {
+        return false;
+    }
+
     public function description(): string
     {
         return "Valid email";

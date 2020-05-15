@@ -28,7 +28,7 @@ class LocalPart extends Parser
                 $dquoteParsingResult = $this->parseDoubleQuote();
 
                 //Invalid double quote parsing
-                if(!$dquoteParsingResult->isValid()) {
+                if($dquoteParsingResult->isInvalid()) {
                     return $dquoteParsingResult;
                 }
             }
@@ -36,7 +36,7 @@ class LocalPart extends Parser
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS || 
                 $this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS ) {
                 $result = $commentParser->parse('remove');
-                if(!$result->isValid()) {
+                if($result->isInvalid()) {
                     return $result;
                 }
                 $warns = $commentParser->getWarnings();
@@ -55,7 +55,7 @@ class LocalPart extends Parser
 
             //$this->warnEscaping();
             $resultEscaping = $this->validateEscaping();
-            if (!$resultEscaping->isValid()) {
+            if ($resultEscaping->isInvalid()) {
                 return $resultEscaping;
             }
 

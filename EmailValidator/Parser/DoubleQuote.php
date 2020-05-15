@@ -17,7 +17,7 @@ class DoubleQuote extends Parser
     {
 
         $validQuotedString = $this->checkDQUOTE();
-        if(!$validQuotedString->isValid()) return $validQuotedString;
+        if($validQuotedString->isInvalid()) return $validQuotedString;
 
         $special = array(
             EmailLexer::S_CR => true,
@@ -55,7 +55,7 @@ class DoubleQuote extends Parser
 
         if ($prev['type'] === EmailLexer::S_BACKSLASH) {
             $validQuotedString = $this->checkDQUOTE();
-            if(!$validQuotedString->isValid()) return $validQuotedString;
+            if($validQuotedString->isInvalid()) return $validQuotedString;
         }
 
         if (!$this->lexer->isNextToken(EmailLexer::S_AT) && $prev['type'] !== EmailLexer::S_BACKSLASH) {

@@ -20,6 +20,11 @@ class InvalidEmail implements Result
         return false;
     }
 
+    public function isInvalid(): bool
+    {
+        return true;
+    }
+
     public function description(): string
     {
         return $this->reason->description() . " in char " . $this->token;
