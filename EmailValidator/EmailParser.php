@@ -59,7 +59,7 @@ class EmailParser
 
     /**
      * @param string $str
-     * @return array
+     * @return Result 
      */
     public function parse($str) : Result
     {

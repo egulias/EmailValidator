@@ -181,7 +181,7 @@ abstract class Parser
     /**
      * @return bool
      */
-    protected function warnEscaping()
+    protected function warnEscaping() : bool
     {
         if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
             return false;

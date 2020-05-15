@@ -5,12 +5,11 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
-use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\LocalTooLong;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
-use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 
 class LocalPart extends Parser
 {
@@ -51,7 +50,7 @@ class LocalPart extends Parser
             if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
                 $this->lexer->isNextToken(EmailLexer::S_AT)
             ) {
-                throw new DotAtEnd();
+                return new InvalidEmail(new DotAtEnd(), $this->lexer->token['value']);
             }
 
             $this->warnEscaping();

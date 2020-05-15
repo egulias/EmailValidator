@@ -36,6 +36,7 @@ use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnopenedComment as ExceptionUnopenedComment;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
@@ -199,7 +200,7 @@ class RFCValidationTest extends TestCase
             [new InvalidEmail(new ReasonDotAtStart(), '.'), '.example@localhost'],
             [new DotAtStart(), 'example@.localhost'],
             [new DotAtEnd(), 'example@localhost.'],
-            [new DotAtEnd(), 'example.@example.co.uk'],
+            [new InvalidEmail(new ReasonDotAtEnd(), '.'), 'example.@example.co.uk'],
             [new InvalidEmail(new ReasonUnclosedComment(), '('), '(example@localhost'],
             [new InvalidEmail(new UnclosedQuotedString(), '"'), '"example@localhost'],
             [
