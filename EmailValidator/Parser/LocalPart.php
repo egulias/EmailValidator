@@ -26,9 +26,12 @@ class LocalPart extends Parser
             EmailLexer::INVALID => EmailLexer::INVALID
         );
 
+    private $foldingWS;
+
     public function parse($localPart) : Result
     {
         $totalLength = 0;
+        $this->foldingWS = new FoldingWhiteSpace($this->lexer);
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->hasDotAtStart()) {
@@ -73,8 +76,9 @@ class LocalPart extends Parser
                 return new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
             }
 
-            if ($this->isFWS()) {
-                $this->parseFWS();
+            $resultFWS = $this->parseLocalFWS();
+            if($resultFWS->isInvalid()) {
+                return $resultFWS;
             }
 
             $totalLength += strlen($this->lexer->token['value']);
@@ -86,6 +90,18 @@ class LocalPart extends Parser
         }
 
         return new ValidEmail();
+    }
+
+    protected function parseLocalFWS() : Result 
+    {
+        $resultFWS = $this->foldingWS->parse('remove');
+        if ($resultFWS->isValid()) {
+            $warns = $this->foldingWS->getWarnings();
+            foreach ($warns as $code => $dWarning) {
+                $this->warnings[$code] = $dWarning;
+            }
+        }
+        return $resultFWS;
     }
 
     protected function hasDotAtStart() : bool

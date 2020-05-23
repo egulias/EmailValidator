@@ -36,6 +36,7 @@ use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnopenedComment as ExceptionUnopenedComment;
+use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS as ReasonAtextAfterCFWS;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
@@ -44,6 +45,7 @@ use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedComment;
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
+use Egulias\EmailValidator\Result\Reason\CRNoLF as ReasonCRNoLF;
 
 class RFCValidationTest extends TestCase
 {
@@ -217,12 +219,12 @@ class RFCValidationTest extends TestCase
             [new ExceptionUnopenedComment, 'example@(comment))example.com'],
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
-            [new AtextAfterCFWS(), "exampl\ne@example.co.uk"],
+            [new InvalidEmail(new ReasonAtextAfterCFWS(), "\n"), "exampl\ne@example.co.uk"],
             [new ExpectingDTEXT(), "example@[[]"],
-            [new AtextAfterCFWS(), "exampl\te@example.co.uk"],
+            [new InvalidEmail(new ReasonAtextAfterCFWS(), "\t"), "exampl\te@example.co.uk"],
             [new CRNoLF(), "example@exa\rmple.co.uk"],
             [new CRNoLF(), "example@[\r]"],
-            [new CRNoLF(), "exam\rple@example.co.uk"],
+            [new InvalidEmail(new ReasonCRNoLF(), "\r"), "exam\rple@example.co.uk"],
         ];
     }
 
