@@ -8,11 +8,28 @@ use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\LocalTooLong;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 
 class LocalPart extends Parser
 {
+
+    /*
+        @property array
+    */
+    private $invalidTokens = array(
+            EmailLexer::S_COMMA => EmailLexer::S_COMMA,
+            EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
+            EmailLexer::S_OPENBRACKET => EmailLexer::S_OPENBRACKET,
+            EmailLexer::S_GREATERTHAN => EmailLexer::S_GREATERTHAN,
+            EmailLexer::S_LOWERTHAN => EmailLexer::S_LOWERTHAN,
+            EmailLexer::S_COLON => EmailLexer::S_COLON,
+            EmailLexer::S_SEMICOLON => EmailLexer::S_SEMICOLON,
+            EmailLexer::INVALID => EmailLexer::INVALID
+        );
+
     public function parse($localPart) : Result
     {
         $closingQuote = false;
@@ -45,7 +62,9 @@ class LocalPart extends Parser
                 }
             }
 
-            $this->checkConsecutiveDots();
+            if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+                return new InvalidEmail(new ConsecutiveDot(), $this->lexer->token['value']);
+            }
 
             if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
                 $this->lexer->isNextToken(EmailLexer::S_AT)
@@ -53,13 +72,14 @@ class LocalPart extends Parser
                 return new InvalidEmail(new DotAtEnd(), $this->lexer->token['value']);
             }
 
-            //$this->warnEscaping();
             $resultEscaping = $this->validateEscaping();
             if ($resultEscaping->isInvalid()) {
                 return $resultEscaping;
             }
 
-            $this->isInvalidToken($this->lexer->token, $closingQuote);
+            if (isset($this->invalidTokens[$this->lexer->token['type']])) {
+                return new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+            }
 
             if ($this->isFWS()) {
                 $this->parseFWS();

@@ -36,6 +36,7 @@ use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Exception\UnopenedComment as ExceptionUnopenedComment;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
@@ -194,9 +195,9 @@ class RFCValidationTest extends TestCase
             [new DomainHyphened(), 'example@example-.co.uk'],
             [new DomainHyphened(), 'example@example-'],
             [new ConsecutiveAt(), 'example@@example.co.uk'],
-            [new ConsecutiveDot(), 'example..example@example.co.uk'],
+            [new InvalidEmail(new ReasonConsecutiveDot(), '.'), 'example..example@example.co.uk'],
             [new ConsecutiveDot(), 'example@example..co.uk'],
-            [new ExpectingATEXT(), '<example_example>@example.fr'],
+            [new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), '<'), '<example_example>@example.fr'],
             [new InvalidEmail(new ReasonDotAtStart(), '.'), '.example@localhost'],
             [new DotAtStart(), 'example@.localhost'],
             [new DotAtEnd(), 'example@localhost.'],
