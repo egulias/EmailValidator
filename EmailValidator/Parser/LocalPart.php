@@ -7,7 +7,6 @@ use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\LocalTooLong;
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
@@ -16,9 +15,6 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 class LocalPart extends Parser
 {
 
-    /*
-        @property array
-    */
     private $invalidTokens = array(
             EmailLexer::S_COMMA => EmailLexer::S_COMMA,
             EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
@@ -32,9 +28,7 @@ class LocalPart extends Parser
 
     public function parse($localPart) : Result
     {
-        $closingQuote = false;
         $totalLength = 0;
-        $commentParser = new Comment($this->lexer);
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->hasDotAtStart()) {
@@ -52,13 +46,11 @@ class LocalPart extends Parser
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS || 
                 $this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS ) {
-                $result = $commentParser->parse('remove');
-                if($result->isInvalid()) {
-                    return $result;
-                }
-                $warns = $commentParser->getWarnings();
-                foreach ($warns as $code => $dWarning) {
-                    $this->warnings[$code] = $dWarning;
+                $commentsResult = $this->parseComments();
+
+                //Invalid comment parsing
+                if($commentsResult->isInvalid()) {
+                    return $commentsResult;
                 }
             }
 
@@ -113,24 +105,17 @@ class LocalPart extends Parser
         return $parseAgain;
     }
 
-    /**
-     * @param bool $closingQuote
-     */
-    protected function isInvalidToken(array $token, $closingQuote)
+    protected function parseComments()
     {
-        $forbidden = array(
-            EmailLexer::S_COMMA,
-            EmailLexer::S_CLOSEBRACKET,
-            EmailLexer::S_OPENBRACKET,
-            EmailLexer::S_GREATERTHAN,
-            EmailLexer::S_LOWERTHAN,
-            EmailLexer::S_COLON,
-            EmailLexer::S_SEMICOLON,
-            EmailLexer::INVALID
-        );
-
-        if (in_array($token['type'], $forbidden) && !$closingQuote) {
-            throw new ExpectingATEXT();
+        $commentParser = new Comment($this->lexer);
+        $result = $commentParser->parse('remove');
+        if($result->isInvalid()) {
+            return $result;
         }
+        $warns = $commentParser->getWarnings();
+        foreach ($warns as $code => $dWarning) {
+            $this->warnings[$code] = $dWarning;
+        }
+        return $result;
     }
 }
