@@ -46,6 +46,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedComment;
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
 use Egulias\EmailValidator\Result\Reason\CRNoLF as ReasonCRNoLF;
+use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
 
 class RFCValidationTest extends TestCase
 {
@@ -202,6 +203,7 @@ class RFCValidationTest extends TestCase
             [new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), '<'), '<example_example>@example.fr'],
             [new InvalidEmail(new ReasonDotAtStart(), '.'), '.example@localhost'],
             [new InvalidEmail(new ReasonDotAtStart(), '.'), 'example@.localhost'],
+            [new InvalidEmail(new ReasonDomainHyphened('After AT'), '-'), 'example@-localhost'],
             [new DotAtEnd(), 'example@localhost.'],
             [new InvalidEmail(new ReasonDotAtEnd(), '.'), 'example.@example.co.uk'],
             [new InvalidEmail(new ReasonUnclosedComment(), '('), '(example@localhost'],

@@ -17,6 +17,7 @@ use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Exception\UnopenedComment;
 use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
 use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
@@ -108,7 +109,7 @@ class DomainPart extends Parser
             return new InvalidEmail(new ReasonDotAtStart(), $this->lexer->token['value']);
         }
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
-            throw new DomainHyphened();
+            return new InvalidEmail(new ReasonDomainHyphened('After AT'), $this->lexer->token['value']);
         }
         return new ValidEmail();
     }
