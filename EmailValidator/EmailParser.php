@@ -70,11 +70,14 @@ class EmailParser
         }
 
         $localPartResult = $this->localPartParser->parse($str);
-        if (!$localPartResult->isValid()) {
+        if ($localPartResult->isInvalid()) {
             return $localPartResult;
         }
 
-        $this->domainPartParser->parse($str);
+        $domainPartResult = $this->domainPartParser->parse($str);
+        if ($domainPartResult->isInvalid()) {
+            return $domainPartResult;
+        }
 
         $this->setParts($str);
 

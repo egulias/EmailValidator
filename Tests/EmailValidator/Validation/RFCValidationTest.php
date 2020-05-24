@@ -201,7 +201,7 @@ class RFCValidationTest extends TestCase
             [new ConsecutiveDot(), 'example@example..co.uk'],
             [new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), '<'), '<example_example>@example.fr'],
             [new InvalidEmail(new ReasonDotAtStart(), '.'), '.example@localhost'],
-            [new DotAtStart(), 'example@.localhost'],
+            [new InvalidEmail(new ReasonDotAtStart(), '.'), 'example@.localhost'],
             [new DotAtEnd(), 'example@localhost.'],
             [new InvalidEmail(new ReasonDotAtEnd(), '.'), 'example.@example.co.uk'],
             [new InvalidEmail(new ReasonUnclosedComment(), '('), '(example@localhost'],

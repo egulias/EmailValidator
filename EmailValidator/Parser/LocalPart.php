@@ -10,7 +10,7 @@ use Egulias\EmailValidator\Warning\LocalTooLong;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
-use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 
 class LocalPart extends Parser
 {
@@ -31,7 +31,6 @@ class LocalPart extends Parser
     public function parse($localPart) : Result
     {
         $totalLength = 0;
-        $this->foldingWS = new FoldingWhiteSpace($this->lexer);
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->hasDotAtStart()) {
@@ -73,7 +72,7 @@ class LocalPart extends Parser
             }
 
             if (isset($this->invalidTokens[$this->lexer->token['type']])) {
-                return new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+                return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
             }
 
             $resultFWS = $this->parseLocalFWS();
@@ -94,9 +93,11 @@ class LocalPart extends Parser
 
     protected function parseLocalFWS() : Result 
     {
-        $resultFWS = $this->foldingWS->parse('remove');
+
+        $foldingWS = new FoldingWhiteSpace($this->lexer);
+        $resultFWS = $foldingWS->parse('remove');
         if ($resultFWS->isValid()) {
-            $warns = $this->foldingWS->getWarnings();
+            $warns = $foldingWS->getWarnings();
             foreach ($warns as $code => $dWarning) {
                 $this->warnings[$code] = $dWarning;
             }

@@ -16,6 +16,10 @@ use Egulias\EmailValidator\Exception\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Exception\UnopenedComment;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
+use Egulias\EmailValidator\Result\Result;
+use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\DeprecatedComment;
@@ -45,7 +49,10 @@ class DomainPart extends Parser
     {
         $this->lexer->moveNext();
 
-        $this->performDomainStartChecks();
+        $domainChecks = $this->performDomainStartChecks();
+        if ($domainChecks->isInvalid()) {
+            return $domainChecks;
+        }
 
         $domain = $this->doParseDomainPart();
 
@@ -65,17 +72,23 @@ class DomainPart extends Parser
             throw new CRLFAtTheEnd();
         }
         $this->domainPart = $domain;
+
+        return new ValidEmail();
     }
 
-    private function performDomainStartChecks()
+    private function performDomainStartChecks() : Result
     {
-        $this->checkInvalidTokensAfterAT();
+        $invalidTokens = $this->checkInvalidTokensAfterAT();
+        if ($invalidTokens->isInvalid()) {
+            return $invalidTokens;
+        }
         $this->checkEmptyDomain();
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
             $this->warnings[DeprecatedComment::CODE] = new DeprecatedComment();
             $this->parseDomainComments();
         }
+        return new ValidEmail();
     }
 
     private function checkEmptyDomain()
@@ -89,14 +102,15 @@ class DomainPart extends Parser
         }
     }
 
-    private function checkInvalidTokensAfterAT()
+    private function checkInvalidTokensAfterAT() : Result
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
-            throw new DotAtStart();
+            return new InvalidEmail(new ReasonDotAtStart(), $this->lexer->token['value']);
         }
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
             throw new DomainHyphened();
         }
+        return new ValidEmail();
     }
 
     /**
