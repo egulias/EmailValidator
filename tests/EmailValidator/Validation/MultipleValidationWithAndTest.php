@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\CommaInDomain;
@@ -18,7 +18,7 @@ class MultipleValidationWithAndTest extends TestCase
     public function testUsesAndLogicalOperation()
     {
         $lexer = new EmailLexer();
-        $validationTrue = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
+        $validationTrue = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validationTrue->expects($this->any())->method("isValid")->willReturn(true);
         $validationTrue->expects($this->any())->method("getWarnings")->willReturn([]);
         $validationFalse = $this->getMockBuilder(EmailValidation::class)->getMock();
@@ -60,7 +60,7 @@ class MultipleValidationWithAndTest extends TestCase
         $expectedResult = array_merge($warnings1, $warnings2);
 
         $lexer = new EmailLexer();
-        $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
+        $validation1 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn($warnings1);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Validation\RFCValidation;
@@ -104,7 +104,7 @@ class RFCValidationTest extends TestCase
 
     public function testInvalidUTF8Email()
     {
-        $email     = "\x80\x81\x82@\x83\x84\x85.\x86\x87\x88";
+        $email = "\x80\x81\x82@\x83\x84\x85.\x86\x87\x88";
         $this->assertFalse($this->validator->isValid($email, $this->lexer));
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
@@ -24,7 +24,7 @@ class DNSCheckValidationTest extends TestCase
             ['"Abc@def"@example.com'],
             ['"Fred\ Bloggs"@example.com'],
             ['"Joe.\\Blow"@example.com'],
-            
+
             // unicide
             ['ñandu.cl'],
         ];
