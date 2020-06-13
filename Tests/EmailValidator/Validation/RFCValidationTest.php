@@ -47,6 +47,7 @@ use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedCommen
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
 use Egulias\EmailValidator\Result\Reason\CRNoLF as ReasonCRNoLF;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
+use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
 
 class RFCValidationTest extends TestCase
 {
@@ -194,7 +195,7 @@ class RFCValidationTest extends TestCase
     {
         return [
             [new InvalidEmail(new NoLocalPart(), "@"), '@example.co.uk'],
-            [new NoDomainPart(), 'example@'],
+            [new InvalidEmail(new ReasonNoDomainPart(), ''), 'example@'],
             [new DomainHyphened(), 'example@example-.co.uk'],
             [new DomainHyphened(), 'example@example-'],
             [new ConsecutiveAt(), 'example@@example.co.uk'],

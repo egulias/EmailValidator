@@ -4,6 +4,7 @@ namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\Reason;
 use Egulias\EmailValidator\Warning\Warning;
 
 interface EmailValidation

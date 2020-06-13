@@ -19,6 +19,7 @@ use Egulias\EmailValidator\Exception\UnopenedComment;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
 use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
+use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\AddressLiteral;
@@ -83,7 +84,11 @@ class DomainPart extends Parser
         if ($invalidTokens->isInvalid()) {
             return $invalidTokens;
         }
-        $this->checkEmptyDomain();
+        
+        $missingDomain = $this->checkEmptyDomain();
+        if ($missingDomain->isInvalid()) {
+            return $missingDomain;
+        }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
             $this->warnings[DeprecatedComment::CODE] = new DeprecatedComment();
@@ -92,15 +97,17 @@ class DomainPart extends Parser
         return new ValidEmail();
     }
 
-    private function checkEmptyDomain()
+    private function checkEmptyDomain() : Result
     {
         $thereIsNoDomain = $this->lexer->token['type'] === EmailLexer::S_EMPTY ||
             ($this->lexer->token['type'] === EmailLexer::S_SP &&
             !$this->lexer->isNextToken(EmailLexer::GENERIC));
 
         if ($thereIsNoDomain) {
-            throw new NoDomainPart();
+            return new InvalidEmail(new ReasonNoDomainPart(), $this->lexer->token['value']);
         }
+
+        return new ValidEmail();
     }
 
     private function checkInvalidTokensAfterAT() : Result

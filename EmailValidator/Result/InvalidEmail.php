@@ -7,6 +7,9 @@ use Egulias\EmailValidator\Result\Reason\Reason;
 class InvalidEmail implements Result
 {
     private  $token;
+    /**
+     * @var Reason
+     */
     private $reason;
 
     public function __construct(Reason $reason, string $token)
@@ -33,6 +36,11 @@ class InvalidEmail implements Result
     public function code(): int
     {
         return $this->reason->code();
+    }
+
+    public function reason() : Reason
+    {
+        return $this->reason;
     }
 
 }

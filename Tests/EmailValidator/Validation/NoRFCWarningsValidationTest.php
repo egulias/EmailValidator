@@ -4,6 +4,7 @@ namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\NoDomainPart;
+use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
 use Egulias\EmailValidator\Validation\Error\RFCWarnings;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ class NoRFCWarningsValidationTest extends TestCase
         $validation = new NoRFCWarningsValidation();
 
         $this->assertFalse($validation->isValid('non-email-string', new EmailLexer()));
-        $this->assertInstanceOf(NoDomainPart::class, $validation->getError());
+        $this->assertInstanceOf(ReasonNoDomainPart::class, $validation->getError()->reason());
     }
 
     public function testEmailWithWarningsIsInvalid()
