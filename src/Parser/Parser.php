@@ -22,7 +22,7 @@ use Egulias\EmailValidator\Warning\QuotedString;
 abstract class Parser
 {
     /**
-     * @var \Egulias\EmailValidator\Warning\Warning[]
+     * @var array
      */
     protected $warnings = [];
 
