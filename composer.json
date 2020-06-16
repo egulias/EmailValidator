@@ -18,21 +18,21 @@
     "symfony/polyfill-intl-idn": "^1.10"
   },
   "require-dev": {
-    "satooshi/php-coveralls": "^1.0.1",
+    "dominicsayers/isemail": "^3.0.7",
     "phpunit/phpunit": "^4.8.36|^7.5.15",
-    "dominicsayers/isemail": "^3.0.7"
+    "satooshi/php-coveralls": "^1.0.1"
   },
   "suggest": {
     "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
   },
   "autoload": {
     "psr-4": {
-      "Egulias\\EmailValidator\\": "EmailValidator"
+      "Egulias\\EmailValidator\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Egulias\\Tests\\": "Tests"
+      "Egulias\\EmailValidator\\Tests\\": "tests"
     }
   }
 }

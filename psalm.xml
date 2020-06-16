@@ -8,7 +8,7 @@
     errorBaseline="./psalm.baseline.xml"
 >
     <projectFiles>
-        <directory name="EmailValidator" />
+        <directory name="src" />
         <ignoreFiles>
             <directory name="vendor" />
         </ignoreFiles>

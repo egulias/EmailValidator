@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
@@ -27,7 +27,7 @@ class IsEmailFunctionTests extends TestCase
 
     public function isEmailTestSuite()
     {
-        $testSuite = dirname(__FILE__) . '/../../resources/is_email_tests.xml';
+        $testSuite = __DIR__ . '/../../resources/is_email_tests.xml';
         $document = new \DOMDocument();
         $document->load($testSuite);
         $elements = $document->getElementsByTagName('test');
