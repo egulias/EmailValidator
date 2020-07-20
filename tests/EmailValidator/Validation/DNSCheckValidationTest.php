@@ -16,16 +16,16 @@ class DNSCheckValidationTest extends TestCase
     {
         return [
             // dot-atom
-            ['Abc@example.com'],
-            ['ABC@EXAMPLE.COM'],
-            ['Abc.123@example.com'],
-            ['user+mailbox/department=shipping@example.com'],
-            ['!#$%&\'*+-/=?^_`.{|}~@example.com'],
+            ['Abc@github.com'],
+            ['ABC@GITHUB.COM'],
+            ['Abc.123@github.com'],
+            ['user+mailbox/department=shipping@github.com'],
+            ['!#$%&\'*+-/=?^_`.{|}~@github.com'],
 
             // quoted string
-            ['"Abc@def"@example.com'],
-            ['"Fred\ Bloggs"@example.com'],
-            ['"Joe.\\Blow"@example.com'],
+            ['"Abc@def"@github.com'],
+            ['"Fred\ Bloggs"@github.com'],
+            ['"Joe.\\Blow"@github.com'],
 
             // unicide
             ['ñandu.cl'],
