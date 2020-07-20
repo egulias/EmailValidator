@@ -98,7 +98,7 @@ class DNSCheckValidation implements EmailValidation
         $dnsRecords = dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
 
         // No MX, A or AAAA records
-        if (empty($dnsRecords) || !is_array($dnsRecords)) {
+        if (empty($dnsRecords)) {
             $this->error = new NoDNSRecord();
             return false;
         }
