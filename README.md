@@ -9,7 +9,7 @@ RFC 5321, 5322, 6530, 6531, 6532.
 ## Requirements ##
 
  * [Composer](https://getcomposer.org) is required for installation
- * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php) and [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php) validation requires that your PHP system has the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
+ * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/src/Validation/SpoofCheckValidation.php) and [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/src/Validation/DNSCheckValidation.php) validation requires that your PHP system has the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
 
 ## Installation ##
 
@@ -36,11 +36,11 @@ $validator->isValid("example@example.com", new RFCValidation()); //true
 
 ### Available validations ###
 
-1. [RFCValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/RFCValidation.php)
-2. [NoRFCWarningsValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/NoRFCWarningsValidation.php)
-3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php)
-4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php)
-5. [MultipleValidationWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
+1. [RFCValidation](https://github.com/egulias/EmailValidator/blob/master/src/Validation/RFCValidation.php)
+2. [NoRFCWarningsValidation](https://github.com/egulias/EmailValidator/blob/master/src/Validation/NoRFCWarningsValidation.php)
+3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/src/Validation/DNSCheckValidation.php)
+4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/src/Validation/SpoofCheckValidation.php)
+5. [MultipleValidationWithAnd](https://github.com/egulias/EmailValidator/blob/master/src/Validation/MultipleValidationWithAnd.php)
 6. [Your own validation](#how-to-extend)
 
 `MultipleValidationWithAnd`
@@ -65,7 +65,7 @@ $validator->isValid("example@example.com", $multipleValidations); //true
 
 ### How to extend ###
 
-It's easy! You just need to implement [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
+It's easy! You just need to implement [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/src/Validation/EmailValidation.php) and you can use your own validation.
 
 
 ## Other Contributors ##
