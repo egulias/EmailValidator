@@ -12,14 +12,14 @@
 >
 <testsuites>
   <testsuite name="EmailValidator Test Suite">
-    <directory>./Tests/EmailValidator</directory>
+    <directory>./tests/EmailValidator</directory>
     <exclude>./vendor/</exclude>
   </testsuite>
 </testsuites>
 
 <filter>
   <whitelist>
-    <directory>./EmailValidator/</directory>
+    <directory>./src/</directory>
   </whitelist>
 </filter>
 </phpunit>
