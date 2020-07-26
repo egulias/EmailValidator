@@ -3,24 +3,31 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\CFWSNearAt;
 use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Parser\CommentStrategy;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\UnclosedComment;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Warning\Comment as WarningComment;
 
-
 class Comment extends Parser
 {
-    private $MopenedParenthesis = 0;
+    //change to private when removed from parent parser
+    protected $openedParenthesis = 0;
+    private $commentStrategy;
+
+    public function __construct(EmailLexer $lexer, CommentStrategy $commentStrategy)
+    {
+        $this->lexer = $lexer;
+        $this->commentStrategy = $commentStrategy;
+    }
 
     public function parse($str)
     {
         if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
-            $this->MopenedParenthesis++;
+            $this->openedParenthesis++;
             if($this->noClosingParenthesis()) {
                 return new InvalidEmail(new UnclosedComment(), $this->lexer->token['value']);
             }
@@ -31,30 +38,31 @@ class Comment extends Parser
         }
 
         $this->warnings[WarningComment::CODE] = new WarningComment();
-        while (!$this->lexer->isNextToken(EmailLexer::S_AT)) {//!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
+
+        $moreTokens = true;
+        while ($this->commentStrategy->exitCondition($this->lexer, $this->openedParenthesis) && $moreTokens){
+
             if ($this->lexer->isNextToken(EmailLexer::S_OPENPARENTHESIS)) {
-                $this->MopenedParenthesis++;
+                $this->openedParenthesis++;
             }
             $this->warnEscaping();
             if($this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
-                $this->MopenedParenthesis--;
+                $this->openedParenthesis--;
             }
-            $this->lexer->moveNext();
+            $moreTokens = $this->lexer->moveNext();
         }
 
-        if($this->MopenedParenthesis >= 1) {
+        if($this->openedParenthesis >= 1) {
             return new InvalidEmail(new UnclosedComment(), $this->lexer->token['value']);
-        } else if ($this->MopenedParenthesis < 0) {
+        } else if ($this->openedParenthesis < 0) {
             return new InvalidEmail(new UnOpenedComment(), $this->lexer->token['value']);
         }
 
-        if (!$this->lexer->isNextToken(EmailLexer::S_AT)) {
-            return new InvalidEmail(new ExpectingATEXT('ATEX is not expected after closing comments'), $this->lexer->token['value']);
-        }
+        $finalValidations = $this->commentStrategy->endOfLoopValidations($this->lexer);
 
-        //You should always end at @
-        $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
-        return new ValidEmail();
+        $this->warnings = array_merge($this->warnings, $this->commentStrategy->getWarnings());
+
+        return $finalValidations;
     }
 
     private function noClosingParenthesis() : bool 

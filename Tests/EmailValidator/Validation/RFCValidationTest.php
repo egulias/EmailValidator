@@ -4,7 +4,6 @@ namespace Egulias\Tests\EmailValidator\Validation;
 
 use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Warning\Comment;
 use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\DotAtEnd;
@@ -12,7 +11,6 @@ use Egulias\EmailValidator\Warning\CFWSNearAt;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
-use Egulias\EmailValidator\Exception\DotAtStart;
 use Egulias\EmailValidator\Warning\IPV6ColonEnd;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\LocalTooLong;
@@ -21,22 +19,17 @@ use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\DomainTooLong;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
-use Egulias\EmailValidator\Exception\NoDomainPart;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
-use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\DomainHyphened;
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Validation\RFCValidation;
-use Egulias\EmailValidator\Exception\UnclosedComment;
-use Egulias\EmailValidator\Exception\UnopenedComment as ExceptionUnopenedComment;
-use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS as ReasonAtextAfterCFWS;
+use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
@@ -217,14 +210,14 @@ class RFCValidationTest extends TestCase
             ],
             [new InvalidEmail(new UnOpenedComment(), ')'), 'comment)example@localhost'],
             [new InvalidEmail(new UnOpenedComment(), ')'), 'example(comment))@localhost'],
-            [new ExceptionUnopenedComment, 'example@comment)localhost'],
-            [new ExceptionUnopenedComment, 'example@localhost(comment))'],
-            [new ExceptionUnopenedComment, 'example@(comment))example.com'],
+            [new InvalidEmail(new UnOpenedComment(), ')'), 'example@comment)localhost'],
+            [new InvalidEmail(new UnOpenedComment(), ')'), 'example@localhost(comment))'],
+            [new InvalidEmail(new UnOpenedComment(), 'com'), 'example@(comment))example.com'],
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
-            [new InvalidEmail(new ReasonAtextAfterCFWS(), "\n"), "exampl\ne@example.co.uk"],
+            [new InvalidEmail(new AtextAfterCFWS(), "\n"), "exampl\ne@example.co.uk"],
             [new ExpectingDTEXT(), "example@[[]"],
-            [new InvalidEmail(new ReasonAtextAfterCFWS(), "\t"), "exampl\te@example.co.uk"],
+            [new InvalidEmail(new AtextAfterCFWS(), "\t"), "exampl\te@example.co.uk"],
             [new CRNoLF(), "example@exa\rmple.co.uk"],
             [new CRNoLF(), "example@[\r]"],
             [new InvalidEmail(new ReasonCRNoLF(), "\r"), "exam\rple@example.co.uk"],

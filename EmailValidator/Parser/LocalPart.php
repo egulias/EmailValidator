@@ -97,10 +97,7 @@ class LocalPart extends Parser
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse('remove');
         if ($resultFWS->isValid()) {
-            $warns = $foldingWS->getWarnings();
-            foreach ($warns as $code => $dWarning) {
-                $this->warnings[$code] = $dWarning;
-            }
+            $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
         }
         return $resultFWS;
     }
@@ -114,24 +111,18 @@ class LocalPart extends Parser
     {
         $dquoteParser = new DoubleQuote($this->lexer);
         $parseAgain = $dquoteParser->parse("remove useless arg");
-        $warns = $dquoteParser->getWarnings();
-        foreach ($warns as $code => $dWarning) {
-            $this->warnings[$code] = $dWarning;
-        }
+        $this->warnings = array_merge($this->warnings, $dquoteParser->getWarnings());
 
         return $parseAgain;
     }
 
     protected function parseComments()
     {
-        $commentParser = new Comment($this->lexer);
+        $commentParser = new Comment($this->lexer, new LocalComment());
         $result = $commentParser->parse('remove');
+        $this->warnings = array_merge($this->warnings, $commentParser->getWarnings());
         if($result->isInvalid()) {
             return $result;
-        }
-        $warns = $commentParser->getWarnings();
-        foreach ($warns as $code => $dWarning) {
-            $this->warnings[$code] = $dWarning;
         }
         return $result;
     }
