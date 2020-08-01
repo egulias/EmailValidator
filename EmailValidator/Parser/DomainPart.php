@@ -9,12 +9,12 @@ use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\DomainHyphened;
-use Egulias\EmailValidator\Exception\DotAtEnd;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
 use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
 use Egulias\EmailValidator\Result\Result;
@@ -62,10 +62,10 @@ class DomainPart extends Parser
         $length = strlen($this->domainPart);
 
         if ($prev['type'] === EmailLexer::S_DOT) {
-            throw new DotAtEnd();
+            return new InvalidEmail(new ReasonDotAtEnd(), $this->lexer->token['value']);
         }
         if ($prev['type'] === EmailLexer::S_HYPHEN) {
-            throw new DomainHyphened();
+            return new InvalidEmail(new ReasonDomainHyphened('Hypen found at the end of the domain'), $prev['value']);
         }
         if ($length > self::DOMAIN_MAX_LENGTH) {
             $this->warnings[DomainTooLong::CODE] = new DomainTooLong();
@@ -205,7 +205,10 @@ class DomainPart extends Parser
             }
 
             $this->checkConsecutiveDots();
-            $this->checkDomainPartExceptions($prev);
+            $result = $this->checkDomainPartExceptions($prev);
+            if ($result->isInvalid()) {
+                return $result;
+            }
 
             if ($this->hasBrackets()) {
                 $this->parseDomainLiteral();
@@ -376,13 +379,15 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            throw new DomainHyphened();
+            return new InvalidEmail(new ReasonDomainHyphened('Hypen found near DOT'), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
             && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
             throw new ExpectingATEXT();
         }
+
+        return new ValidEmail();
     }
 
     /**
