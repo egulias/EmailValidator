@@ -6,13 +6,12 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\CharNotAllowed;
 use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
-use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRNoLF;
-use Egulias\EmailValidator\Exception\DomainHyphened;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd as ReasonCRLFAtTheEnd;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
@@ -69,9 +68,6 @@ class DomainPart extends Parser
         }
         if ($length > self::DOMAIN_MAX_LENGTH) {
             $this->warnings[DomainTooLong::CODE] = new DomainTooLong();
-        }
-        if ($prev['type'] === EmailLexer::S_CR) {
-            throw new CRLFAtTheEnd();
         }
 
         return new ValidEmail();

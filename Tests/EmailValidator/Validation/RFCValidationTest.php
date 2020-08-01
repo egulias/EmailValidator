@@ -27,20 +27,21 @@ use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\DomainHyphened;
+use Egulias\EmailValidator\Exception\ExpectingCTEXT;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Validation\RFCValidation;
-use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS;
-use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
-use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
+use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
-use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
-use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
-use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedComment;
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
 use Egulias\EmailValidator\Result\Reason\CRNoLF as ReasonCRNoLF;
-use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
+use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
 use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
+use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedComment;
 
 class RFCValidationTest extends TestCase
 {
@@ -190,6 +191,7 @@ class RFCValidationTest extends TestCase
             [new InvalidEmail(new NoLocalPart(), "@"), '@example.co.uk'],
             [new InvalidEmail(new ReasonNoDomainPart(), ''), 'example@'],
             [new InvalidEmail(new ReasonDomainHyphened('Hypen found near DOT'), '-'), 'example@example-.co.uk'],
+            [new CRNoLF(), "example@example\r.com"],
             [new InvalidEmail(new ReasonDomainHyphened('Hypen found at the end of the domain'), '-'), 'example@example-'],
             [new ConsecutiveAt(), 'example@@example.co.uk'],
             [new InvalidEmail(new ReasonConsecutiveDot(), '.'), 'example..example@example.co.uk'],
