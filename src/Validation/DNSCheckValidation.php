@@ -111,7 +111,7 @@ class DNSCheckValidation implements EmailValidation
     /**
      * Validate the DNS records for given host.
      *
-     * @param array $host A set of DNS records in the format returned by dns_get_record.
+     * @param string $host A set of DNS records in the format returned by dns_get_record.
      *
      * @return bool True on success.
      */
