@@ -16,16 +16,16 @@ class DNSCheckValidationTest extends TestCase
     {
         return [
             // dot-atom
-            ['Abc@github.com'],
-            ['ABC@GITHUB.COM'],
-            ['Abc.123@github.com'],
-            ['user+mailbox/department=shipping@github.com'],
-            ['!#$%&\'*+-/=?^_`.{|}~@github.com'],
+            ['Abc@ietf.org'],
+            ['ABC@ietf.org'],
+            ['Abc.123@ietf.org'],
+            ['user+mailbox/department=shipping@ietf.org'],
+            ['!#$%&\'*+-/=?^_`.{|}~@ietf.org'],
 
             // quoted string
-            ['"Abc@def"@github.com'],
-            ['"Fred\ Bloggs"@github.com'],
-            ['"Joe.\\Blow"@github.com'],
+            ['"Abc@def"@ietf.org'],
+            ['"Fred\ Bloggs"@ietf.org'],
+            ['"Joe.\\Blow"@ietf.org'],
 
             // unicide
             ['ñandu.cl'],
@@ -57,13 +57,13 @@ class DNSCheckValidationTest extends TestCase
     /**
      * @dataProvider validEmailsProvider
      */
-    public function testValidDns($validEmail)
+    public function testValidDNS($validEmail)
     {
         $validation = new DNSCheckValidation();
         $this->assertTrue($validation->isValid($validEmail, new EmailLexer()));
     }
 
-    public function testInvalidDns()
+    public function testInvalidDNS()
     {
         $validation = new DNSCheckValidation();
         $this->assertFalse($validation->isValid("example@invalid.example.com", new EmailLexer()));
@@ -84,13 +84,13 @@ class DNSCheckValidationTest extends TestCase
     {
         $validation = new DNSCheckValidation();
         $expectedError = new DomainAcceptsNoMail();
-        $isValidResult = $validation->isValid("example@example.com", new EmailLexer());
+        $isValidResult = $validation->isValid("nullmx@example.com", new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
         $this->assertFalse($isValidResult);
     }
 
     /*
-    public function testDnsWarnings()
+    public function testDNSWarnings()
     {
         $validation = new DNSCheckValidation();
         $expectedWarnings = [NoDNSMXRecord::CODE => new NoDNSMXRecord()];
@@ -99,7 +99,7 @@ class DNSCheckValidationTest extends TestCase
     }
     */
 
-    public function testNoDnsError()
+    public function testNoDNSError()
     {
         $validation = new DNSCheckValidation();
         $expectedError = new NoDNSRecord();

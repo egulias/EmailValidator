@@ -21,6 +21,12 @@ class DNSCheckValidation implements EmailValidation
      */
     private $error;
 
+    /**
+     * @var array
+     */
+    private $mxRecords = [];
+
+
     public function __construct()
     {
         if (!function_exists('idn_to_ascii')) {
@@ -68,7 +74,7 @@ class DNSCheckValidation implements EmailValidation
             return false;
         }
 
-        return $this->checkDNS($host);
+        return $this->checkDns($host);
     }
 
     public function getError()
@@ -86,48 +92,71 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool
      */
-    protected function checkDNS($host)
+    protected function checkDns($host)
     {
         $variant = INTL_IDNA_VARIANT_2003;
         if (defined('INTL_IDNA_VARIANT_UTS46')) {
             $variant = INTL_IDNA_VARIANT_UTS46;
         }
+
         $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
 
-        // Get all MX, A and AAAA DNS records
+        return $this->validateDnsRecords($host);
+    }
+
+
+    /**
+     * Validate the DNS records
+     *
+     * @param $dnsRecords A set of DNS records in the format returned by dns_get_record.
+     *
+     * @return bool True on success.
+     */
+    private function validateDnsRecords($host)
+    {
+        // Get all MX, A and AAAA DNS records for host
         $dnsRecords = dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
 
-        // No MX, A or AAAA records
+
+        // No MX, A or AAAA DNS records
         if (empty($dnsRecords)) {
             $this->error = new NoDNSRecord();
             return false;
         }
 
-        $aRecords  = [];
-        $mxRecords = [];
-
-        // Iterate over all returned DNS records
+        // For each DNS record
         foreach ($dnsRecords as $dnsRecord) {
-            if ($dnsRecord['type'] == 'MX') {
-                // "Null MX" record indicates the domain accepts no mail (https://tools.ietf.org/html/rfc7505)
-                if (empty($dnsRecord['target']) || $dnsRecord['target'] == '.') {
-                    $this->error = new DomainAcceptsNoMail();
-                    return false;
-                }
-
-                $mxRecords[] = $dnsRecord;
-                continue;
-            }
-
-            if (in_array($dnsRecord['type'], ['A', 'AAAA'])) {
-                $aRecords[] = $dnsRecord;
+            if (!$this->validateMXRecord($dnsRecord)) {
+                return false;
             }
         }
 
-        // No MX record
-        if (empty($mxRecords)) {
+        // No MX records (fallback to A or AAAA records)
+        if (empty($this->mxRecords)) {
             $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
         }
+
+        return true;
+    }
+
+    /**
+     * Validate an MX record
+     *
+     * @param $dnsRecord A DNS record.
+     */
+    private function validateMxRecord($dnsRecord)
+    {
+        if ($dnsRecord['type'] != 'MX') {
+            return true;
+        }
+
+        // "Null MX" record indicates the domain accepts no mail (https://tools.ietf.org/html/rfc7505)
+        if (empty($dnsRecord['target']) || $dnsRecord['target'] == '.') {
+            $this->error = new DomainAcceptsNoMail();
+            return false;
+        }
+
+        $this->mxRecords[] = $dnsRecord;
 
         return true;
     }
