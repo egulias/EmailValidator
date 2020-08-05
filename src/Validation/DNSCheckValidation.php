@@ -68,8 +68,11 @@ class DNSCheckValidation implements EmailValidation
             'lan',
         ];
 
+        $isLocalDomain = count($hostParts) <= 1;
+        $isReservedTopLevel = in_array($hostParts[(count($hostParts) - 1)], $reservedTopLevelDnsNames);
+
         // Exclude reserved top level DNS names
-        if (count($hostParts) <= 1 || in_array($hostParts[(count($hostParts) - 1)], $reservedTopLevelDnsNames)) {
+        if ($isLocalDomain || $isReservedTopLevel) {
             $this->error = new LocalOrReservedDomain();
             return false;
         }
@@ -143,6 +146,8 @@ class DNSCheckValidation implements EmailValidation
      * Validate an MX record
      *
      * @param $dnsRecord A DNS record.
+     *
+     * @return bool True if valid.
      */
     private function validateMxRecord($dnsRecord)
     {
