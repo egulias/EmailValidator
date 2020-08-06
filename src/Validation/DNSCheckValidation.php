@@ -69,7 +69,7 @@ class DNSCheckValidation implements EmailValidation
         ];
 
         $isLocalDomain = count($hostParts) <= 1;
-        $isReservedTopLevel = in_array($hostParts[(count($hostParts) - 1)], $reservedTopLevelDnsNames);
+        $isReservedTopLevel = in_array($hostParts[(count($hostParts) - 1)], $reservedTopLevelDnsNames, true);
 
         // Exclude reserved top level DNS names
         if ($isLocalDomain || $isReservedTopLevel) {
@@ -151,12 +151,12 @@ class DNSCheckValidation implements EmailValidation
      */
     private function validateMxRecord($dnsRecord)
     {
-        if ($dnsRecord['type'] != 'MX') {
+        if ($dnsRecord['type'] !== 'MX') {
             return true;
         }
 
         // "Null MX" record indicates the domain accepts no mail (https://tools.ietf.org/html/rfc7505)
-        if (empty($dnsRecord['target']) || $dnsRecord['target'] == '.') {
+        if (empty($dnsRecord['target']) || $dnsRecord['target'] === '.') {
             $this->error = new DomainAcceptsNoMail();
             return false;
         }
