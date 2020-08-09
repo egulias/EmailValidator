@@ -13,5 +13,4 @@ class CharNotAllowed implements Reason
     {
         return "Character not allowed";
     }
-
 }

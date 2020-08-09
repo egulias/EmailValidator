@@ -5,12 +5,13 @@ namespace Egulias\EmailValidator\Validation;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
+use Egulias\EmailValidator\Result\MultipleErrors;
 
 class MultipleValidationWithAnd implements EmailValidation
 {
     /**
-     * If one of validations gets failure skips all succeeding validation.
-     * This means MultipleErrors will only contain a single error which first found.
+     * If one of validations fails, the remaining validations will be skept.
+     * This means MultipleErrors will only contain a single error, the first found.
      */
     const STOP_ON_ERROR = 0;
 
@@ -52,6 +53,7 @@ class MultipleValidationWithAnd implements EmailValidation
 
         $this->validations = $validations;
         $this->mode = $mode;
+        $this->error = new MultipleErrors();
     }
 
     /**
@@ -65,34 +67,22 @@ class MultipleValidationWithAnd implements EmailValidation
             $emailLexer->reset();
             $validationResult = $validation->isValid($email, $emailLexer);
             $result = $result && $validationResult;
-            $this->warnings = array_merge($this->warnings, $validation->getWarnings());
-            $errors = $this->addNewError($validation->getError(), $errors);
+            $this->processValidation($validation);
 
             if ($this->shouldStop($result)) {
                 break;
             }
         }
 
-        if (!empty($errors)) {
-            $this->error = new MultipleErrors($errors);
-        }
-
         return $result;
     }
 
-    /**
-     * @param \Egulias\EmailValidator\Exception\InvalidEmail|null $possibleError
-     * @param \Egulias\EmailValidator\Exception\InvalidEmail[] $errors
-     *
-     * @return \Egulias\EmailValidator\Exception\InvalidEmail[]
-     */
-    private function addNewError($possibleError, array $errors)
+    private function processValidation(EmailValidation $validation)
     {
-        if (null !== $possibleError) {
-            $errors[] = $possibleError;
+        $this->warnings = array_merge($this->warnings, $validation->getWarnings());
+        if (null !== $validation->getError()) {
+            $this->error->addError($validation->getError()->reason());
         }
-
-        return $errors;
     }
 
     /**
