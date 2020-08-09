@@ -11,6 +11,7 @@ use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\CharNotAllowed as ReasonCharNotAllowed;
 use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd as ReasonCRLFAtTheEnd;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
 use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
@@ -188,7 +189,10 @@ class DomainPart extends Parser
         do {
             $prev = $this->lexer->getPrevious();
 
-            $this->checkNotAllowedChars($this->lexer->token);
+            $notAllowedChars = $this->checkNotAllowedChars($this->lexer->token);
+            if ($notAllowedChars->isInvalid()) {
+                return $notAllowedChars;
+            }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS || 
                 $this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS ) {
@@ -224,12 +228,13 @@ class DomainPart extends Parser
         return new ValidEmail();
     }
 
-    private function checkNotAllowedChars(array $token)
+    private function checkNotAllowedChars(array $token) : Result
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH=> true];
         if (isset($notAllowed[$token['type']])) {
-            throw new CharNotAllowed();
+            return new InvalidEmail(new ReasonCharNotAllowed(), $token['value']);
         }
+        return new ValidEmail();
     }
 
     /**
