@@ -4,7 +4,8 @@ namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailParser;
-use Egulias\EmailValidator\Exception\InvalidEmail;
+use Egulias\EmailValidator\Exception\InvalidEmail as ExceptionInvalidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
 
 class RFCValidation implements EmailValidation
 {
@@ -19,7 +20,7 @@ class RFCValidation implements EmailValidation
     private $warnings = [];
 
     /**
-     * @var InvalidEmail|null
+     * @var InvalidEmail
      */
     private $error;
 
@@ -32,7 +33,7 @@ class RFCValidation implements EmailValidation
                 $this->error = $result;
                 return false;
             }
-        } catch (InvalidEmail $invalid) {
+        } catch (ExceptionInvalidEmail $invalid) {
             $this->error = $invalid;
             return false;
         }
@@ -41,7 +42,7 @@ class RFCValidation implements EmailValidation
         return true;
     }
 
-    public function getError()
+    public function getError() : InvalidEmail
     {
         return $this->error;
     }

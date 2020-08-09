@@ -3,6 +3,7 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 
 class MultipleValidationWithAnd implements EmailValidation
@@ -107,9 +108,8 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * Returns the validation errors.
      *
-     * @return MultipleErrors|null
      */
-    public function getError()
+    public function getError() : InvalidEmail
     {
         return $this->error;
     }

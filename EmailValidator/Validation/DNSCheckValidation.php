@@ -3,9 +3,9 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\InvalidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\NoDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
-use Egulias\EmailValidator\Exception\NoDNSRecord;
 
 class DNSCheckValidation implements EmailValidation
 {
@@ -39,7 +39,7 @@ class DNSCheckValidation implements EmailValidation
         return $this->checkDNS($host);
     }
 
-    public function getError()
+    public function getError() : InvalidEmail
     {
         return $this->error;
     }
@@ -69,7 +69,7 @@ class DNSCheckValidation implements EmailValidation
             $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
             $Aresult = checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA');
             if (!$Aresult) {
-                $this->error = new NoDNSRecord();
+                $this->error = new InvalidEmail(new NoDNSRecord(), $host);
             }
         }
         return $MXresult || $Aresult;

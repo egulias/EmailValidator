@@ -3,8 +3,8 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\InvalidEmail;
-use Egulias\EmailValidator\Validation\Error\RFCWarnings;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\RFCWarnings;
 
 class NoRFCWarningsValidation extends RFCValidation
 {
@@ -26,7 +26,7 @@ class NoRFCWarningsValidation extends RFCValidation
             return true;
         }
 
-        $this->error = new RFCWarnings();
+        $this->error = new InvalidEmail(new RFCWarnings(), '');
 
         return false;
     }
@@ -34,7 +34,7 @@ class NoRFCWarningsValidation extends RFCValidation
     /**
      * {@inheritdoc}
      */
-    public function getError()
+    public function getError() : InvalidEmail
     {
         return $this->error ?: parent::getError();
     }

@@ -3,7 +3,8 @@
 namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\NoDNSRecord;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\NoDNSRecord;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use PHPUnit\Framework\TestCase;
@@ -56,7 +57,7 @@ class DNSCheckValidationTest extends TestCase
     public function testNoDNSError()
     {
         $validation = new DNSCheckValidation();
-        $expectedError = new NoDNSRecord();
+        $expectedError = new InvalidEmail(new NoDNSRecord(),"example@invalid.example.com");
         $validation->isValid("example@invalid.example.com", new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
     }

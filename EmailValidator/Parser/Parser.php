@@ -3,21 +3,17 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\AtextAfterCFWS;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRLFX2;
-use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\ExpectingQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\ExpectingCTEXT;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\CFWSNearAt;
-use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\Comment;
 use Egulias\EmailValidator\Warning\QuotedPart;
 
@@ -114,27 +110,33 @@ abstract class Parser
 
     protected function parseFWS()
     {
-        $previous = $this->lexer->getPrevious();
-
-        $this->checkCRLFInFWS();
-
-        if ($this->lexer->token['type'] === EmailLexer::S_CR) {
-            throw new CRNoLF();
+        $foldingWS = new FoldingWhiteSpace($this->lexer);
+        $resultFWS = $foldingWS->parse('remove');
+        if ($resultFWS->isValid()) {
+            $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
         }
+        return $resultFWS;
+        //$previous = $this->lexer->getPrevious();
 
-        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
-            throw new AtextAfterCFWS();
-        }
+        //$this->checkCRLFInFWS();
 
-        if ($this->lexer->token['type'] === EmailLexer::S_LF || $this->lexer->token['type'] === EmailLexer::C_NUL) {
-            throw new ExpectingCTEXT();
-        }
+        //if ($this->lexer->token['type'] === EmailLexer::S_CR) {
+        //    throw new CRNoLF();
+        //}
 
-        if ($this->lexer->isNextToken(EmailLexer::S_AT) || $previous['type']  === EmailLexer::S_AT) {
-            $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
-        } else {
-            $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
-        }
+        //if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
+        //    throw new AtextAfterCFWS();
+        //}
+
+        //if ($this->lexer->token['type'] === EmailLexer::S_LF || $this->lexer->token['type'] === EmailLexer::C_NUL) {
+        //    throw new ExpectingCTEXT();
+        //}
+
+        //if ($this->lexer->isNextToken(EmailLexer::S_AT) || $previous['type']  === EmailLexer::S_AT) {
+        //    $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
+        //} else {
+        //    $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
+        //}
     }
 
     protected function checkConsecutiveDots()

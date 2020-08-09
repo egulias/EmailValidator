@@ -2,10 +2,10 @@
 
 namespace Egulias\EmailValidator\Validation;
 
-use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\InvalidEmail;
-use Egulias\EmailValidator\Validation\Error\SpoofEmail;
 use \Spoofchecker;
+use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Validation\Result\SpoofEmail;
 
 class SpoofCheckValidation implements EmailValidation
 {
@@ -37,9 +37,9 @@ class SpoofCheckValidation implements EmailValidation
     }
 
     /**
-     * @return InvalidEmail|null
+     * @return InvalidEmail
      */
-    public function getError()
+    public function getError() : InvalidEmail
     {
         return $this->error;
     }
