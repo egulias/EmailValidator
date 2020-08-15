@@ -57,7 +57,7 @@ class DNSCheckValidationTest extends TestCase
     public function testNoDNSError()
     {
         $validation = new DNSCheckValidation();
-        $expectedError = new InvalidEmail(new NoDNSRecord(),"example@invalid.example.com");
+        $expectedError = new InvalidEmail(new NoDNSRecord(),"invalid.example.com.");
         $validation->isValid("example@invalid.example.com", new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
     }

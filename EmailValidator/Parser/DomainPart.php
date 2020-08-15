@@ -151,7 +151,7 @@ class DomainPart extends Parser
                 return $result;
             }
 
-            if ($this->lexer->token['type'] !== EmailLexer::S_OPENBRACKET) {
+            if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
                 $literalResult = $this->parseDomainLiteral();
                 //Invalid literal parsing
                 if($literalResult->isInvalid()) {

@@ -10,7 +10,7 @@ class MultipleErrors extends InvalidEmail
     /**
      * @var Reason[]
      */
-    private $errors = [];
+    private $reasons = [];
 
     public function __construct()
     {
@@ -24,8 +24,13 @@ class MultipleErrors extends InvalidEmail
     /**
      * @return Reason[]
      */
-    public function getReason()
+    public function getReasons() : array
     {
-        return $this->errors;
+        return $this->reasons;
+    }
+
+    public function reason() : Reason
+    {
+        return $this->reasons[0];
     }
 }

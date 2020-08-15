@@ -30,7 +30,9 @@ class MultipleValidationWithAndTest extends TestCase
         $validationFalse->expects($this->any())->method("isValid")->willReturn(false);
         $validationFalse->expects($this->any())->method("getWarnings")->willReturn([]);
         $validationFalse->expects($this->any())->method("getError")->willReturn($invalidEmail);
+
         $multipleValidation = new MultipleValidationWithAnd([$validationTrue, $validationFalse]);
+
         $this->assertFalse($multipleValidation->isValid("exmpale@example.com", $lexer));
     }
 
@@ -43,12 +45,11 @@ class MultipleValidationWithAndTest extends TestCase
     public function testValidationIsValid()
     {
         $lexer = new EmailLexer();
-        $invalidEmail = new InvalidEmail(new DummyReason(), '');
 
         $validation = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation->expects($this->any())->method("isValid")->willReturn(true);
         $validation->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation->expects($this->any())->method("getError")->willReturn($invalidEmail);
+        $validation->expects($this->any())->method("getError")->willReturn(null);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation]);
         $this->assertTrue($multipleValidation->isValid("example@example.com", $lexer));
@@ -99,12 +100,12 @@ class MultipleValidationWithAndTest extends TestCase
         $validation1 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation1->expects($this->once())->method("isValid")->willReturn(false);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation1->expects($this->once())->method("getError")->willReturn($invalidEmail);
+        $validation1->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
 
         $validation2 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation2->expects($this->once())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation2->expects($this->once())->method("getError")->willReturn($invalidEmail);
+        $validation2->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2]);
         $multipleValidation->isValid("example@example.com", $lexer);
@@ -127,12 +128,12 @@ class MultipleValidationWithAndTest extends TestCase
         $validation1 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(false);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation1->expects($this->once())->method("getError")->willReturn($invalidEmail);
+        $validation1->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
 
         $validation2 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
         $validation2->expects($this->never())->method("getWarnings")->willReturn([]);
-        $validation2->expects($this->never())->method("getError")->willReturn($invalidEmail);
+        $validation1->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], MultipleValidationWithAnd::STOP_ON_ERROR);
         $multipleValidation->isValid("example@example.com", $lexer);
@@ -152,7 +153,7 @@ class MultipleValidationWithAndTest extends TestCase
         $validation1 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(false);
         $validation1->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation1->expects($this->once())->method("getError")->willReturn($invalidEmail);
+        $validation1->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
 
         $validation2 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation2->expects($this->never())->method("isValid");

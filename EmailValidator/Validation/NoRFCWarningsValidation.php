@@ -34,7 +34,7 @@ class NoRFCWarningsValidation extends RFCValidation
     /**
      * {@inheritdoc}
      */
-    public function getError() : InvalidEmail
+    public function getError() : ?InvalidEmail
     {
         return $this->error ?: parent::getError();
     }

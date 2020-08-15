@@ -19,7 +19,7 @@
   },
   "require-dev": {
     "php-coveralls/php-coveralls": "^2.2",
-    "phpunit/phpunit": "^8.2",
+    "phpunit/phpunit": "^8",
     "dominicsayers/isemail": "^3.0.7",
     "vimeo/psalm": "^3.11"
   },

@@ -22,8 +22,8 @@ class NoRFCWarningsValidationTest extends TestCase
     {
         $validation = new NoRFCWarningsValidation();
 
-        $this->assertFalse($validation->isValid(str_repeat('x', 254).'@example.com', new EmailLexer())); // too long email
-        $this->assertInstanceOf(RFCWarnings::class, $validation->getError());
+        $this->assertFalse($validation->isValid('test()@example.com', new EmailLexer()));
+        $this->assertInstanceOf(RFCWarnings::class, $validation->getError()->reason());
     }
 
     public function testEmailWithoutWarningsIsValid()

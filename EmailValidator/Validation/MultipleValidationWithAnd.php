@@ -53,7 +53,6 @@ class MultipleValidationWithAnd implements EmailValidation
 
         $this->validations = $validations;
         $this->mode = $mode;
-        $this->error = new MultipleErrors();
     }
 
     /**
@@ -62,12 +61,14 @@ class MultipleValidationWithAnd implements EmailValidation
     public function isValid($email, EmailLexer $emailLexer)
     {
         $result = true;
-        $errors = [];
         foreach ($this->validations as $validation) {
             $emailLexer->reset();
             $validationResult = $validation->isValid($email, $emailLexer);
             $result = $result && $validationResult;
-            $this->processValidation($validation);
+            $this->warnings = array_merge($this->warnings, $validation->getWarnings());
+            if (!$validationResult) {
+                $this->processError($validation);
+            }
 
             if ($this->shouldStop($result)) {
                 break;
@@ -77,10 +78,17 @@ class MultipleValidationWithAnd implements EmailValidation
         return $result;
     }
 
-    private function processValidation(EmailValidation $validation)
+    private function initErrorStorage()
     {
-        $this->warnings = array_merge($this->warnings, $validation->getWarnings());
+        if (null === $this->error) {
+            $this->error = new MultipleErrors();
+        }
+    }
+
+    private function processError(EmailValidation $validation)
+    {
         if (null !== $validation->getError()) {
+            $this->initErrorStorage();
             $this->error->addReason($validation->getError()->reason());
         }
     }
@@ -99,7 +107,7 @@ class MultipleValidationWithAnd implements EmailValidation
      * Returns the validation errors.
      *
      */
-    public function getError() : InvalidEmail
+    public function getError() : ?InvalidEmail
     {
         return $this->error;
     }

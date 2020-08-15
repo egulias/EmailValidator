@@ -42,7 +42,7 @@ class RFCValidation implements EmailValidation
         return true;
     }
 
-    public function getError() : InvalidEmail
+    public function getError() : ?InvalidEmail
     {
         return $this->error;
     }

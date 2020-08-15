@@ -39,7 +39,7 @@ class DNSCheckValidation implements EmailValidation
         return $this->checkDNS($host);
     }
 
-    public function getError() : InvalidEmail
+    public function getError() : ?InvalidEmail
     {
         return $this->error;
     }

@@ -27,12 +27,11 @@ class EmailValidatorTest extends TestCase
 
     public function testMultipleValidation()
     {
-        $invalidEmail = new InvalidEmail(new DummyReason(), '');
         $validator = new EmailValidator();
         $validation = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation->expects($this->once())->method("isValid")->willReturn(true);
         $validation->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
+        $validation->expects($this->never(2))->method("getError");
         $multiple = new MultipleValidationWithAnd([$validation]);
 
         $this->assertTrue($validator->isValid("example@example.com", $multiple));

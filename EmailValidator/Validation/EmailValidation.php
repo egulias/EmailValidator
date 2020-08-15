@@ -23,7 +23,7 @@ interface EmailValidation
      *
      * @return InvalidEmail|null
      */
-    public function getError() : InvalidEmail;
+    public function getError() : ?InvalidEmail;
 
     /**
      * Returns the validation warnings.
