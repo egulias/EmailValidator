@@ -93,7 +93,7 @@ class LocalPart extends Parser
 
     protected function parseLocalFWS() : Result 
     {
-
+        //use $this->parseFWS()
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse('remove');
         if ($resultFWS->isValid()) {

@@ -116,27 +116,6 @@ abstract class Parser
             $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
         }
         return $resultFWS;
-        //$previous = $this->lexer->getPrevious();
-
-        //$this->checkCRLFInFWS();
-
-        //if ($this->lexer->token['type'] === EmailLexer::S_CR) {
-        //    throw new CRNoLF();
-        //}
-
-        //if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
-        //    throw new AtextAfterCFWS();
-        //}
-
-        //if ($this->lexer->token['type'] === EmailLexer::S_LF || $this->lexer->token['type'] === EmailLexer::C_NUL) {
-        //    throw new ExpectingCTEXT();
-        //}
-
-        //if ($this->lexer->isNextToken(EmailLexer::S_AT) || $previous['type']  === EmailLexer::S_AT) {
-        //    $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
-        //} else {
-        //    $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
-        //}
     }
 
     protected function checkConsecutiveDots()

@@ -5,9 +5,7 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Exception\ConsecutiveAt;
-use Egulias\EmailValidator\Exception\CRNoLF;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\CharNotAllowed as ReasonCharNotAllowed;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
@@ -16,21 +14,13 @@ use Egulias\EmailValidator\Result\Reason\DotAtStart;
 use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
-use Egulias\EmailValidator\Warning\AddressLiteral;
-use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\DeprecatedComment;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\DomainTooLong;
-use Egulias\EmailValidator\Warning\IPV6BadChar;
-use Egulias\EmailValidator\Warning\IPV6ColonEnd;
-use Egulias\EmailValidator\Warning\IPV6Deprecated;
-use Egulias\EmailValidator\Warning\IPV6DoubleColon;
-use Egulias\EmailValidator\Warning\IPV6GroupCount;
-use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\LabelTooLong;
-use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveAt as ReasonConsecutiveAt;
 use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
 
 class DomainPart extends Parser
@@ -230,7 +220,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            throw new ConsecutiveAt();
+            return new InvalidEmail(new ReasonConsecutiveAt(), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {

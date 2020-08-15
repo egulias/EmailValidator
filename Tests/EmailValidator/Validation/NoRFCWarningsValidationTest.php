@@ -4,7 +4,7 @@ namespace Egulias\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
-use Egulias\EmailValidator\Validation\Error\RFCWarnings;
+use Egulias\EmailValidator\Result\Reason\RFCWarnings;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use PHPUnit\Framework\TestCase;
 

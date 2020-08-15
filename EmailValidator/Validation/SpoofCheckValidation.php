@@ -5,7 +5,7 @@ namespace Egulias\EmailValidator\Validation;
 use \Spoofchecker;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Validation\Result\SpoofEmail;
+use Egulias\EmailValidator\Result\SpoofEmail;
 
 class SpoofCheckValidation implements EmailValidation
 {

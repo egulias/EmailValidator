@@ -2,15 +2,16 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class CommaInDomain implements Reason
+class SpoofEmail implements Reason
 {
     public function code() : int
     {
-        return 200;
+        return 298;
     }
 
     public function description() : string
     {
-        return "Comma ',' is not allowed in domain part";
+        return 'The email contains mixed UTF8 chars that makes it suspicious'; 
     }
+
 }
