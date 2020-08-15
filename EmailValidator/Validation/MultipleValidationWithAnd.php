@@ -81,7 +81,7 @@ class MultipleValidationWithAnd implements EmailValidation
     {
         $this->warnings = array_merge($this->warnings, $validation->getWarnings());
         if (null !== $validation->getError()) {
-            $this->error->addError($validation->getError()->reason());
+            $this->error->addReason($validation->getError()->reason());
         }
     }
 
