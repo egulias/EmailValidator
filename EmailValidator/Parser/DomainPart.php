@@ -4,7 +4,6 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\CommaInDomain;
-use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\CharNotAllowed as ReasonCharNotAllowed;
@@ -145,10 +144,13 @@ class DomainPart extends Parser
                 }
             }
 
-            $this->checkConsecutiveDots();
-            $result = $this->checkDomainPartExceptions($prev);
-            if ($result->isInvalid()) {
-                return $result;
+            $dotsResult = $this->checkConsecutiveDots();
+            if ($dotsResult) {
+                return $dotsResult;
+            }
+            $exceptionsResult = $this->checkDomainPartExceptions($prev);
+            if ($exceptionsResult->isInvalid()) {
+                return $exceptionsResult;
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET) {
@@ -162,7 +164,10 @@ class DomainPart extends Parser
             $this->checkLabelLength($prev);
 
             if ($this->isFWS()) {
-                $this->parseFWS();
+                $FwsResult = $this->parseFWS();
+                if($FwsResult->isInvalid()) {
+                    return $FwsResult;
+                }
             }
 
             $domain .= $this->lexer->token['value'];

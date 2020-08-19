@@ -22,7 +22,6 @@ use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6GroupCount;
-use Egulias\EmailValidator\Exception\ConsecutiveAt;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
 use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\ExpectingDTEXT;
@@ -189,11 +188,11 @@ class RFCValidationTest extends TestCase
             [new InvalidEmail(new NoLocalPart(), "@"), '@example.co.uk'],
             [new InvalidEmail(new ReasonNoDomainPart(), ''), 'example@'],
             [new InvalidEmail(new ReasonDomainHyphened('Hypen found near DOT'), '-'), 'example@example-.co.uk'],
-            [new CRNoLF(), "example@example\r.com"],
+            [new InvalidEmail(new ReasonCRNoLF(), "\r"), "example@example\r.com"],
             [new InvalidEmail(new ReasonDomainHyphened('Hypen found at the end of the domain'), '-'), 'example@example-'],
             [new InvalidEmail(new ReasonConsecutiveAt(), '@'), 'example@@example.co.uk'],
             [new InvalidEmail(new ReasonConsecutiveDot(), '.'), 'example..example@example.co.uk'],
-            [new ConsecutiveDot(), 'example@example..co.uk'],
+            [new InvalidEmail(new ReasonConsecutiveDot(), '.'), 'example@example..co.uk'],
             [new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), '<'), '<example_example>@example.fr'],
             [new InvalidEmail(new ReasonDotAtStart(), '.'), '.example@localhost'],
             [new InvalidEmail(new ReasonDotAtStart(), '.'), 'example@.localhost'],

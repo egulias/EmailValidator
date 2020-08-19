@@ -3,13 +3,14 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\ConsecutiveDot;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRLFX2;
 use Egulias\EmailValidator\Exception\ExpectingQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
@@ -112,16 +113,16 @@ abstract class Parser
     {
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse('remove');
-        if ($resultFWS->isValid()) {
+        //if ($resultFWS->isValid()) {
             $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
-        }
+        //}
         return $resultFWS;
     }
 
     protected function checkConsecutiveDots()
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            throw new ConsecutiveDot();
+            return new InvalidEmail(new ConsecutiveDot(), $this->lexer->token['value']);
         }
     }
 
