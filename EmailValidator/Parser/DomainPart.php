@@ -20,6 +20,7 @@ use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveAt as ReasonConsecutiveAt;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
 
 class DomainPart extends Parser
@@ -215,7 +216,7 @@ class DomainPart extends Parser
         );
 
         if (isset($invalidDomainTokens[$this->lexer->token['type']])) {
-            throw new ExpectingATEXT();
+            return new InvalidEmail(new ReasonExpectingATEXT('Invalid token in domain'), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
@@ -227,7 +228,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
-            throw new ExpectingATEXT();
+            return new InvalidEmail(new ReasonExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
@@ -236,7 +237,7 @@ class DomainPart extends Parser
 
         if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
             && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
-            throw new ExpectingATEXT();
+            return new InvalidEmail(new ReasonExpectingATEXT('Escaping following "ATOM"'), $this->lexer->token['value']);
         }
 
         return new ValidEmail();
