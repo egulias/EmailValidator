@@ -38,6 +38,7 @@ use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT as ReasonExpectingDTEXT;
 use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedComment;
 
 class RFCValidationTest extends TestCase
@@ -215,10 +216,10 @@ class RFCValidationTest extends TestCase
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
             [new InvalidEmail(new AtextAfterCFWS(), "\n"), "exampl\ne@example.co.uk"],
-            [new ExpectingDTEXT(), "example@[[]"],
+            [new InvalidEmail(new ReasonExpectingDTEXT(), '['), "example@[[]"],
             [new InvalidEmail(new AtextAfterCFWS(), "\t"), "exampl\te@example.co.uk"],
-            [new CRNoLF(), "example@exa\rmple.co.uk"],
-            [new CRNoLF(), "example@[\r]"],
+            [new InvalidEmail(new ReasonCRNoLF(), "\r"), "example@exa\rmple.co.uk"],
+            [new InvalidEmail(new ReasonCRNoLF(), "["), "example@[\r]"],
             [new InvalidEmail(new ReasonCRNoLF(), "\r"), "exam\rple@example.co.uk"],
         ];
     }
@@ -231,8 +232,8 @@ class RFCValidationTest extends TestCase
         $this->assertTrue($this->validator->isValid($email, $this->lexer));
         $warnings = $this->validator->getWarnings();
         $this->assertCount(
-            count($warnings), $expectedWarnings,
-            "Expected: " . implode(",", $expectedWarnings) . " and got " . implode(",", $warnings)
+            count($expectedWarnings), $warnings,
+            "Expected: " . implode(",", $expectedWarnings) . " and got: " . PHP_EOL . implode(PHP_EOL, $warnings)
         );
 
         foreach ($warnings as $warning) {
