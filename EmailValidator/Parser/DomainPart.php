@@ -145,7 +145,7 @@ class DomainPart extends Parser
             }
 
             $dotsResult = $this->checkConsecutiveDots();
-            if ($dotsResult) {
+            if ($dotsResult->isInvalid()) {
                 return $dotsResult;
             }
             $exceptionsResult = $this->checkDomainPartExceptions($prev);
@@ -163,11 +163,9 @@ class DomainPart extends Parser
 
             $this->checkLabelLength($prev);
 
-            if ($this->isFWS()) {
-                $FwsResult = $this->parseFWS();
-                if($FwsResult->isInvalid()) {
-                    return $FwsResult;
-                }
+            $FwsResult = $this->parseFWS();
+            if($FwsResult->isInvalid()) {
+                return $FwsResult;
             }
 
             $domain .= $this->lexer->token['value'];

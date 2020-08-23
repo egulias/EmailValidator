@@ -5,17 +5,12 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Egulias\EmailValidator\Exception\CRLFX2;
-use Egulias\EmailValidator\Exception\ExpectingQPair;
 use Egulias\EmailValidator\Exception\ExpectingATEXT;
-use Egulias\EmailValidator\Exception\UnclosedComment;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
-use Egulias\EmailValidator\Warning\CFWSNearAt;
-use Egulias\EmailValidator\Warning\Comment;
 use Egulias\EmailValidator\Warning\QuotedPart;
 
 abstract class Parser
@@ -29,11 +24,6 @@ abstract class Parser
      * @var EmailLexer
      */
     protected $lexer;
-
-    /**
-     * @var int
-     */
-    protected $openedParenthesis = 0;
 
     public function __construct(EmailLexer $lexer)
     {
@@ -53,93 +43,21 @@ abstract class Parser
      */
     abstract public function parse($str);
 
-    /** @return int */
-    public function getOpenedParenthesis()
-    {
-        return $this->openedParenthesis;
-    }
-
-    /**
-     * validateQuotedPair
-     */
-    protected function validateQuotedPair()
-    {
-        if (!($this->lexer->token['type'] === EmailLexer::INVALID
-            || $this->lexer->token['type'] === EmailLexer::C_DEL)) {
-            throw new ExpectingQPair();
-        }
-
-        $this->warnings[QuotedPart::CODE] =
-            new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
-    }
-
-    protected function parseComments()
-    {
-        $this->openedParenthesis = 1;
-        $this->isUnclosedComment();
-        $this->warnings[Comment::CODE] = new Comment();
-        while (!$this->lexer->isNextToken(EmailLexer::S_CLOSEPARENTHESIS)) {
-            if ($this->lexer->isNextToken(EmailLexer::S_OPENPARENTHESIS)) {
-                $this->openedParenthesis++;
-            }
-            $this->warnEscaping();
-            $this->lexer->moveNext();
-        }
-
-        $this->lexer->moveNext();
-        if ($this->lexer->isNextTokenAny(array(EmailLexer::GENERIC, EmailLexer::S_EMPTY))) {
-            throw new ExpectingATEXT();
-        }
-
-        if ($this->lexer->isNextToken(EmailLexer::S_AT)) {
-            $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function isUnclosedComment()
-    {
-        try {
-            $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);
-            return true;
-        } catch (\RuntimeException $e) {
-            throw new UnclosedComment();
-        }
-    }
-
-    protected function parseFWS()
+    protected function parseFWS() : Result
     {
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse('remove');
-        //if ($resultFWS->isValid()) {
-            $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
-        //}
+        $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
         return $resultFWS;
     }
 
-    protected function checkConsecutiveDots()
+    protected function checkConsecutiveDots() : Result
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
             return new InvalidEmail(new ConsecutiveDot(), $this->lexer->token['value']);
         }
-    }
 
-    /**
-     * @return bool
-     */
-    protected function isFWS()
-    {
-        if ($this->escaped()) {
-            return false;
-        }
-
-        return $this->lexer->token['type'] === EmailLexer::S_SP ||
-            $this->lexer->token['type'] === EmailLexer::S_HTAB ||
-            $this->lexer->token['type'] === EmailLexer::S_CR ||
-            $this->lexer->token['type'] === EmailLexer::S_LF ||
-            $this->lexer->token['type'] === EmailLexer::CRLF;
+        return new ValidEmail();
     }
 
     /**
@@ -198,20 +116,5 @@ abstract class Parser
 
         return new ValidEmail();
 
-    }
-
-    protected function checkCRLFInFWS()
-    {
-        if ($this->lexer->token['type'] !== EmailLexer::CRLF) {
-            return;
-        }
-
-        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
-            throw new CRLFX2();
-        }
-
-        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
-            throw new CRLFAtTheEnd();
-        }
     }
 }
