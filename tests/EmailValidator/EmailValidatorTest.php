@@ -1,13 +1,13 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator;
+namespace Egulias\EmailValidator\Tests\EmailValidator;
 
+use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Tests\EmailValidator\Dummy\DummyReason;
 use Egulias\EmailValidator\Validation\EmailValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\Tests\EmailValidator\Dummy\DummyReason;
-use PHPUnit\Framework\TestCase;
 
 class EmailValidatorTest extends TestCase
 {

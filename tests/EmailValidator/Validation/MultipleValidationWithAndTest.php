@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailLexer;
@@ -8,12 +8,10 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\MultipleErrors;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\AddressLiteral;
-use Egulias\Tests\EmailValidator\Dummy\DummyReason;
 use Egulias\EmailValidator\Validation\RFCValidation;
-use Egulias\EmailValidator\Result\Reason\NoDomainPart;
 use Egulias\EmailValidator\Validation\EmailValidation;
-use Egulias\EmailValidator\Result\Reason\CommaInDomain;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Tests\EmailValidator\Dummy\DummyReason;
 use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 
 class MultipleValidationWithAndTest extends TestCase
@@ -22,7 +20,7 @@ class MultipleValidationWithAndTest extends TestCase
     {
         $invalidEmail = new InvalidEmail(new DummyReason(), '');
         $lexer = new EmailLexer();
-        $validationTrue = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
+        $validationTrue = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validationTrue->expects($this->any())->method("isValid")->willReturn(true);
         $validationTrue->expects($this->any())->method("getWarnings")->willReturn([]);
 
@@ -68,7 +66,7 @@ class MultipleValidationWithAndTest extends TestCase
         $expectedResult = array_merge($warnings1, $warnings2);
 
         $lexer = new EmailLexer();
-        $validation1 = $this->getMockBuilder("Egulias\\EmailValidator\\Validation\\EmailValidation")->getMock();
+        $validation1 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation1->expects($this->any())->method("isValid")->willReturn(true);
         $validation1->expects($this->once())->method("getWarnings")->willReturn($warnings1);
         $validation1->expects($this->any())->method("getError")->willReturn($invalidEmail);

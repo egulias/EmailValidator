@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;

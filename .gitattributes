@@ -1,5 +1,5 @@
-/Tests export-ignore
 /documentation export-ignore
+/tests export-ignore
 /.* export-ignore
 /phpunit.xml.dist export-ignore
 /psalm.xml export-ignore

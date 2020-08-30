@@ -16,7 +16,7 @@ use Egulias\EmailValidator\Warning\QuotedPart;
 abstract class Parser
 {
     /**
-     * @var \Egulias\EmailValidator\Warning\Warning[]
+     * @var array
      */
     protected $warnings = [];
 

@@ -1,5 +1,5 @@
 <?php
-namespace Egulias\Tests\EmailValidator\Dummy;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Dummy;
 
 use Egulias\EmailValidator\Result\Reason\Reason;
 

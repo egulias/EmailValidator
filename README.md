@@ -1,7 +1,12 @@
 # EmailValidator
-[!https://img.shields.io/packagist/v/egulias/email-validator.svg?style=flat-square](https://packagist.org/packages/egulias/email-validator) [![Build Status](https://travis-ci.org/egulias/EmailValidator.svg?branch=master)](https://travis-ci.org/egulias/EmailValidator) [![Coverage Status](https://coveralls.io/repos/egulias/EmailValidator/badge.svg?branch=master)](https://coveralls.io/r/egulias/EmailValidator?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/small.png)](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
-=============================
+[!https://img.shields.io/packagist/v/egulias/email-validator.svg?style=flat-square](https://packagist.org/packages/egulias/email-validator)
+[![Build Status](https://travis-ci.org/egulias/EmailValidator.svg?branch=master)](https://travis-ci.org/egulias/EmailValidator)
+[![Coverage Status](https://coveralls.io/repos/egulias/EmailValidator/badge.svg?branch=master)](https://coveralls.io/r/egulias/EmailValidator?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=master)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/small.png)](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
+
 ## Suported RFCs ##
+
 This library aims to support:
 
 RFC 5321, 5322, 6530, 6531, 6532.
@@ -9,7 +14,7 @@ RFC 5321, 5322, 6530, 6531, 6532.
 ## Requirements ##
 
  * [Composer](https://getcomposer.org) is required for installation
- * [Spoofchecking](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php) and [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php) validation requires that your PHP system has the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
+ * [Spoofchecking](/src/Validation/SpoofCheckValidation.php) and [DNSCheckValidation](/src/Validation/DNSCheckValidation.php) validation requires that your PHP system has the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
 
 ## Installation ##
 
@@ -20,6 +25,7 @@ composer require egulias/email-validator
 ```
 
 ## Getting Started ##
+
 `EmailValidator`requires you to decide which (or combination of them) validation/s strategy/ies you'd like to follow for each [validation](#available-validations).
 
 A basic example with the RFC validation
@@ -36,11 +42,11 @@ $validator->isValid("example@example.com", new RFCValidation()); //true
 
 ### Available validations ###
 
-1. [RFCValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/RFCValidation.php)
-2. [NoRFCWarningsValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/NoRFCWarningsValidation.php)
-3. [DNSCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/DNSCheckValidation.php)
-4. [SpoofCheckValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/SpoofCheckValidation.php)
-5. [MultipleValidationWithAnd](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/MultipleValidationWithAnd.php)
+1. [RFCValidation](/src/Validation/RFCValidation.php)
+2. [NoRFCWarningsValidation](/src/Validation/NoRFCWarningsValidation.php)
+3. [DNSCheckValidation](/src/Validation/DNSCheckValidation.php)
+4. [SpoofCheckValidation](/src/Validation/SpoofCheckValidation.php)
+5. [MultipleValidationWithAnd](/src/Validation/MultipleValidationWithAnd.php)
 6. [Your own validation](#how-to-extend)
 
 `MultipleValidationWithAnd`
@@ -65,10 +71,11 @@ $validator->isValid("example@example.com", $multipleValidations); //true
 
 ### How to extend ###
 
-It's easy! You just need to implement [EmailValidation](https://github.com/egulias/EmailValidator/blob/master/EmailValidator/Validation/EmailValidation.php) and you can use your own validation.
+It's easy! You just need to implement [EmailValidation](/src/Validation/EmailValidation.php) and you can use your own validation.
 
 
 ## Other Contributors ##
+
 (You can find current contributors [here](https://github.com/egulias/EmailValidator/graphs/contributors))
 
 As this is a port from another library and work, here are other people related to the previous one:
@@ -78,5 +85,5 @@ As this is a port from another library and work, here are other people related t
 * Dominic Sayers [@dominicsayers](https://github.com/dominicsayers):  	The original isemail function
 
 ## License ##
-Released under the MIT License attached with this code.
 
+Released under the MIT License attached with this code.

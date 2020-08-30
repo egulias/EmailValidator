@@ -28,12 +28,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Egulias\\EmailValidator\\": "EmailValidator"
+      "Egulias\\EmailValidator\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Egulias\\Tests\\": "Tests"
+      "Egulias\\EmailValidator\\Tests\\": "tests"
     }
   }
 }
