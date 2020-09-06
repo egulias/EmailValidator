@@ -118,11 +118,12 @@ class DNSCheckValidation implements EmailValidation
     private function validateDnsRecords($host)
     {
         // Get all MX, A and AAAA DNS records for host
-        $dnsRecords = dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
+        // Using @ as workaround to fix https://bugs.php.net/bug.php?id=73149
+        $dnsRecords = @dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
 
 
         // No MX, A or AAAA DNS records
-        if (empty($dnsRecords)) {
+        if (empty($dnsRecords) || !$dnsRecords) {
             $this->error = new NoDNSRecord();
             return false;
         }
