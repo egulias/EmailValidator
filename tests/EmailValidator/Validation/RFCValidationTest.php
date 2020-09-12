@@ -26,18 +26,18 @@ use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS;
 use Egulias\EmailValidator\Result\Reason\CommaInDomain;
-use Egulias\EmailValidator\Result\Reason\ConsecutiveAt as ReasonConsecutiveAt;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
-use Egulias\EmailValidator\Result\Reason\CRNoLF as ReasonCRNoLF;
-use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
-use Egulias\EmailValidator\Result\Reason\DotAtStart as ReasonDotAtStart;
-use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
-use Egulias\EmailValidator\Result\Reason\ConsecutiveDot as ReasonConsecutiveDot;
-use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
-use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
-use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT as ReasonExpectingDTEXT;
-use Egulias\EmailValidator\Result\Reason\UnclosedComment as ReasonUnclosedComment;
+use Egulias\EmailValidator\Result\Reason\CRNoLF;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd;
+use Egulias\EmailValidator\Result\Reason\DotAtStart;
+use Egulias\EmailValidator\Result\Reason\NoDomainPart;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
+use Egulias\EmailValidator\Result\Reason\DomainHyphened;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
+use Egulias\EmailValidator\Result\Reason\UnclosedComment;
 
 class RFCValidationTest extends TestCase
 {
@@ -186,24 +186,24 @@ class RFCValidationTest extends TestCase
     {
         return [
             [new InvalidEmail(new NoLocalPart(), "@"), '@example.co.uk'],
-            [new InvalidEmail(new ReasonNoDomainPart(), ''), 'example@'],
-            [new InvalidEmail(new ReasonDomainHyphened('Hypen found near DOT'), '-'), 'example@example-.co.uk'],
-            [new InvalidEmail(new ReasonCRNoLF(), "\r"), "example@example\r.com"],
-            [new InvalidEmail(new ReasonDomainHyphened('Hypen found at the end of the domain'), '-'), 'example@example-'],
-            [new InvalidEmail(new ReasonConsecutiveAt(), '@'), 'example@@example.co.uk'],
-            [new InvalidEmail(new ReasonConsecutiveDot(), '.'), 'example..example@example.co.uk'],
-            [new InvalidEmail(new ReasonConsecutiveDot(), '.'), 'example@example..co.uk'],
-            [new InvalidEmail(new ReasonExpectingATEXT('Invalid token found'), '<'), '<example_example>@example.fr'],
-            [new InvalidEmail(new ReasonDotAtStart(), '.'), '.example@localhost'],
-            [new InvalidEmail(new ReasonDotAtStart(), '.'), 'example@.localhost'],
-            [new InvalidEmail(new ReasonDomainHyphened('After AT'), '-'), 'example@-localhost'],
-            [new InvalidEmail(new ReasonDotAtEnd(), ''), 'example@localhost.'],
-            [new InvalidEmail(new ReasonDotAtEnd(), '.'), 'example.@example.co.uk'],
-            [new InvalidEmail(new ReasonUnclosedComment(), '('), '(example@localhost'],
+            [new InvalidEmail(new NoDomainPart(), ''), 'example@'],
+            [new InvalidEmail(new DomainHyphened('Hypen found near DOT'), '-'), 'example@example-.co.uk'],
+            [new InvalidEmail(new CRNoLF(), "\r"), "example@example\r.com"],
+            [new InvalidEmail(new DomainHyphened('Hypen found at the end of the domain'), '-'), 'example@example-'],
+            [new InvalidEmail(new ConsecutiveAt(), '@'), 'example@@example.co.uk'],
+            [new InvalidEmail(new ConsecutiveDot(), '.'), 'example..example@example.co.uk'],
+            [new InvalidEmail(new ConsecutiveDot(), '.'), 'example@example..co.uk'],
+            [new InvalidEmail(new ExpectingATEXT('Invalid token found'), '<'), '<example_example>@example.fr'],
+            [new InvalidEmail(new DotAtStart(), '.'), '.example@localhost'],
+            [new InvalidEmail(new DotAtStart(), '.'), 'example@.localhost'],
+            [new InvalidEmail(new DomainHyphened('After AT'), '-'), 'example@-localhost'],
+            [new InvalidEmail(new DotAtEnd(), ''), 'example@localhost.'],
+            [new InvalidEmail(new DotAtEnd(), '.'), 'example.@example.co.uk'],
+            [new InvalidEmail(new UnclosedComment(), '('), '(example@localhost'],
             [new InvalidEmail(new UnclosedQuotedString(), '"'), '"example@localhost'],
             [
                 new InvalidEmail(
-                    new ReasonExpectingATEXT('https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit'),
+                    new ExpectingATEXT('https://tools.ietf.org/html/rfc5322#section-3.2.4 - quoted string should be a unit'),
                     '"'),
                 'exa"mple@localhost'
             ],
@@ -215,11 +215,11 @@ class RFCValidationTest extends TestCase
             //This was the original. But atext is not allowed after \n
             //array(EmailValidator::ERR_EXPECTING_ATEXT, "exampl\ne@example.co.uk"),
             [new InvalidEmail(new AtextAfterCFWS(), "\n"), "exampl\ne@example.co.uk"],
-            [new InvalidEmail(new ReasonExpectingDTEXT(), '['), "example@[[]"],
+            [new InvalidEmail(new ExpectingDTEXT(), '['), "example@[[]"],
             [new InvalidEmail(new AtextAfterCFWS(), "\t"), "exampl\te@example.co.uk"],
-            [new InvalidEmail(new ReasonCRNoLF(), "\r"), "example@exa\rmple.co.uk"],
-            [new InvalidEmail(new ReasonCRNoLF(), "["), "example@[\r]"],
-            [new InvalidEmail(new ReasonCRNoLF(), "\r"), "exam\rple@example.co.uk"],
+            [new InvalidEmail(new CRNoLF(), "\r"), "example@exa\rmple.co.uk"],
+            [new InvalidEmail(new CRNoLF(), "["), "example@[\r]"],
+            [new InvalidEmail(new CRNoLF(), "\r"), "exam\rple@example.co.uk"],
             [new InvalidEmail(new CommaInDomain(), ','), 'example@exam,ple.com'],
         ];
     }
