@@ -115,11 +115,8 @@ class DomainPart extends Parser
     {
         $commentParser = new Comment($this->lexer, new DomainComment());
         $result = $commentParser->parse('remove');
-        if($result->isInvalid()) {
-            return $result;
-        }
-
         $this->warnings = array_merge($this->warnings, $commentParser->getWarnings());
+
         return $result;
     }
 
@@ -186,7 +183,7 @@ class DomainPart extends Parser
     }
 
     /**
-     * @return string|false
+     * @return Result
      */
     protected function parseDomainLiteral() : Result
     {
@@ -201,8 +198,6 @@ class DomainPart extends Parser
         $result = $domainLiteralParser->parse('remove');
         $this->warnings = array_merge($this->warnings, $domainLiteralParser->getWarnings());
         return $result;
-
-        //return $this->doParseDomainLiteral();
     }
 
     protected function checkDomainPartExceptions(array $prev)
