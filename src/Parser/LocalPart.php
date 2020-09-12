@@ -26,9 +26,7 @@ class LocalPart extends Parser
             EmailLexer::INVALID => EmailLexer::INVALID
         );
 
-    private $foldingWS;
-
-    public function parse($localPart) : Result
+    public function parse() : Result
     {
         $totalLength = 0;
 
@@ -95,7 +93,7 @@ class LocalPart extends Parser
     {
         //use $this->parseFWS()
         $foldingWS = new FoldingWhiteSpace($this->lexer);
-        $resultFWS = $foldingWS->parse('remove');
+        $resultFWS = $foldingWS->parse();
         if ($resultFWS->isValid()) {
             $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
         }
@@ -110,7 +108,7 @@ class LocalPart extends Parser
     private function parseDoubleQuote() : Result
     {
         $dquoteParser = new DoubleQuote($this->lexer);
-        $parseAgain = $dquoteParser->parse("remove useless arg");
+        $parseAgain = $dquoteParser->parse();
         $this->warnings = array_merge($this->warnings, $dquoteParser->getWarnings());
 
         return $parseAgain;
@@ -119,7 +117,7 @@ class LocalPart extends Parser
     private function parseComments()
     {
         $commentParser = new Comment($this->lexer, new LocalComment());
-        $result = $commentParser->parse('remove');
+        $result = $commentParser->parse();
         $this->warnings = array_merge($this->warnings, $commentParser->getWarnings());
         if($result->isInvalid()) {
             return $result;

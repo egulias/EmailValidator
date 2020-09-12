@@ -13,7 +13,7 @@ use Egulias\EmailValidator\Result\Result;
 
 class DoubleQuote extends Parser
 {
-    public function parse($qouted)
+    public function parse() : Result
     {
 
         $validQuotedString = $this->checkDQUOTE();

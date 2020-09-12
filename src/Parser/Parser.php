@@ -33,15 +33,12 @@ abstract class Parser
         return $this->warnings;
     }
 
-    /**
-     * @param string $str
-     */
-    abstract public function parse($str);
+    abstract public function parse() : Result;
 
     protected function parseFWS() : Result
     {
         $foldingWS = new FoldingWhiteSpace($this->lexer);
-        $resultFWS = $foldingWS->parse('remove');
+        $resultFWS = $foldingWS->parse();
         $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
         return $resultFWS;
     }

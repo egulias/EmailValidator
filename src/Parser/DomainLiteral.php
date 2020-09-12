@@ -2,13 +2,12 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Result\Reason\CRNoLF;
-use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
+use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Warning\DomainLiteral as WarningDomainLiteral;
 use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
+use Egulias\EmailValidator\Result\Reason\CRNoLF;
 use Egulias\EmailValidator\Warning\IPV6ColonEnd;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
@@ -17,10 +16,12 @@ use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
+use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
+use Egulias\EmailValidator\Warning\DomainLiteral as WarningDomainLiteral;
 
 class DomainLiteral extends Parser
 {
-    public function parse($remove)
+    public function parse() : Result
     {
         $this->addTagWarnings();
 

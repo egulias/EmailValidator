@@ -31,7 +31,7 @@ class DomainPart extends Parser
      */
     protected $domainPart = '';
 
-    public function parse($domainPart)
+    public function parse() : Result
     {
         $this->lexer->moveNext();
 
@@ -114,7 +114,7 @@ class DomainPart extends Parser
     protected function parseComments()
     {
         $commentParser = new Comment($this->lexer, new DomainComment());
-        $result = $commentParser->parse('remove');
+        $result = $commentParser->parse();
         $this->warnings = array_merge($this->warnings, $commentParser->getWarnings());
 
         return $result;
@@ -195,7 +195,7 @@ class DomainPart extends Parser
         }
 
         $domainLiteralParser = new DomainLiteralParser($this->lexer);
-        $result = $domainLiteralParser->parse('remove');
+        $result = $domainLiteralParser->parse();
         $this->warnings = array_merge($this->warnings, $domainLiteralParser->getWarnings());
         return $result;
     }

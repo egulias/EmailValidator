@@ -10,11 +10,12 @@ use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS;
 use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd;
 use Egulias\EmailValidator\Result\Reason\CRLFX2;
 use Egulias\EmailValidator\Result\Reason\ExpectingCTEXT;
+use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 
 class  FoldingWhiteSpace extends Parser
 {
-    public function parse($str)
+    public function parse() : Result
     {
         if (!$this->isFWS()) {
             return new ValidEmail();

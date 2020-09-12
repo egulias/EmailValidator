@@ -69,12 +69,12 @@ class EmailParser
             return new InvalidEmail(new NoLocalPart(), $this->lexer->token["value"]);
         }
 
-        $localPartResult = $this->localPartParser->parse($str);
+        $localPartResult = $this->localPartParser->parse();
         if ($localPartResult->isInvalid()) {
             return $localPartResult;
         }
 
-        $domainPartResult = $this->domainPartParser->parse($str);
+        $domainPartResult = $this->domainPartParser->parse();
         if ($domainPartResult->isInvalid()) {
             return $domainPartResult;
         }
