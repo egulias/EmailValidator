@@ -4,13 +4,15 @@ namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Exception\CommaInDomain;
-use Egulias\EmailValidator\Exception\ExpectingATEXT;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Result\Reason\CharNotAllowed as ReasonCharNotAllowed;
-use Egulias\EmailValidator\Result\Reason\DomainHyphened as ReasonDomainHyphened;
-use Egulias\EmailValidator\Result\Reason\DotAtEnd as ReasonDotAtEnd;
+use Egulias\EmailValidator\Result\Reason\CharNotAllowed;
+use Egulias\EmailValidator\Result\Reason\DomainHyphened;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
-use Egulias\EmailValidator\Result\Reason\NoDomainPart as ReasonNoDomainPart;
+use Egulias\EmailValidator\Result\Reason\NoDomainPart;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
+use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\DeprecatedComment;
@@ -19,9 +21,6 @@ use Egulias\EmailValidator\Warning\DomainTooLong;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
-use Egulias\EmailValidator\Result\Reason\ConsecutiveAt as ReasonConsecutiveAt;
-use Egulias\EmailValidator\Result\Reason\ExpectingATEXT as ReasonExpectingATEXT;
-use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
 
 class DomainPart extends Parser
 {
@@ -50,10 +49,10 @@ class DomainPart extends Parser
         $length = strlen($this->domainPart);
 
         if ($prev['type'] === EmailLexer::S_DOT) {
-            return new InvalidEmail(new ReasonDotAtEnd(), $this->lexer->token['value']);
+            return new InvalidEmail(new DotAtEnd(), $this->lexer->token['value']);
         }
         if ($prev['type'] === EmailLexer::S_HYPHEN) {
-            return new InvalidEmail(new ReasonDomainHyphened('Hypen found at the end of the domain'), $prev['value']);
+            return new InvalidEmail(new DomainHyphened('Hypen found at the end of the domain'), $prev['value']);
         }
         if ($length > self::DOMAIN_MAX_LENGTH) {
             $this->warnings[DomainTooLong::CODE] = new DomainTooLong();
@@ -87,7 +86,7 @@ class DomainPart extends Parser
             !$this->lexer->isNextToken(EmailLexer::GENERIC));
 
         if ($thereIsNoDomain) {
-            return new InvalidEmail(new ReasonNoDomainPart(), $this->lexer->token['value']);
+            return new InvalidEmail(new NoDomainPart(), $this->lexer->token['value']);
         }
 
         return new ValidEmail();
@@ -99,7 +98,7 @@ class DomainPart extends Parser
             return new InvalidEmail(new DotAtStart(), $this->lexer->token['value']);
         }
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN) {
-            return new InvalidEmail(new ReasonDomainHyphened('After AT'), $this->lexer->token['value']);
+            return new InvalidEmail(new DomainHyphened('After AT'), $this->lexer->token['value']);
         }
         return new ValidEmail();
     }
@@ -181,7 +180,7 @@ class DomainPart extends Parser
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH=> true];
         if (isset($notAllowed[$token['type']])) {
-            return new InvalidEmail(new ReasonCharNotAllowed(), $token['value']);
+            return new InvalidEmail(new CharNotAllowed(), $token['value']);
         }
         return new ValidEmail();
     }
@@ -216,7 +215,7 @@ class DomainPart extends Parser
         );
 
         if (isset($invalidDomainTokens[$this->lexer->token['type']])) {
-            return new InvalidEmail(new ReasonExpectingATEXT('Invalid token in domain'), $this->lexer->token['value']);
+            return new InvalidEmail(new ExpectingATEXT('Invalid token in domain'), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
@@ -224,20 +223,20 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            return new InvalidEmail(new ReasonConsecutiveAt(), $this->lexer->token['value']);
+            return new InvalidEmail(new ConsecutiveAt(), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
-            return new InvalidEmail(new ReasonExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token['value']);
+            return new InvalidEmail(new ExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_HYPHEN && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            return new InvalidEmail(new ReasonDomainHyphened('Hypen found near DOT'), $this->lexer->token['value']);
+            return new InvalidEmail(new DomainHyphened('Hypen found near DOT'), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
             && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
-            return new InvalidEmail(new ReasonExpectingATEXT('Escaping following "ATOM"'), $this->lexer->token['value']);
+            return new InvalidEmail(new ExpectingATEXT('Escaping following "ATOM"'), $this->lexer->token['value']);
         }
 
         return new ValidEmail();
