@@ -114,7 +114,7 @@ class LocalPart extends Parser
         return $parseAgain;
     }
 
-    private function parseComments()
+    private function parseComments(): Result
     {
         $commentParser = new Comment($this->lexer, new LocalComment());
         $result = $commentParser->parse();

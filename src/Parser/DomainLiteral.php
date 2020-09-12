@@ -138,7 +138,7 @@ class DomainLiteral extends Parser
         }
     }
     
-    public function convertIPv4ToIPv6($addressLiteralIPv4) : string
+    public function convertIPv4ToIPv6(string $addressLiteralIPv4) : string
     {
         $matchesIP  = array();
         $IPv4Match = preg_match(
@@ -162,7 +162,7 @@ class DomainLiteral extends Parser
     /**
      * @param string $addressLiteral
      *
-     * @return string
+     * @return bool
      */
     protected function checkIPV4Tag($addressLiteral) : bool
     {

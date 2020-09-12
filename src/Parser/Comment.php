@@ -13,8 +13,14 @@ use Egulias\EmailValidator\Warning\Comment as WarningComment;
 
 class Comment extends Parser
 {
-    //change to private when removed from parent parser
-    protected $openedParenthesis = 0;
+    /**
+     * @var int
+     */
+    private $openedParenthesis = 0;
+
+    /**
+     * @var CommentStrategy
+     */
     private $commentStrategy;
 
     public function __construct(EmailLexer $lexer, CommentStrategy $commentStrategy)

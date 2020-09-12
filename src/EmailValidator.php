@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\Exception\InvalidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\EmailValidation;
 
 class EmailValidator
@@ -15,12 +15,12 @@ class EmailValidator
     /**
      * @var Warning\Warning[]
      */
-    protected $warnings = [];
+    private $warnings = [];
 
     /**
-     * @var InvalidEmail|null
+     * @var ?InvalidEmail
      */
-    protected $error;
+    private $error;
 
     public function __construct()
     {

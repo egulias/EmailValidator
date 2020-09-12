@@ -46,6 +46,9 @@ class  FoldingWhiteSpace extends Parser
         return new ValidEmail();
     }
 
+    /**
+     * @return InvalidEmail|ValidEmail|null
+     */
     protected function checkCRLFInFWS()
     {
         if ($this->lexer->token['type'] !== EmailLexer::CRLF) {

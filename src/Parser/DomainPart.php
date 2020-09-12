@@ -111,7 +111,7 @@ class DomainPart extends Parser
         return $this->domainPart;
     }
 
-    protected function parseComments()
+    protected function parseComments(): Result
     {
         $commentParser = new Comment($this->lexer, new DomainComment());
         $result = $commentParser->parse();
@@ -200,6 +200,9 @@ class DomainPart extends Parser
         return $result;
     }
 
+    /**
+     * @return InvalidEmail|ValidEmail
+     */
     protected function checkDomainPartExceptions(array $prev)
     {
         $invalidDomainTokens = array(
