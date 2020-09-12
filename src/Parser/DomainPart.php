@@ -3,7 +3,6 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\CommaInDomain;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\CharNotAllowed;
 use Egulias\EmailValidator\Result\Reason\DomainHyphened;
@@ -21,6 +20,7 @@ use Egulias\EmailValidator\Warning\DomainTooLong;
 use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
+use Egulias\EmailValidator\Result\Reason\CommaInDomain;
 
 class DomainPart extends Parser
 {
@@ -219,7 +219,7 @@ class DomainPart extends Parser
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_COMMA) {
-            throw new CommaInDomain();
+            return new InvalidEmail(new CommaInDomain(), $this->lexer->token['value']);
         }
 
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {

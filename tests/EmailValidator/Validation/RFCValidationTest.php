@@ -25,6 +25,7 @@ use Egulias\EmailValidator\Warning\IPV6DoubleColon;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 use Egulias\EmailValidator\Result\Reason\AtextAfterCFWS;
+use Egulias\EmailValidator\Result\Reason\CommaInDomain;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveAt as ReasonConsecutiveAt;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
@@ -167,6 +168,7 @@ class RFCValidationTest extends TestCase
             ['test@email>'],
             ['test@email<'],
             ['test@email{'],
+            ['username@examp,le.com'],
             ['test@ '],
         ];
     }
@@ -218,6 +220,7 @@ class RFCValidationTest extends TestCase
             [new InvalidEmail(new ReasonCRNoLF(), "\r"), "example@exa\rmple.co.uk"],
             [new InvalidEmail(new ReasonCRNoLF(), "["), "example@[\r]"],
             [new InvalidEmail(new ReasonCRNoLF(), "\r"), "exam\rple@example.co.uk"],
+            [new InvalidEmail(new CommaInDomain(), ','), 'example@exam,ple.com'],
         ];
     }
 
