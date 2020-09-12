@@ -16,7 +16,7 @@ class NoRFCWarningsValidation extends RFCValidation
     /**
      * {@inheritdoc}
      */
-    public function isValid($email, EmailLexer $emailLexer)
+    public function isValid($email, EmailLexer $emailLexer) : bool
     {
         if (!parent::isValid($email, $emailLexer)) {
             return false;

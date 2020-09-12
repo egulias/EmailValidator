@@ -24,7 +24,7 @@ class SpoofCheckValidation implements EmailValidation
     /**
      * @psalm-suppress InvalidArgument
      */
-    public function isValid($email, EmailLexer $emailLexer)
+    public function isValid($email, EmailLexer $emailLexer) : bool
     {
         $checker = new Spoofchecker();
         $checker->setChecks(Spoofchecker::SINGLE_SCRIPT);
@@ -44,7 +44,7 @@ class SpoofCheckValidation implements EmailValidation
         return $this->error;
     }
 
-    public function getWarnings()
+    public function getWarnings() : array
     {
         return [];
     }

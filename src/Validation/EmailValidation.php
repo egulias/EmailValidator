@@ -16,7 +16,7 @@ interface EmailValidation
      *
      * @return bool
      */
-    public function isValid($email, EmailLexer $emailLexer);
+    public function isValid($email, EmailLexer $emailLexer) : bool;
 
     /**
      * Returns the validation error.
@@ -30,5 +30,5 @@ interface EmailValidation
      *
      * @return Warning[]
      */
-    public function getWarnings();
+    public function getWarnings() : array;
 }

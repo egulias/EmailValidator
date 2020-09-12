@@ -34,7 +34,7 @@ class DNSCheckValidation implements EmailValidation
         }
     }
 
-    public function isValid($email, EmailLexer $emailLexer)
+    public function isValid($email, EmailLexer $emailLexer) : bool
     {
         // use the input to check DNS if we cannot extract something similar to a domain
         $host = $email;
@@ -85,7 +85,7 @@ class DNSCheckValidation implements EmailValidation
         return $this->error;
     }
 
-    public function getWarnings()
+    public function getWarnings() : array
     {
         return $this->warnings;
     }
