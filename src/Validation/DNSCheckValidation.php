@@ -130,16 +130,13 @@ class DNSCheckValidation implements EmailValidation
         // For each DNS record
         foreach ($dnsRecords as $dnsRecord) {
             if (!$this->validateMXRecord($dnsRecord)) {
-        // No MX records (fallback to A or AAAA records)
-
-        if (empty($this->mxRecords)) {
-            $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
-        }
+                // No MX records (fallback to A or AAAA records)
+                if (empty($this->mxRecords)) {
+                    $this->warnings[NoDNSMXRecord::CODE] = new NoDNSMXRecord();
+                }
                 return false;
             }
         }
-
-
         return true;
     }
 
