@@ -91,7 +91,7 @@ class LocalPart extends Parser
         return new ValidEmail();
     }
 
-    protected function parseLocalFWS() : Result 
+    private function parseLocalFWS() : Result 
     {
         //use $this->parseFWS()
         $foldingWS = new FoldingWhiteSpace($this->lexer);
@@ -102,12 +102,12 @@ class LocalPart extends Parser
         return $resultFWS;
     }
 
-    protected function hasDotAtStart() : bool
+    private function hasDotAtStart() : bool
     {
             return $this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type'];
     }
 
-    protected function parseDoubleQuote() : Result
+    private function parseDoubleQuote() : Result
     {
         $dquoteParser = new DoubleQuote($this->lexer);
         $parseAgain = $dquoteParser->parse("remove useless arg");
@@ -116,7 +116,7 @@ class LocalPart extends Parser
         return $parseAgain;
     }
 
-    protected function parseComments()
+    private function parseComments()
     {
         $commentParser = new Comment($this->lexer, new LocalComment());
         $result = $commentParser->parse('remove');
@@ -125,5 +125,23 @@ class LocalPart extends Parser
             return $result;
         }
         return $result;
+    }
+
+    private function validateEscaping() : Result
+    {
+        //Backslash found
+        if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
+            return new ValidEmail();
+        }
+
+        if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
+            return new InvalidEmail(new ExpectingATEXT('Found ATOM after escaping'), $this->lexer->token['value']);
+        }
+
+        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
+            return new ValidEmail();
+        }
+
+        return new ValidEmail();
     }
 }

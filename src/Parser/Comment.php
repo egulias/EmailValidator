@@ -5,6 +5,7 @@ namespace Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\CFWSNearAt;
+use Egulias\EmailValidator\Warning\QuotedPart;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Parser\CommentStrategy;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
@@ -63,6 +64,27 @@ class Comment extends Parser
         $this->warnings = array_merge($this->warnings, $this->commentStrategy->getWarnings());
 
         return $finalValidations;
+    }
+
+
+    /**
+     * @return bool
+     */
+    private function warnEscaping() : bool
+    {
+        //Backslash found
+        if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
+            return false;
+        }
+
+        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
+            return false;
+        }
+
+        $this->warnings[QuotedPart::CODE] =
+            new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
+        return true;
+
     }
 
     private function noClosingParenthesis() : bool 

@@ -76,17 +76,4 @@ class  FoldingWhiteSpace extends Parser
             $this->lexer->token['type'] === EmailLexer::S_LF ||
             $this->lexer->token['type'] === EmailLexer::CRLF;
     }
-
-    /**
-     * @return bool
-     */
-    protected function escaped()
-    {
-        $previous = $this->lexer->getPrevious();
-
-        return $previous && $previous['type'] === EmailLexer::S_BACKSLASH
-            &&
-            $this->lexer->token['type'] !== EmailLexer::GENERIC;
-    }
-
 }
