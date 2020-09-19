@@ -89,6 +89,7 @@ class MultipleValidationWithAnd implements EmailValidation
     {
         if (null !== $validation->getError()) {
             $this->initErrorStorage();
+            /** @psalm-suppress PossiblyNullReference */
             $this->error->addReason($validation->getError()->reason());
         }
     }

@@ -10,7 +10,7 @@ class InvalidEmail implements Result
     /**
      * @var Reason
      */
-    private $reason;
+    protected $reason;
 
     public function __construct(Reason $reason, string $token)
     {

@@ -5,6 +5,9 @@ namespace Egulias\EmailValidator\Result;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\Reason;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class MultipleErrors extends InvalidEmail
 {
     /**
@@ -32,5 +35,20 @@ class MultipleErrors extends InvalidEmail
     public function reason() : Reason
     {
         return $this->reasons[0];
+    }
+
+    public function description() : string
+    {
+        $description = '';
+        foreach($this->reasons as $reason) {
+            $description .= $reason->description() . PHP_EOL;
+        }
+
+        return $description;
+    }
+
+    public function code() : int
+    {
+        return 0;
     }
 }

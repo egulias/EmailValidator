@@ -20,7 +20,7 @@ class RFCValidation implements EmailValidation
     private $warnings = [];
 
     /**
-     * @var InvalidEmail
+     * @var ?InvalidEmail
      */
     private $error;
 
@@ -31,6 +31,7 @@ class RFCValidation implements EmailValidation
             $result = $this->parser->parse((string)$email);
             $this->warnings = $this->parser->getWarnings();
             if ($result->isInvalid()) {
+                /** @psalm-suppress PropertyTypeCoercion */
                 $this->error = $result;
                 return false;
             }
