@@ -11,6 +11,6 @@ class UnclosedComment implements Reason
 
     public function description(): string
     {
-        return 'No colosing comment token found';
+        return 'No closing comment token found';
     }
 }
