@@ -4,6 +4,16 @@ namespace Egulias\EmailValidator\Result\Reason;
 
 class ExceptionFound implements Reason
 {
+    /**
+     * @var \Exception
+     */
+    private $exception;
+
+    public function __construct(\Exception $exception)
+    {
+        $this->exception = $exception;
+        
+    }
     public function code() : int
     {
         return 999;
@@ -11,6 +21,6 @@ class ExceptionFound implements Reason
 
     public function description() : string
     {
-        return 'An exception occurred during the execution';
+        return $this->exception->getMessage();
     }
 }

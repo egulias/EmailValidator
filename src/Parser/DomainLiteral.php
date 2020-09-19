@@ -17,6 +17,7 @@ use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
 use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
+use Egulias\EmailValidator\Result\Reason\UnusualElements;
 use Egulias\EmailValidator\Warning\DomainLiteral as WarningDomainLiteral;
 
 class DomainLiteral extends Parser
@@ -51,10 +52,7 @@ class DomainLiteral extends Parser
             }
 
             if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
-                $addressLiteral .= $this->lexer->token['value'];
-                $this->lexer->moveNext();
-                $this->validateQuotedPair();
+                return new InvalidEmail(new UnusualElements($this->lexer->token['value']), $this->lexer->token['value']);
             }
             if ($this->lexer->token['type'] === EmailLexer::S_IPV6TAG) {
                 $IPv6TAG = true;
@@ -190,7 +188,8 @@ class DomainLiteral extends Parser
     {
         if ($this->lexer->token['type'] === EmailLexer::INVALID ||
             $this->lexer->token['type'] === EmailLexer::C_DEL   ||
-            $this->lexer->token['type'] === EmailLexer::S_LF
+            $this->lexer->token['type'] === EmailLexer::S_LF ||
+            $this->lexer->token['type'] === EmailLexer::S_BACKSLASH
         ) {
             $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
         }
