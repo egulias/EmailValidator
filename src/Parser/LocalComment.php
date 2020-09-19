@@ -11,6 +11,9 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 
 class LocalComment implements CommentStrategy
 {
+    /**
+     * @var array
+     */
     private $warnings = [];
 
     public function exitCondition(EmailLexer $lexer, int $openedParenthesis) : bool

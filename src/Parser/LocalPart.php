@@ -15,6 +15,10 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 class LocalPart extends Parser
 {
 
+    /**
+     * Invalid lexer tokens for local part
+     * @var array
+     */
     private $invalidTokens = array(
             EmailLexer::S_COMMA => EmailLexer::S_COMMA,
             EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
@@ -91,7 +95,6 @@ class LocalPart extends Parser
 
     private function parseLocalFWS() : Result 
     {
-        //use $this->parseFWS()
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse();
         if ($resultFWS->isValid()) {

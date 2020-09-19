@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\MultipleErrors;
+use Egulias\EmailValidator\Tests\EmailValidator\Dummy\AnotherDummyReason;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Validation\RFCValidation;
@@ -85,9 +86,10 @@ class MultipleValidationWithAndTest extends TestCase
     public function testGathersAllTheErrors()
     {
         $invalidEmail = new InvalidEmail(new DummyReason(), '');
+        $invalidEmail2 = new InvalidEmail(new AnotherDummyReason(), '');
 
         $error1 = new DummyReason();
-        $error2 = new DummyReason();
+        $error2 = new AnotherDummyReason();
 
         $expectedResult = new MultipleErrors();
         $expectedResult->addReason($error1);
@@ -103,7 +105,7 @@ class MultipleValidationWithAndTest extends TestCase
         $validation2 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation2->expects($this->once())->method("isValid")->willReturn(false);
         $validation2->expects($this->once())->method("getWarnings")->willReturn([]);
-        $validation2->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
+        $validation2->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail2);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2]);
         $multipleValidation->isValid("example@example.com", $lexer);
@@ -113,13 +115,12 @@ class MultipleValidationWithAndTest extends TestCase
     public function testStopsAfterFirstError()
     {
         $invalidEmail = new InvalidEmail(new DummyReason(), '');
+        $invalidEmail2 = new InvalidEmail(new AnotherDummyReason(), '');
 
         $error1 = new DummyReason();
-        $error2 = new DummyReason();
 
         $expectedResult = new MultipleErrors();
         $expectedResult->addReason($error1);
-        $expectedResult->addReason($error2);
 
         $lexer = new EmailLexer();
 
@@ -131,7 +132,7 @@ class MultipleValidationWithAndTest extends TestCase
         $validation2 = $this->getMockBuilder(EmailValidation::class)->getMock();
         $validation2->expects($this->any())->method("isValid")->willReturn(false);
         $validation2->expects($this->never())->method("getWarnings")->willReturn([]);
-        $validation1->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail);
+        $validation1->expects($this->exactly(2))->method("getError")->willReturn($invalidEmail2);
 
         $multipleValidation = new MultipleValidationWithAnd([$validation1, $validation2], MultipleValidationWithAnd::STOP_ON_ERROR);
         $multipleValidation->isValid("example@example.com", $lexer);
