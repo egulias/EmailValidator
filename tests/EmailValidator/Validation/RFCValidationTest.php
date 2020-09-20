@@ -107,6 +107,22 @@ class RFCValidationTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider getValidEmailsWithWarnings
+     */
+    public function testValidEmailsWithWarningsCheck($email, $expectedWarnings)
+    {
+        $this->assertTrue($this->validator->isValid($email, $this->lexer));
+        $this->assertEquals($expectedWarnings, $this->validator->getWarnings());
+    }
+
+    public function getValidEmailsWithWarnings()
+    {
+        return [
+            ['a5aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com', [new LocalTooLong()]]
+        ];
+    }
+
     public function testInvalidUTF8Email()
     {
         $email = "\x80\x81\x82@\x83\x84\x85.\x86\x87\x88";
