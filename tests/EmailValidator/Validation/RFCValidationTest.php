@@ -190,6 +190,9 @@ class RFCValidationTest extends TestCase
             ['username@examp,le.com'],
             ['test@ '],
             ['validipv4@[127.\0.0.0]'],
+            ['test@example.com []'],
+            ['test@example.com. []'],
+            ['test@test. example.com'],
         ];
     }
 
@@ -207,8 +210,7 @@ class RFCValidationTest extends TestCase
         return [
             [new InvalidEmail(new NoLocalPart(), "@"), '@example.co.uk'],
             [new InvalidEmail(new NoDomainPart(), ''), 'example@'],
-            [new InvalidEmail(new DomainHyphened('Hypen found near DOT'), '-'), 'example@example-.co.uk'],
-            [new InvalidEmail(new CRNoLF(), "\r"), "example@example\r.com"],
+            [new InvalidEmail(new DomainHyphened('Hypen found near DOT'), '-'), 'example@example-.co.uk'], [new InvalidEmail(new CRNoLF(), "\r"), "example@example\r.com"],
             [new InvalidEmail(new DomainHyphened('Hypen found at the end of the domain'), '-'), 'example@example-'],
             [new InvalidEmail(new ConsecutiveAt(), '@'), 'example@@example.co.uk'],
             [new InvalidEmail(new ConsecutiveDot(), '.'), 'example..example@example.co.uk'],

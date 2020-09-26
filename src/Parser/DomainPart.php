@@ -21,6 +21,7 @@ use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
 use Egulias\EmailValidator\Result\Reason\CommaInDomain;
+use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd;
 
 class DomainPart extends Parser
 {
@@ -45,20 +46,35 @@ class DomainPart extends Parser
             return $domain;
         }
 
-        $prev = $this->lexer->getPrevious();
         $length = strlen($this->domainPart);
 
+        $end = $this->checkEndOfDomain();
+        if ($end->isInvalid()) {
+            return $end;
+        }
+
+        if ($length > self::DOMAIN_MAX_LENGTH) {
+            $this->warnings[DomainTooLong::CODE] = new DomainTooLong();
+        }
+
+        return new ValidEmail();
+    }
+
+    private function checkEndOfDomain() : Result
+    {
+        $prev = $this->lexer->getPrevious();
         if ($prev['type'] === EmailLexer::S_DOT) {
             return new InvalidEmail(new DotAtEnd(), $this->lexer->token['value']);
         }
         if ($prev['type'] === EmailLexer::S_HYPHEN) {
             return new InvalidEmail(new DomainHyphened('Hypen found at the end of the domain'), $prev['value']);
         }
-        if ($length > self::DOMAIN_MAX_LENGTH) {
-            $this->warnings[DomainTooLong::CODE] = new DomainTooLong();
-        }
 
+        if ($this->lexer->token['type'] === EmailLexer::S_SP) {
+            return new InvalidEmail(new CRLFAtTheEnd(), $prev['value']);
+        }
         return new ValidEmail();
+
     }
 
     private function performDomainStartChecks() : Result
@@ -167,6 +183,10 @@ class DomainPart extends Parser
 
             $domain .= $this->lexer->token['value'];
             $this->lexer->moveNext();
+            if ($this->lexer->token['type'] === EmailLexer::S_SP) {
+                return new InvalidEmail(new CharNotAllowed(), $this->lexer->token['type']);
+            }
+
         } while (null !== $this->lexer->token['type']);
 
         $this->domainPart = $domain;
