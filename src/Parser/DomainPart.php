@@ -198,6 +198,9 @@ class DomainPart extends Parser
 
             $domain .= $this->lexer->token['value'];
             $this->lexer->moveNext();
+            if ($this->lexer->token['type'] === EmailLexer::S_SP) {
+                throw new CharNotAllowed();
+            }
         } while (null !== $this->lexer->token['type']);
 
         return $domain;
