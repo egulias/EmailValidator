@@ -135,7 +135,8 @@ class LocalPart extends Parser
             EmailLexer::S_LOWERTHAN,
             EmailLexer::S_COLON,
             EmailLexer::S_SEMICOLON,
-            EmailLexer::INVALID
+            EmailLexer::INVALID,
+            EmailLexer::S_SP
         );
 
         if (in_array($token['type'], $forbidden) && !$closingQuote) {
