@@ -35,16 +35,6 @@ class EmailParser
      */
     protected $lexer;
 
-    /**
-     * @var LocalPart
-     */
-    protected $localPartParser;
-
-    /**
-     * @var DomainPart
-     */
-    protected $domainPartParser;
-
     public function __construct(EmailLexer $lexer)
     {
         $this->lexer = $lexer;
@@ -86,11 +76,11 @@ class EmailParser
     private function processLocalPart() : Result
     {
         $this->lexer->startRecording();
-        $this->localPartParser = new LocalPart($this->lexer);
-        $localPartResult = $this->localPartParser->parse();
+        $localPartParser = new LocalPart($this->lexer);
+        $localPartResult = $localPartParser->parse();
         $this->lexer->stopRecording();
         $this->localPart = rtrim($this->lexer->getAccumulatedValues(), '@');
-        $this->warnings = array_merge($this->localPartParser->getWarnings(), $this->warnings);
+        $this->warnings = array_merge($localPartParser->getWarnings(), $this->warnings);
 
         return $localPartResult;
     }
@@ -99,11 +89,11 @@ class EmailParser
     {
         $this->lexer->clearRecorded();
         $this->lexer->startRecording();
-        $this->domainPartParser = new DomainPart($this->lexer);
-        $domainPartResult = $this->domainPartParser->parse();
+        $domainPartParser = new DomainPart($this->lexer);
+        $domainPartResult = $domainPartParser->parse();
         $this->lexer->stopRecording();
         $this->domainPart = $this->lexer->getAccumulatedValues();
-        $this->warnings = array_merge($this->domainPartParser->getWarnings(), $this->warnings);
+        $this->warnings = array_merge($domainPartParser->getWarnings(), $this->warnings);
         
         return $domainPartResult;
     }

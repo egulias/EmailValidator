@@ -110,7 +110,14 @@ class EmailLexer extends AbstractLexer
         'position' => 0,
     ];
 
+    /**
+     * @var string
+     */
     private $accumulator = '';
+
+    /**
+     * @var bool
+     */
     private $hasToRecord = false;
 
     public function __construct()
