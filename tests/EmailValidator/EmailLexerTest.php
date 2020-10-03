@@ -159,4 +159,33 @@ class EmailLexerTests extends TestCase
             array(chr(0),  EmailLexer::C_NUL)
         );
     }
+
+    public function testRecordIsOffAtStart()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput('foo-bar');
+        $lexer->moveNext();
+        $this->assertEquals('', $lexer->getAccumulatedValues());
+    }
+
+    public function testRecord()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput('foo-bar');
+        $lexer->startRecording();
+        $lexer->moveNext();
+        $lexer->moveNext();
+        $this->assertEquals('foo', $lexer->getAccumulatedValues());
+    }
+
+    public function testRecordAndClear()
+    {
+        $lexer = new EmailLexer();
+        $lexer->setInput('foo-bar');
+        $lexer->startRecording();
+        $lexer->moveNext();
+        $lexer->moveNext();
+        $lexer->clearRecorded();
+        $this->assertEquals('', $lexer->getAccumulatedValues());
+    }
 }

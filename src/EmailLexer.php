@@ -110,6 +110,9 @@ class EmailLexer extends AbstractLexer
         'position' => 0,
     ];
 
+    private $accumulator = '';
+    private $hasToRecord = false;
+
     public function __construct()
     {
         $this->previous = $this->token = self::$nullToken;
@@ -169,9 +172,17 @@ class EmailLexer extends AbstractLexer
      */
     public function moveNext()
     {
+        if ($this->hasToRecord && $this->previous === self::$nullToken) {
+            $this->accumulator .= $this->token['value'];
+        }
+
         $this->previous = $this->token;
         $hasNext = parent::moveNext();
         $this->token = $this->token ?: self::$nullToken;
+
+        if ($this->hasToRecord) {
+            $this->accumulator .= $this->token['value'];
+        }
 
         return $hasNext;
     }
@@ -275,5 +286,25 @@ class EmailLexer extends AbstractLexer
     protected function getModifiers()
     {
         return 'iu';
+    }
+
+    public function getAccumulatedValues() : string
+    {
+        return $this->accumulator;
+    }
+
+    public function startRecording() : void
+    {
+        $this->hasToRecord = true;
+    }
+
+    public function stopRecording() : void
+    {
+        $this->hasToRecord = false;
+    }
+
+    public function clearRecorded() : void
+    {
+        $this->accumulator = '';
     }
 }

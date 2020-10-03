@@ -12,11 +12,6 @@ use Egulias\EmailValidator\Warning\EmailTooLong;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 
-/**
- * EmailParser
- *
- * @author Eduardo Gulias Davis <me@egulias.com>
- */
 class EmailParser
 {
     const EMAIL_MAX_LENGTH = 254;
@@ -53,8 +48,6 @@ class EmailParser
     public function __construct(EmailLexer $lexer)
     {
         $this->lexer = $lexer;
-        $this->localPartParser = new LocalPart($this->lexer);
-        $this->domainPartParser = new DomainPart($this->lexer);
     }
 
     /**
@@ -69,24 +62,50 @@ class EmailParser
             return new InvalidEmail(new NoLocalPart(), $this->lexer->token["value"]);
         }
 
-        $localPartResult = $this->localPartParser->parse();
+        $localPartResult = $this->processLocalPart();
+
         if ($localPartResult->isInvalid()) {
             return $localPartResult;
         }
 
-        $domainPartResult = $this->domainPartParser->parse();
+        $domainPartResult = $this->processDomainPart();
+
         if ($domainPartResult->isInvalid()) {
             return $domainPartResult;
         }
-
-        $this->setParts($str);
 
         if ($this->lexer->hasInvalidTokens()) {
             return new InvalidEmail(new ExpectingATEXT("Invalid tokens found"), $this->lexer->token["value"]);
         }
 
+        $this->addLongEmailWarning($this->localPart, $this->domainPart);
+
         return new ValidEmail();
-        //return array('local' => $this->localPart, 'domain' => $this->domainPart);
+    }
+
+    private function processLocalPart() : Result
+    {
+        $this->lexer->startRecording();
+        $this->localPartParser = new LocalPart($this->lexer);
+        $localPartResult = $this->localPartParser->parse();
+        $this->lexer->stopRecording();
+        $this->localPart = rtrim($this->lexer->getAccumulatedValues(), '@');
+        $this->warnings = array_merge($this->localPartParser->getWarnings(), $this->warnings);
+
+        return $localPartResult;
+    }
+
+    private function processDomainPart() : Result
+    {
+        $this->lexer->clearRecorded();
+        $this->lexer->startRecording();
+        $this->domainPartParser = new DomainPart($this->lexer);
+        $domainPartResult = $this->domainPartParser->parse();
+        $this->lexer->stopRecording();
+        $this->domainPart = $this->lexer->getAccumulatedValues();
+        $this->warnings = array_merge($this->domainPartParser->getWarnings(), $this->warnings);
+        
+        return $domainPartResult;
     }
 
     /**
@@ -94,31 +113,20 @@ class EmailParser
      */
     public function getWarnings() : array
     {
-        $localPartWarnings = $this->localPartParser->getWarnings();
-        $domainPartWarnings = $this->domainPartParser->getWarnings();
-        $this->warnings = array_merge($localPartWarnings, $domainPartWarnings);
-
-        $this->addLongEmailWarning($this->localPart, $this->domainPart);
-
         return $this->warnings;
     }
 
     /**
      * @return string
      */
-    public function getParsedDomainPart() : string
+    public function getDomainPart() : string
     {
         return $this->domainPart;
     }
 
-    /**
-     * @param string $email
-     */
-    protected function setParts($email) : void
+    public function getLocalPart() : string
     {
-        $parts = explode('@', $email);
-        $this->domainPart = $this->domainPartParser->getDomainPart();
-        $this->localPart = $parts[0];
+        return $this->localPart;
     }
 
     /**
