@@ -38,6 +38,7 @@ use Egulias\EmailValidator\Result\Reason\DomainHyphened;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\Reason\UnclosedComment;
+use Egulias\EmailValidator\Warning\TLD;
 
 class RFCValidationTest extends TestCase
 {
@@ -119,7 +120,8 @@ class RFCValidationTest extends TestCase
     public function getValidEmailsWithWarnings()
     {
         return [
-            ['a5aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com', [new LocalTooLong()]]
+            ['a5aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com', [new LocalTooLong()]],
+            ['example@example', [new TLD()]]
         ];
     }
 
@@ -272,24 +274,24 @@ class RFCValidationTest extends TestCase
             [[Comment::CODE,CFWSNearAt::CODE], 'example(examplecomment)@invalid.example.com'],
             [[QuotedString::CODE, CFWSWithFWS::CODE,], "\"\t\"@invalid.example.com"],
             [[QuotedString::CODE, CFWSWithFWS::CODE,], "\"\r\"@invalid.example.com"],
-            [[AddressLiteral::CODE,], 'example@[127.0.0.1]'],
-            [[AddressLiteral::CODE,], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]'],
-            [[AddressLiteral::CODE, IPV6Deprecated::CODE], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370::]'],
-            [[AddressLiteral::CODE, IPV6MaxGroups::CODE,], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334::]'],
-            [[AddressLiteral::CODE, IPV6DoubleColon::CODE,], 'example@[IPv6:1::1::1]'],
-            [[ObsoleteDTEXT::CODE, DomainLiteral::CODE,], "example@[\n]"],
-            [[DomainLiteral::CODE,], 'example@[::1]'],
-            [[DomainLiteral::CODE,], 'example@[::123.45.67.178]'],
+            [[AddressLiteral::CODE, TLD::CODE], 'example@[127.0.0.1]'],
+            [[AddressLiteral::CODE, TLD::CODE], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]'],
+            [[AddressLiteral::CODE, IPV6Deprecated::CODE, TLD::CODE], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370::]'],
+            [[AddressLiteral::CODE, IPV6MaxGroups::CODE, TLD::CODE], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334::]'],
+            [[AddressLiteral::CODE, IPV6DoubleColon::CODE, TLD::CODE], 'example@[IPv6:1::1::1]'],
+            [[ObsoleteDTEXT::CODE, DomainLiteral::CODE, TLD::CODE], "example@[\n]"],
+            [[DomainLiteral::CODE, TLD::CODE], 'example@[::1]'],
+            [[DomainLiteral::CODE, TLD::CODE], 'example@[::123.45.67.178]'],
             [
-                [IPV6ColonStart::CODE, AddressLiteral::CODE, IPV6GroupCount::CODE,],
+                [IPV6ColonStart::CODE, AddressLiteral::CODE, IPV6GroupCount::CODE, TLD::CODE],
                 'example@[IPv6::2001:0db8:85a3:0000:0000:8a2e:0370:7334]'
             ],
             [
-                [AddressLiteral::CODE, IPV6BadChar::CODE,],
+                [AddressLiteral::CODE, IPV6BadChar::CODE, TLD::CODE],
                 'example@[IPv6:z001:0db8:85a3:0000:0000:8a2e:0370:7334]'
             ],
             [
-                [AddressLiteral::CODE, IPV6ColonEnd::CODE,],
+                [AddressLiteral::CODE, IPV6ColonEnd::CODE, TLD::CODE],
                 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:]'
             ],
             [[QuotedString::CODE,], '"example"@invalid.example.com'],
@@ -306,13 +308,13 @@ class RFCValidationTest extends TestCase
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'
             ],
             [
-                [DomainTooLong::CODE, LabelTooLong::CODE,],
+                [DomainTooLong::CODE, LabelTooLong::CODE, TLD::CODE],
                 'example2@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'
             ],
             [
-                [DomainTooLong::CODE, LabelTooLong::CODE,],
+                [DomainTooLong::CODE, LabelTooLong::CODE, TLD::CODE],
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'

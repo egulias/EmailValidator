@@ -138,6 +138,7 @@ class DomainPart extends Parser
 
     protected function doParseDomainPart() : Result
     {
+        $tldMissing = true;
         $domain = '';
         do {
             $prev = $this->lexer->getPrevious();
@@ -182,12 +183,19 @@ class DomainPart extends Parser
             }
 
             $domain .= $this->lexer->token['value'];
+
+            if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
+                $tldMissing = false;
+            }
+
             $this->lexer->moveNext();
             if ($this->lexer->token['type'] === EmailLexer::S_SP) {
                 return new InvalidEmail(new CharNotAllowed(), $this->lexer->token['value']);
             }
 
         } while (null !== $this->lexer->token['type']);
+
+        $this->addTLDWarnings($tldMissing);
 
         $this->domainPart = $domain;
         return new ValidEmail();
@@ -270,9 +278,9 @@ class DomainPart extends Parser
         }
     }
 
-    protected function addTLDWarnings()
+    private function addTLDWarnings(bool $isTLDMissing) : void
     {
-        if ($this->warnings[DomainLiteral::CODE]) {
+        if ($isTLDMissing) {
             $this->warnings[TLD::CODE] = new TLD();
         }
     }
