@@ -120,7 +120,7 @@ class DNSCheckValidation implements EmailValidation
 
 
         // No MX, A or AAAA DNS records
-        if (empty($dnsRecords) || !$dnsRecords) {
+        if (empty($dnsRecords)) {
             $this->error = new NoDNSRecord();
             return false;
         }

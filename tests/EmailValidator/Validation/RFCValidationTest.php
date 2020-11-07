@@ -168,6 +168,7 @@ class RFCValidationTest extends TestCase
             ['test@email{'],
             ['test@ '],
             ['test@example.com []'],
+            ["test@example.com'"],
         ];
     }
 
@@ -212,6 +213,7 @@ class RFCValidationTest extends TestCase
             [new CRNoLF(), "example@exa\rmple.co.uk"],
             [new CRNoLF(), "example@[\r]"],
             [new CRNoLF(), "exam\rple@example.co.uk"],
+            [new ExpectingATEXT(), "test@example.com'"],
         ];
     }
 

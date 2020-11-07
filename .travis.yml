@@ -31,7 +31,7 @@ matrix:
 
 install:
   - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
-  - if [ "$psalm" = "yes" ]; then composer require --dev vimeo/psalm; fi
+  - if [ "$psalm" = "yes" ]; then composer require --dev vimeo/psalm:3.18.2; fi
 
 before_script:
   - mkdir -p build/logs
@@ -42,3 +42,4 @@ script:
 
 after_script:
   - php vendor/bin/coveralls
+  
