@@ -42,16 +42,14 @@ $validator->isValid("example@example.com", new RFCValidation()); //true
 
 ### Available validations ###
 
-1. [RFCValidation](/src/Validation/RFCValidation.php)
-2. [NoRFCWarningsValidation](/src/Validation/NoRFCWarningsValidation.php)
-3. [DNSCheckValidation](/src/Validation/DNSCheckValidation.php)
-4. [SpoofCheckValidation](/src/Validation/SpoofCheckValidation.php)
-5. [MultipleValidationWithAnd](/src/Validation/MultipleValidationWithAnd.php)
-6. [Your own validation](#how-to-extend)
+1. [RFCValidation](/src/Validation/RFCValidation.php): Standard RFC-like email validation.
+2. [NoRFCWarningsValidation](/src/Validation/NoRFCWarningsValidation.php): RFC-like validation that will fail when warnings* are found.
+3. [DNSCheckValidation](/src/Validation/DNSCheckValidation.php): Will check if there are DNS records that signal that the server accepts emails. This does not entails that the email exists.
+4. [SpoofCheckValidation](/src/Validation/SpoofCheckValidation.php): Will check for multi-utf-8 chars that can signal an erroneous email name.
+5. [MultipleValidationWithAnd](/src/Validation/MultipleValidationWithAnd.php): It is a validation that operates over other validations performing a logical and (&&) over the result of each validation.
+6. [Your own validation](#how-to-extend): You can extend the library behaviour by implementing your own validations.
 
-`MultipleValidationWithAnd`
-
-It is a validation that operates over other validations performing a logical and (&&) over the result of each validation.
+*warnings: Warnings are deviations from the RFC that in a broader interpretation are acceptded.
 
 ```php
 <?php
@@ -66,7 +64,8 @@ $multipleValidations = new MultipleValidationWithAnd([
     new RFCValidation(),
     new DNSCheckValidation()
 ]);
-$validator->isValid("example@example.com", $multipleValidations); //true
+//ietf.org has MX records signaling a server with email capabilites
+$validator->isValid("example@ietf.org", $multipleValidations); //true
 ```
 
 ### How to extend ###
