@@ -105,6 +105,8 @@ class RFCValidationTest extends TestCase
             ['validipv6@[IPv6:2001:db8:1ff::a0b:dbd0]'],
             ['validipv4@[127.0.0.0]'],
             ['validipv4@127.0.0.0'],
+            ['withhyphen@domain-exam.com'],
+
         );
     }
 
@@ -185,6 +187,7 @@ class RFCValidationTest extends TestCase
             ['test@foo;bar.com'],
             ['test;123@foobar.com'],
             ['test@example..com'],
+            ["test@examp'le.com"],
             ['email.email@email."'],
             ['test@email>'],
             ['test@email<'],
@@ -245,6 +248,7 @@ class RFCValidationTest extends TestCase
             [new InvalidEmail(new CRNoLF(), "["), "example@[\r]"],
             [new InvalidEmail(new CRNoLF(), "\r"), "exam\rple@example.co.uk"],
             [new InvalidEmail(new CommaInDomain(), ','), 'example@exam,ple.com'],
+            [new InvalidEmail(new ExpectingATEXT('Invalid token in domain'), "'"), "test@example.com'"],
         ];
     }
 
