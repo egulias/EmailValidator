@@ -112,14 +112,14 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True on success.
      */
-    private function validateDnsRecords($host)
+    private function validateDnsRecords($host) : bool
     {
         // Get all MX, A and AAAA DNS records for host
         $dnsRecords = @dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
 
 
         // No MX, A or AAAA DNS records
-        if (empty($dnsRecords) || !$dnsRecords) {
+        if (empty($dnsRecords)) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
             return false;
         }
@@ -144,7 +144,7 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True if valid.
      */
-    private function validateMxRecord($dnsRecord)
+    private function validateMxRecord($dnsRecord) : bool
     {
         if ($dnsRecord['type'] !== 'MX') {
             return true;

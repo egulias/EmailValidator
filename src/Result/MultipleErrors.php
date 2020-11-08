@@ -19,7 +19,7 @@ class MultipleErrors extends InvalidEmail
     {
     }
 
-    public function addReason(Reason $reason)
+    public function addReason(Reason $reason) : void
     {
         $this->reasons[$reason->code()] = $reason;
     }

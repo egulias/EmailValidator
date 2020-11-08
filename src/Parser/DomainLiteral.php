@@ -93,7 +93,7 @@ class DomainLiteral extends Parser
      * @param string $addressLiteral
      * @param int $maxGroups
      */
-    public function checkIPV6Tag($addressLiteral, $maxGroups = 8)
+    public function checkIPV6Tag($addressLiteral, $maxGroups = 8) : void
     {
         $prev = $this->lexer->getPrevious();
         if ($prev['type'] === EmailLexer::S_COLON) {
@@ -184,7 +184,7 @@ class DomainLiteral extends Parser
         return true;
     }
 
-    private function addObsoleteWarnings()
+    private function addObsoleteWarnings() : void
     {
         if ($this->lexer->token['type'] === EmailLexer::INVALID ||
             $this->lexer->token['type'] === EmailLexer::C_DEL   ||
@@ -195,7 +195,7 @@ class DomainLiteral extends Parser
         }
     }
 
-    private function addTagWarnings()
+    private function addTagWarnings() : void
     {
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
             $this->warnings[IPV6ColonStart::CODE] = new IPV6ColonStart();

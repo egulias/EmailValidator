@@ -78,14 +78,14 @@ class MultipleValidationWithAnd implements EmailValidation
         return $result;
     }
 
-    private function initErrorStorage()
+    private function initErrorStorage() : void
     {
         if (null === $this->error) {
             $this->error = new MultipleErrors();
         }
     }
 
-    private function processError(EmailValidation $validation)
+    private function processError(EmailValidation $validation) : void
     {
         if (null !== $validation->getError()) {
             $this->initErrorStorage();
@@ -94,19 +94,13 @@ class MultipleValidationWithAnd implements EmailValidation
         }
     }
 
-    /**
-     * @param bool $result
-     *
-     * @return bool
-     */
-    private function shouldStop($result)
+    private function shouldStop(bool $result) : bool
     {
         return !$result && $this->mode === self::STOP_ON_ERROR;
     }
 
     /**
      * Returns the validation errors.
-     *
      */
     public function getError() : ?InvalidEmail
     {

@@ -231,7 +231,7 @@ class DomainPart extends Parser
     /**
      * @return InvalidEmail|ValidEmail
      */
-    protected function checkDomainPartExceptions(array $prev)
+    protected function checkDomainPartExceptions(array $prev) : Result
     {
         $invalidDomainTokens = array(
             EmailLexer::S_DQUOTE => true,
@@ -269,7 +269,7 @@ class DomainPart extends Parser
         return new ValidEmail();
     }
 
-    protected function checkLabelLength(array $prev)
+    protected function checkLabelLength(array $prev) : void
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
             $prev['type'] === EmailLexer::GENERIC &&
