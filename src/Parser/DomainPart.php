@@ -15,17 +15,17 @@ use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Warning\DeprecatedComment;
-use Egulias\EmailValidator\Warning\DomainLiteral;
-use Egulias\EmailValidator\Warning\DomainTooLong;
-use Egulias\EmailValidator\Warning\LabelTooLong;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
-use Egulias\EmailValidator\Result\Reason\CommaInDomain;
 use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd;
+use Egulias\EmailValidator\Result\Reason\DomainTooLong;
+use Egulias\EmailValidator\Result\Reason\LabelTooLong;
 
 class DomainPart extends Parser
 {
-    const DOMAIN_MAX_LENGTH = 254;
+    const DOMAIN_MAX_LENGTH = 253;
+    const LABEL_MAX_LENGTH = 63;
+
 
     /**
      * @var string
@@ -57,7 +57,8 @@ class DomainPart extends Parser
         }
 
         if ($length > self::DOMAIN_MAX_LENGTH) {
-            $this->warnings[DomainTooLong::CODE] = new DomainTooLong();
+            //$this->warnings[DomainTooLong::CODE] = new DomainTooLong();
+            return new InvalidEmail(new DomainTooLong(), $this->lexer->token['value']);
         }
 
         return new ValidEmail();
@@ -179,7 +180,10 @@ class DomainPart extends Parser
                 return $literalResult;
             }
 
-            $this->checkLabelLength($prev);
+            $labelCheck = $this->checkLabelLength($prev);
+            if ($labelCheck->isInvalid()) {
+                return $labelCheck;
+            }
 
             $FwsResult = $this->parseFWS();
             if($FwsResult->isInvalid()) {
@@ -280,14 +284,16 @@ class DomainPart extends Parser
         return new ValidEmail();
     }
 
-    protected function checkLabelLength(array $prev) : void
+    protected function checkLabelLength(array $prev) : Result
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
             $prev['type'] === EmailLexer::GENERIC &&
-            strlen($prev['value']) > 63
+            strlen($prev['value']) > self::LABEL_MAX_LENGTH
         ) {
-            $this->warnings[LabelTooLong::CODE] = new LabelTooLong();
+            //$this->warnings[LabelTooLong::CODE] = new LabelTooLong();
+           return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
         }
+        return new ValidEmail();
     }
 
     private function addTLDWarnings(bool $isTLDMissing) : void
