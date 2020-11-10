@@ -36,6 +36,12 @@ class EmailLexer extends AbstractLexer
     const S_EMPTY            = null;
     const GENERIC            = 300;
     const CRLF               = 301;
+    const ASTERISK           = 42;
+    const EXCLAMATION        = 33;
+    const AMPERSAND          = 38;
+    const CARET              = 94;
+    const PERCENTAGE         = 37;
+    const DOLLAR             = 36;
     const INVALID            = 302;
     const ASCII_INVALID_FROM = 127;
     const ASCII_INVALID_TO   = 199;
@@ -73,6 +79,12 @@ class EmailLexer extends AbstractLexer
         '}'    => self::S_CLOSEQBRACKET,
         ''     => self::S_EMPTY,
         '\0'   => self::C_NUL,
+        '*'    => self::ASTERISK,
+        '!'    => self::EXCLAMATION,
+        '&'    => self::AMPERSAND,
+        '^'    => self::CARET,
+        '$'    => self::DOLLAR,
+        '%'    => self::PERCENTAGE,
     );
 
     /**

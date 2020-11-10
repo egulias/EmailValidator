@@ -70,12 +70,6 @@ class RFCValidationDomainPartTest extends TestCase
             ['example@faked(fake).co.uk'],
             ['инфо@письмо.рф'],
             ['müller@möller.de'],
-            ['test@email*'],
-            ['test@email!'],
-            ['test@email&'],
-            ['test@email^'],
-            ['test@email%'],
-            ['test@email$'],
             ["1500111@профи-инвест.рф"],
             ['validipv6@[IPv6:2001:db8:1ff::a0b:dbd0]'],
             ['validipv4@[127.0.0.0]'],
@@ -132,6 +126,12 @@ class RFCValidationDomainPartTest extends TestCase
             ['example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'],
             ['example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.test.co.uk'],
             ['example@test.toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'],
+            ['test@email*'],
+            ['test@email!'],
+            ['test@email&'],
+            ['test@email^'],
+            ['test@email%'],
+            ['test@email$'],
         ];
     }
 
