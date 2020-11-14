@@ -14,6 +14,9 @@ class EmailLexer extends AbstractLexer
     const S_DOT              = 46;
     const S_DQUOTE           = 34;
     const S_SQUOTE           = 39;
+    const S_BACKTICK         = 96;
+    const S_OPENCURLYBRACES  = 123;
+    const S_CLOSECURLYBRACES = 125;
     const S_OPENPARENTHESIS  = 49;
     const S_CLOSEPARENTHESIS = 261;
     const S_OPENBRACKET      = 262;
@@ -21,6 +24,11 @@ class EmailLexer extends AbstractLexer
     const S_HYPHEN           = 264;
     const S_COLON            = 265;
     const S_DOUBLECOLON      = 266;
+    const S_PIPE             = 124;
+    const S_TILDE            = 126;
+    const S_UNDERSCORE       = 95;
+    const S_PLUS             = 43;
+    const S_EQUAL            = 61;
     const S_SP               = 267;
     const S_HTAB             = 268;
     const S_CR               = 269;
@@ -52,6 +60,8 @@ class EmailLexer extends AbstractLexer
      * @var array
      */
     protected $charValue = array(
+        '{'    => self::S_OPENCURLYBRACES,
+        '}'    => self::S_CLOSECURLYBRACES,
         '('    => self::S_OPENPARENTHESIS,
         ')'    => self::S_CLOSEPARENTHESIS,
         '<'    => self::S_LOWERTHAN,
@@ -66,6 +76,7 @@ class EmailLexer extends AbstractLexer
         ','    => self::S_COMMA,
         '.'    => self::S_DOT,
         "'"    => self::S_SQUOTE,
+        "`"    => self::S_BACKTICK,
         '"'    => self::S_DQUOTE,
         '-'    => self::S_HYPHEN,
         '::'   => self::S_DOUBLECOLON,
@@ -75,8 +86,6 @@ class EmailLexer extends AbstractLexer
         "\n"   => self::S_LF,
         "\r\n" => self::CRLF,
         'IPv6' => self::S_IPV6TAG,
-        '{'    => self::S_OPENQBRACKET,
-        '}'    => self::S_CLOSEQBRACKET,
         ''     => self::S_EMPTY,
         '\0'   => self::C_NUL,
         '*'    => self::ASTERISK,
@@ -85,6 +94,11 @@ class EmailLexer extends AbstractLexer
         '^'    => self::CARET,
         '$'    => self::DOLLAR,
         '%'    => self::PERCENTAGE,
+        '~'    => self::S_TILDE,
+        '|'    => self::S_PIPE,
+        '_'    => self::S_UNDERSCORE,
+        '='    => self::S_EQUAL,
+        '+'    => self::S_PLUS,
     );
 
     /**
@@ -216,7 +230,7 @@ class EmailLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-zA-Z_]+[46]?', //ASCII and domain literal
+            '[a-zA-Z]+[46]?', //ASCII and domain literal
             '[^\x00-\x7F]',  //UTF-8
             '[0-9]+',
             '\r\n',
