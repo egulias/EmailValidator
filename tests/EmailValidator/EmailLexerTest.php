@@ -139,6 +139,7 @@ class EmailLexerTests extends TestCase
             array(".", EmailLexer::S_DOT),
             array("\"", EmailLexer::S_DQUOTE),
             array("'", EmailLexer::S_SQUOTE),
+            array("`", EmailLexer::S_BACKTICK),
             array("-", EmailLexer::S_HYPHEN),
             array("\\", EmailLexer::S_BACKSLASH),
             array("/", EmailLexer::S_SLASH),
