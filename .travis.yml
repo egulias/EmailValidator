@@ -14,6 +14,10 @@ matrix:
       env:
         - psalm=yes
       dist: bionic
+    - php: 8.0
+      env:
+        - psalm=yes
+      dist: bionic
 
 install:
   - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
