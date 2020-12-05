@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\EmailValidator\Parser;
+namespace Egulias\EmailValidator\Parser\CommentStrategy;
 
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;

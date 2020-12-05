@@ -6,7 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Warning\QuotedPart;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Parser\CommentStrategy;
+use Egulias\EmailValidator\Parser\CommentStrategy\CommentStrategy;
 use Egulias\EmailValidator\Result\Reason\UnclosedComment;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Warning\Comment as WarningComment;
