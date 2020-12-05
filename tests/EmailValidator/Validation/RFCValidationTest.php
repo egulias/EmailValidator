@@ -148,13 +148,14 @@ class RFCValidationTest extends TestCase
             ['\r\n \r\ntest@iana.org'],
             ['\r\n \r\n test@iana.org'],
             ['test;123@foobar.com'],
+            ['examp║le@symfony.com'],
         ];
     }
 
     /**
      * @dataProvider getInvalidEmailsWithErrors
      */
-    public function testInvalidEmailsWithErrorsCheck($error, $email)
+    public function testInvalidDEmailsWithErrorsCheck($error, $email)
     {
         $this->assertFalse($this->validator->isValid($email, $this->lexer));
         $this->assertEquals($error, $this->validator->getError());

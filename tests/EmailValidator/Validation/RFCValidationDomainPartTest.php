@@ -140,6 +140,13 @@ class RFCValidationDomainPartTest extends TestCase
             ['test@email=a.com'],
             ['test@email+a.com'],
             ['test@email_a.com'],
+            ['test@email¡a.com'],
+            ['test@email?a.com'],
+            ['test@email#a.com'],
+            ['test@email¨a.com'],
+            ['test@email€a.com'],
+            ['test@email$a.com'],
+            ['test@email£a.com'],
         ];
     }
 
@@ -220,5 +227,20 @@ class RFCValidationDomainPartTest extends TestCase
         ];
     }
 
+    public function invalidUTF16Chars()
+    {
+        return [
+            ['example@symƒony.com'],
+        ];
+    }
+    
+    /**
+     * @dataProvider invalidUTF16Chars
+     */
+    public function testInvalidUTF16($email)
+    {
+        $this->markTestSkipped('Util finding a way to control this kind of chars');
+        $this->assertFalse($this->validator->isValid($email, $this->lexer));
+    }
 
 }

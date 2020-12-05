@@ -256,7 +256,7 @@ class DomainPart extends Parser
             $validDomainTokens[EmailLexer::S_CLOSEPARENTHESIS] = true;
         }
 
-        if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
+        if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET && $prev['type'] !== EmailLexer::S_AT) {
             return new InvalidEmail(new ExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token['value']);
         }
 

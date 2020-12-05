@@ -36,7 +36,7 @@ class DomainLiteral extends Parser
 
             $this->addObsoleteWarnings();
 
-            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {
+            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENBRACKET, EmailLexer::S_OPENBRACKET))) {
                 return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
             }
 
@@ -58,7 +58,7 @@ class DomainLiteral extends Parser
                 $IPv6TAG = true;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEQBRACKET) {
+            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEBRACKET) {
                 break;
             }
 
