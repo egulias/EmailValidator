@@ -1,11 +1,12 @@
 <?php
 
-namespace Egulias\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Validation\Extra;
 
 use \Spoofchecker;
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\SpoofEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Validation\EmailValidation;
 
 class SpoofCheckValidation implements EmailValidation
 {
