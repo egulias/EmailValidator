@@ -16,7 +16,7 @@ interface EmailValidation
      *
      * @return bool
      */
-    public function isValid($email, EmailLexer $emailLexer) : bool;
+    public function isValid(string $email, EmailLexer $emailLexer) : bool;
 
     /**
      * Returns the validation error.

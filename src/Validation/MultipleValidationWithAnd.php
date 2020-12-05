@@ -58,7 +58,7 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function isValid($email, EmailLexer $emailLexer) : bool
+    public function isValid(string $email, EmailLexer $emailLexer) : bool
     {
         $result = true;
         foreach ($this->validations as $validation) {

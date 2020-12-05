@@ -105,7 +105,6 @@ class EmailLexer extends AbstractLexer
         '?'    => self::QUESTIONMARK,
         '#'    => self::NUMBER_SIGN,
         '¡'    => self::INVERT_EXCLAMATION,
-        null   => self::S_EMPTY,
     );
 
     /**

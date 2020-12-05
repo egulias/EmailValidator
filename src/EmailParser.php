@@ -40,11 +40,7 @@ class EmailParser
         $this->lexer = $lexer;
     }
 
-    /**
-     * @param string $str
-     * @return Result 
-     */
-    public function parse($str) : Result
+    public function parse(string $str) : Result
     {
         $this->lexer->setInput($str);
 

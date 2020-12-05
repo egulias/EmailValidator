@@ -24,11 +24,11 @@ class RFCValidation implements EmailValidation
      */
     private $error;
 
-    public function isValid($email, EmailLexer $emailLexer) : bool
+    public function isValid(string $email, EmailLexer $emailLexer) : bool
     {
         $this->parser = new EmailParser($emailLexer);
         try {
-            $result = $this->parser->parse((string)$email);
+            $result = $this->parser->parse($email);
             $this->warnings = $this->parser->getWarnings();
             if ($result->isInvalid()) {
                 /** @psalm-suppress PropertyTypeCoercion */
