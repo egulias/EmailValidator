@@ -1,0 +1,45 @@
+name: analysis
+
+on: [push, pull_request]
+
+jobs:
+
+  psalm:
+    name: psalm
+
+    strategy:
+      matrix:
+        php-version: [7.2]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          extensions: intl
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
+          restore-keys: |
+            composer-${{ runner.os }}-${{ matrix.php-version }}-
+            composer-${{ runner.os }}-
+            composer-
+
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+
+      - name: Run psalm
+        run: ./vendor/bin/psalm --no-progress --output-format=github
