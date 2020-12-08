@@ -14,6 +14,17 @@ matrix:
       env:
         - psalm=yes
       dist: bionic
+#ppc64le support code
+    - php: 7.2
+      arch: ppc64le
+      env:
+        - psalm=yes
+      dist: bionic
+    - php: 7.4
+      arch: ppc64le
+      env:
+        - psalm=yes
+      dist: bionic
 
 install:
   - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
