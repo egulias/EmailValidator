@@ -29,7 +29,7 @@ abstract class Warning
      */
     public function code()
     {
-        return self::CODE;
+        return static::CODE;
     }
 
     /**

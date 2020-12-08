@@ -210,6 +210,8 @@ class DomainPart extends Parser
             }
         } while (null !== $this->lexer->token['type']);
 
+        $this->checkLabelLength($label);
+
         return $domain;
     }
 
