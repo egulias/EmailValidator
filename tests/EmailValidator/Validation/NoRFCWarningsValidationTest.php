@@ -26,11 +26,22 @@ class NoRFCWarningsValidationTest extends TestCase
         $this->assertInstanceOf(RFCWarnings::class, $validation->getError());
     }
 
-    public function testEmailWithoutWarningsIsValid()
+    /**
+     * @dataProvider getValidEmailsWithoutWarnings
+     */
+    public function testEmailWithoutWarningsIsValid($email)
     {
         $validation = new NoRFCWarningsValidation();
 
-        $this->assertTrue($validation->isValid('example@example.com', new EmailLexer()));
+        $this->assertTrue($validation->isValid($email, new EmailLexer()));
         $this->assertNull($validation->getError());
+    }
+
+    public function getValidEmailsWithoutWarnings()
+    {
+        return [
+            ['example@example.com',],
+            [sprintf('example@%s.com', str_repeat('ъ', 40)),],
+        ];
     }
 }

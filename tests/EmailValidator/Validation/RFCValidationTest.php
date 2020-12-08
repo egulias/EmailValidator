@@ -289,6 +289,14 @@ class RFCValidationTest extends TestCase
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
             ],
+            [
+                [LabelTooLong::CODE,],
+                sprintf('example@%s.com', str_repeat('ъ', 60)),
+            ],
+            [
+                [LabelTooLong::CODE,],
+                sprintf('example@%s.com', str_repeat('a4t', 22)),
+            ],
         ];
     }
 }
