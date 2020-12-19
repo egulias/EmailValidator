@@ -1,9 +1,9 @@
 <?php
 
-namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Validation\Extra;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Validation\SpoofCheckValidation;
+use Egulias\EmailValidator\Validation\Extra\SpoofCheckValidation;
 use PHPUnit\Framework\TestCase;
 
 class SpoofCheckValidationTest extends TestCase

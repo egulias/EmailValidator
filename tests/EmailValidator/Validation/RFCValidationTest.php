@@ -64,7 +64,8 @@ class RFCValidationTest extends TestCase
             ['fab\'ien@symfony.com'],
             ['fab\ ien@symfony.com'],
             ['example((example))@fakedfake.co.uk'],
-            ['fabien+@symfony.com'],
+            ['fabien+a@symfony.com'],
+            ['exampl=e@example.com'],
             ['инфо@письмо.рф'],
             ['"username"@example.com'],
             ['"user,name"@example.com'],
@@ -147,13 +148,16 @@ class RFCValidationTest extends TestCase
             ['\r\n \r\ntest@iana.org'],
             ['\r\n \r\n test@iana.org'],
             ['test;123@foobar.com'],
+            ['examp║le@symfony.com'],
+            ['0'],
+            [0],
         ];
     }
 
     /**
      * @dataProvider getInvalidEmailsWithErrors
      */
-    public function testInvalidEmailsWithErrorsCheck($error, $email)
+    public function testInvalidDEmailsWithErrorsCheck($error, $email)
     {
         $this->assertFalse($this->validator->isValid($email, $this->lexer));
         $this->assertEquals($error, $this->validator->getError());

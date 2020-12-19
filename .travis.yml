@@ -14,6 +14,10 @@ matrix:
       env:
         - psalm=yes
       dist: bionic
+    - php: 8.0
+      env:
+        - psalm=yes
+      dist: bionic
 #ppc64le support code
     - php: 7.2
       arch: ppc64le

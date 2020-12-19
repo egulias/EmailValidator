@@ -36,7 +36,7 @@ class DomainLiteral extends Parser
 
             $this->addObsoleteWarnings();
 
-            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENQBRACKET, EmailLexer::S_OPENBRACKET))) {
+            if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENBRACKET, EmailLexer::S_OPENBRACKET))) {
                 return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
             }
 
@@ -58,7 +58,7 @@ class DomainLiteral extends Parser
                 $IPv6TAG = true;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEQBRACKET) {
+            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEBRACKET) {
                 break;
             }
 
@@ -146,11 +146,11 @@ class DomainLiteral extends Parser
 
         // Extract IPv4 part from the end of the address-literal (if there is one)
         if ($IPv4Match > 0) {
-            $index = strrpos($addressLiteralIPv4, $matchesIP[0]);
+            $index = (int) strrpos($addressLiteralIPv4, $matchesIP[0]);
             //There's a match but it is at the start
             if ($index > 0) {
                 // Convert IPv4 part to IPv6 format for further testing
-                return substr($addressLiteralIPv4, 0, (int) $index) . '0:0';
+                return substr($addressLiteralIPv4, 0, $index) . '0:0';
             }
         }
 

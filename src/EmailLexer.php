@@ -7,42 +7,52 @@ use Doctrine\Common\Lexer\AbstractLexer;
 class EmailLexer extends AbstractLexer
 {
     //ASCII values
-    const C_DEL              = 127;
-    const C_NUL              = 0;
-    const S_AT               = 64;
-    const S_BACKSLASH        = 92;
-    const S_DOT              = 46;
-    const S_DQUOTE           = 34;
-    const S_SQUOTE           = 39;
-    const S_OPENPARENTHESIS  = 49;
-    const S_CLOSEPARENTHESIS = 261;
-    const S_OPENBRACKET      = 262;
-    const S_CLOSEBRACKET     = 263;
-    const S_HYPHEN           = 264;
-    const S_COLON            = 265;
-    const S_DOUBLECOLON      = 266;
-    const S_SP               = 267;
-    const S_HTAB             = 268;
-    const S_CR               = 269;
-    const S_LF               = 270;
-    const S_IPV6TAG          = 271;
-    const S_LOWERTHAN        = 272;
-    const S_GREATERTHAN      = 273;
-    const S_COMMA            = 274;
-    const S_SEMICOLON        = 275;
-    const S_OPENQBRACKET     = 276;
-    const S_CLOSEQBRACKET    = 277;
-    const S_SLASH            = 278;
     const S_EMPTY            = null;
-    const GENERIC            = 300;
-    const CRLF               = 301;
-    const ASTERISK           = 42;
+    const C_NUL              = 0;
+    const S_HTAB             = 9;
+    const S_LF               = 10;
+    const S_CR               = 13;
+    const S_SP               = 32;
     const EXCLAMATION        = 33;
-    const AMPERSAND          = 38;
-    const CARET              = 94;
-    const PERCENTAGE         = 37;
+    const S_DQUOTE           = 34;
+    const NUMBER_SIGN        = 35;
     const DOLLAR             = 36;
+    const PERCENTAGE         = 37;
+    const AMPERSAND          = 38;
+    const S_SQUOTE           = 39;
+    const S_OPENPARENTHESIS  = 40;
+    const S_CLOSEPARENTHESIS = 41;
+    const ASTERISK           = 42;
+    const S_PLUS             = 43;
+    const S_COMMA            = 44;
+    const S_HYPHEN           = 45;
+    const S_DOT              = 46;
+    const S_SLASH            = 47;
+    const S_COLON            = 58;
+    const S_SEMICOLON        = 59;
+    const S_LOWERTHAN        = 60;
+    const S_EQUAL            = 61;
+    const S_GREATERTHAN      = 62;
+    const QUESTIONMARK       = 63;
+    const S_AT               = 64;
+    const S_OPENBRACKET      = 91;
+    const S_BACKSLASH        = 92;
+    const S_CLOSEBRACKET     = 93;
+    const CARET              = 94;
+    const S_UNDERSCORE       = 95;
+    const S_BACKTICK         = 96;
+    const S_OPENCURLYBRACES  = 123;
+    const S_PIPE             = 124;
+    const S_CLOSECURLYBRACES = 125;
+    const S_TILDE            = 126;
+    const C_DEL              = 127;
+    const INVERT_QUESTIONMARK= 168;
+    const INVERT_EXCLAMATION = 173;
+    const GENERIC            = 300;
+    const S_IPV6TAG          = 301;
     const INVALID            = 302;
+    const CRLF               = 1310;
+    const S_DOUBLECOLON      = 5858;
     const ASCII_INVALID_FROM = 127;
     const ASCII_INVALID_TO   = 199;
 
@@ -52,6 +62,8 @@ class EmailLexer extends AbstractLexer
      * @var array
      */
     protected $charValue = array(
+        '{'    => self::S_OPENCURLYBRACES,
+        '}'    => self::S_CLOSECURLYBRACES,
         '('    => self::S_OPENPARENTHESIS,
         ')'    => self::S_CLOSEPARENTHESIS,
         '<'    => self::S_LOWERTHAN,
@@ -66,6 +78,7 @@ class EmailLexer extends AbstractLexer
         ','    => self::S_COMMA,
         '.'    => self::S_DOT,
         "'"    => self::S_SQUOTE,
+        "`"    => self::S_BACKTICK,
         '"'    => self::S_DQUOTE,
         '-'    => self::S_HYPHEN,
         '::'   => self::S_DOUBLECOLON,
@@ -75,8 +88,6 @@ class EmailLexer extends AbstractLexer
         "\n"   => self::S_LF,
         "\r\n" => self::CRLF,
         'IPv6' => self::S_IPV6TAG,
-        '{'    => self::S_OPENQBRACKET,
-        '}'    => self::S_CLOSEQBRACKET,
         ''     => self::S_EMPTY,
         '\0'   => self::C_NUL,
         '*'    => self::ASTERISK,
@@ -85,6 +96,15 @@ class EmailLexer extends AbstractLexer
         '^'    => self::CARET,
         '$'    => self::DOLLAR,
         '%'    => self::PERCENTAGE,
+        '~'    => self::S_TILDE,
+        '|'    => self::S_PIPE,
+        '_'    => self::S_UNDERSCORE,
+        '='    => self::S_EQUAL,
+        '+'    => self::S_PLUS,
+        '¿'    => self::INVERT_QUESTIONMARK,
+        '?'    => self::QUESTIONMARK,
+        '#'    => self::NUMBER_SIGN,
+        '¡'    => self::INVERT_EXCLAMATION,
     );
 
     /**
@@ -216,7 +236,7 @@ class EmailLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-zA-Z_]+[46]?', //ASCII and domain literal
+            '[a-zA-Z]+[46]?', //ASCII and domain literal
             '[^\x00-\x7F]',  //UTF-8
             '[0-9]+',
             '\r\n',
@@ -233,7 +253,9 @@ class EmailLexer extends AbstractLexer
      */
     protected function getNonCatchablePatterns()
     {
-        return array('[\xA0-\xff]+');
+        return [
+            '[\xA0-\xff]+',
+        ];
     }
 
     /**
@@ -245,28 +267,38 @@ class EmailLexer extends AbstractLexer
      */
     protected function getType(&$value)
     {
-        if ($this->isNullType($value)) {
+        $encoded = $value;
+
+        if (mb_detect_encoding($value, 'auto', true) !== 'UTF-8') {
+            $encoded = utf8_encode($value);
+        }
+
+        if ($this->isValid($encoded)) {
+            return $this->charValue[$encoded];
+        }
+
+        if ($this->isNullType($encoded)) {
             return self::C_NUL;
         }
 
-        if ($this->isValid($value)) {
-            return $this->charValue[$value];
-        }
-
-        if ($this->isUTF8Invalid($value)) {
+        if ($this->isInvalidChar($encoded)) {
             $this->hasInvalidTokens = true;
             return self::INVALID;
         }
 
+
         return  self::GENERIC;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    protected function isValid($value)
+    protected function isInvalidChar(string $value) : bool
+    {
+        if(preg_match("/[^\p{S}\p{C}\p{Cc}]+/iu", $value) ) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function isValid(string $value) : bool
     {
         if (isset($this->charValue[$value])) {
             return true;
@@ -288,11 +320,7 @@ class EmailLexer extends AbstractLexer
         return false;
     }
 
-    /**
-     * @param string $value
-     * @return bool
-     */
-    protected function isUTF8Invalid($value)
+    protected function isUTF8Invalid(string $value) : bool
     {
         if (preg_match('/\p{Cc}+/u', $value)) {
             return true;

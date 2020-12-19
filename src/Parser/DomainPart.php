@@ -3,23 +3,24 @@
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Result\Reason\CharNotAllowed;
-use Egulias\EmailValidator\Result\Reason\DomainHyphened;
-use Egulias\EmailValidator\Result\Reason\DotAtEnd;
-use Egulias\EmailValidator\Result\Reason\DotAtStart;
-use Egulias\EmailValidator\Result\Reason\NoDomainPart;
-use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
-use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
-use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
+use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd;
+use Egulias\EmailValidator\Result\Reason\DotAtStart;
 use Egulias\EmailValidator\Warning\DeprecatedComment;
-use Egulias\EmailValidator\Warning\TLD;
-use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
 use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd;
-use Egulias\EmailValidator\Result\Reason\DomainTooLong;
 use Egulias\EmailValidator\Result\Reason\LabelTooLong;
+use Egulias\EmailValidator\Result\Reason\NoDomainPart;
+use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
+use Egulias\EmailValidator\Result\Reason\DomainTooLong;
+use Egulias\EmailValidator\Result\Reason\CharNotAllowed;
+use Egulias\EmailValidator\Result\Reason\DomainHyphened;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
+use Egulias\EmailValidator\Parser\CommentStrategy\DomainComment;
+use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
+use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
 
 class DomainPart extends Parser
 {
@@ -245,14 +246,6 @@ class DomainPart extends Parser
      */
     protected function checkDomainPartExceptions(array $prev, bool $hasComments) : Result
     {
-        $invalidDomainTokens = array(
-            EmailLexer::S_DQUOTE => true,
-            EmailLexer::S_SQUOTE => true,
-            EmailLexer::S_SEMICOLON => true,
-            EmailLexer::S_GREATERTHAN => true,
-            EmailLexer::S_LOWERTHAN => true,
-        );
-
         $validDomainTokens = array(
             EmailLexer::GENERIC => true,
             EmailLexer::S_HYPHEN => true,
@@ -264,7 +257,7 @@ class DomainPart extends Parser
             $validDomainTokens[EmailLexer::S_CLOSEPARENTHESIS] = true;
         }
 
-        if ($this->lexer->token['type'] === EmailLexer::S_OPENQBRACKET && $prev['type'] !== EmailLexer::S_AT) {
+        if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET && $prev['type'] !== EmailLexer::S_AT) {
             return new InvalidEmail(new ExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token['value']);
         }
 
