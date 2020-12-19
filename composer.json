@@ -19,9 +19,9 @@
   },
   "require-dev": {
     "php-coveralls/php-coveralls": "^2.2",
-    "phpunit/phpunit": "^8",
+    "phpunit/phpunit": "^8.5.8|^9.3.3",
     "dominicsayers/isemail": "^3.0.7",
-    "vimeo/psalm": "^3.11"
+    "vimeo/psalm": "^4"
   },
   "suggest": {
     "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
