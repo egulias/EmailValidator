@@ -412,11 +412,9 @@ class DomainPart extends Parser
     private function isLabelTooLong($label)
     {
         if (preg_match('/[^\x00-\x7F]/', $label)) {
-            $label = idn_to_ascii($label, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46, $idnaInfo);
+            idn_to_ascii($label, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46, $idnaInfo);
 
-            if (!$label) {
-                return (bool) ($idnaInfo['errors'] | IDNA_ERROR_LABEL_TOO_LONG);
-            }
+            return (bool) ($idnaInfo['errors'] & IDNA_ERROR_LABEL_TOO_LONG);
         }
 
         return strlen($label) > self::LABEL_MAX_LENGTH;
