@@ -20,7 +20,6 @@
   "require-dev": {
     "php-coveralls/php-coveralls": "^2.2",
     "phpunit/phpunit": "^8.5.8|^9.3.3",
-    "dominicsayers/isemail": "^3.0.7",
     "vimeo/psalm": "^4"
   },
   "suggest": {
