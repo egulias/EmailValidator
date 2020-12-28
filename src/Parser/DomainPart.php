@@ -181,17 +181,10 @@ class DomainPart extends Parser
                 return $literalResult;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
-                $labelCheck = $this->checkLabelLength($this->label);
-                $this->label = '';
+                $labelCheck = $this->checkLabelLength();
                 if ($labelCheck->isInvalid()) {
                     return $labelCheck;
                 }
-            } else {
-                $this->label .= $this->lexer->token['value'];
-            }
-
-            //$labelCheck = $this->checkLabelLength($prev);
 
             $FwsResult = $this->parseFWS();
             if($FwsResult->isInvalid()) {
@@ -212,8 +205,7 @@ class DomainPart extends Parser
 
         } while (null !== $this->lexer->token['type']);
 
-        $labelCheck = $this->checkLabelLength($this->label);
-        $this->label = '';
+        $labelCheck = $this->checkLabelLength(true);
         if ($labelCheck->isInvalid()) {
             return $labelCheck;
         }
@@ -287,11 +279,15 @@ class DomainPart extends Parser
     }
 
 
-    private function checkLabelLength(string $label) : Result
+    private function checkLabelLength(bool $isEndOfDomain = false) : Result
     {
-        if ($this->isLabelTooLong($label)) {
-            return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
+        if ($this->lexer->token['type'] === EmailLexer::S_DOT || $isEndOfDomain) {
+            if ($this->isLabelTooLong($this->label)) {
+                $this->label = '';
+                return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
+            }
         }
+        $this->label .= $this->lexer->token['value'];
         return new ValidEmail();
     }
 
@@ -304,14 +300,6 @@ class DomainPart extends Parser
         }
         return strlen($label) > self::LABEL_MAX_LENGTH;
     }
-        //if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
-        //    $prev['type'] === EmailLexer::GENERIC &&
-        //    strlen($prev['value']) > self::LABEL_MAX_LENGTH
-        //) {
-        //   return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
-        //}
-        //return new ValidEmail();
-    //}
 
     private function addTLDWarnings(bool $isTLDMissing) : void
     {
