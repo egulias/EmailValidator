@@ -5,11 +5,17 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/small.png)](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
 
+A library for validatin emails against several RFC.
+
 ## Supported RFCs ##
 
-This library aims to support:
+This library aims to support RFCs:
 
-RFC 5321, 5322, 6530, 6531, 6532.
+* [5321](https://tools.ietf.org/html/rfc5321), 
+* [5322](https://tools.ietf.org/html/rfc5322), 
+* [6530](https://tools.ietf.org/html/rfc6530), 
+* [6531](https://tools.ietf.org/html/rfc6531), 
+* [6532](https://tools.ietf.org/html/rfc6532), 
 
 ## Requirements ##
 
@@ -45,7 +51,6 @@ $validator->isValid("example@example.com", new RFCValidation()); //true
 1. [RFCValidation](/src/Validation/RFCValidation.php): Standard RFC-like email validation.
 2. [NoRFCWarningsValidation](/src/Validation/NoRFCWarningsValidation.php): RFC-like validation that will fail when warnings* are found.
 3. [DNSCheckValidation](/src/Validation/DNSCheckValidation.php): Will check if there are DNS records that signal that the server accepts emails. This does not entails that the email exists.
-4. [SpoofCheckValidation](/src/Validation/SpoofCheckValidation.php): Will check for multi-utf-8 chars that can signal an erroneous email name.
 5. [MultipleValidationWithAnd](/src/Validation/MultipleValidationWithAnd.php): It is a validation that operates over other validations performing a logical and (&&) over the result of each validation.
 6. [Your own validation](#how-to-extend): You can extend the library behaviour by implementing your own validations.
 
@@ -68,10 +73,19 @@ $multipleValidations = new MultipleValidationWithAnd([
 $validator->isValid("example@ietf.org", $multipleValidations); //true
 ```
 
+#### Additional validations ####
+Validations not present in the RFCs 
+
+1. [SpoofCheckValidation](/src/Validation/Extra/SpoofCheckValidation.php): Will check for multi-utf-8 chars that can signal an erroneous email name.
+
+
 ### How to extend ###
 
 It's easy! You just need to implement [EmailValidation](/src/Validation/EmailValidation.php) and you can use your own validation.
 
+## Contributing ##
+
+Please follow the [Contribution guide](CONTRIBUTING.md). Is short and simple and will help a lot.
 
 ## Other Contributors ##
 
@@ -79,7 +93,7 @@ It's easy! You just need to implement [EmailValidation](/src/Validation/EmailVal
 
 As this is a port from another library and work, here are other people related to the previous one:
 
-* Ricard Clau [@ricardclau](https://github.com/ricardclau):      	Performance against PHP built-in filter_var
+* Ricard Clau [@ricardclau](https://github.com/ricardclau):      	Performance against PHP built-in filter_var (v2 and earlier)
 * Josepf Bielawski [@stloyd](https://github.com/stloyd):      		For its first re-work of Dominic's lib
 * Dominic Sayers [@dominicsayers](https://github.com/dominicsayers):  	The original isemail function
 
