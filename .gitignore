@@ -1,6 +1,5 @@
 phpunit.result.cache
 .idea
-composer.lock
 report/
 vendor/
 .phpunit*
