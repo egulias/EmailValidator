@@ -3,23 +3,25 @@
 namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use PHPUnit\Framework\TestCase;
-use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Warning\Comment;
+use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
+use Egulias\EmailValidator\Result\Reason\CRNoLF;
 use Egulias\EmailValidator\Warning\IPV6ColonEnd;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\IPV6MaxGroups;
 use Egulias\EmailValidator\Warning\ObsoleteDTEXT;
+use Egulias\EmailValidator\Result\Reason\DotAtEnd;
 use Egulias\EmailValidator\Warning\AddressLiteral;
 use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
-use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
-use Egulias\EmailValidator\Result\Reason\DotAtEnd;
+use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Result\Reason\LabelTooLong;
 use Egulias\EmailValidator\Result\Reason\NoDomainPart;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveAt;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
@@ -27,7 +29,6 @@ use Egulias\EmailValidator\Result\Reason\DomainHyphened;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
-use Egulias\EmailValidator\Result\Reason\CRNoLF;
 
 
 class RFCValidationDomainPartTest extends TestCase
@@ -178,6 +179,9 @@ class RFCValidationDomainPartTest extends TestCase
             [new InvalidEmail(new CRNoLF(), "["), "example@[\r]"],
             [new InvalidEmail(new ExpectingATEXT('Invalid token in domain: ,'), ','), 'example@exam,ple.com'],
             [new InvalidEmail(new ExpectingATEXT("Invalid token in domain: '"), "'"), "test@example.com'"],
+            [new InvalidEmail(new LabelTooLong(), "."), sprintf('example@%s.com', str_repeat('ъ', 64))],
+            [new InvalidEmail(new LabelTooLong(), "."), sprintf('example@%s.com', str_repeat('a4t', 22))],
+            [new InvalidEmail(new LabelTooLong(), ""), sprintf('example@%s', str_repeat('a4t', 22))],
         ];
     }
 

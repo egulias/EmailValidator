@@ -27,11 +27,15 @@ class DomainPart extends Parser
     const DOMAIN_MAX_LENGTH = 253;
     const LABEL_MAX_LENGTH = 63;
 
-
     /**
      * @var string
      */
     protected $domainPart = '';
+
+    /**
+     * @var string
+     */
+    protected $label = '';
 
     public function parse() : Result
     {
@@ -174,17 +178,20 @@ class DomainPart extends Parser
                 $literalResult = $this->parseDomainLiteral();
 
                 $this->addTLDWarnings($tldMissing);
-                //Invalid literal parsing
-                //if($literalResult->isInvalid()) {
-                //    return $literalResult;
-                //}
                 return $literalResult;
             }
 
-            $labelCheck = $this->checkLabelLength($prev);
-            if ($labelCheck->isInvalid()) {
-                return $labelCheck;
+            if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
+                $labelCheck = $this->checkLabelLength($this->label);
+                $this->label = '';
+                if ($labelCheck->isInvalid()) {
+                    return $labelCheck;
+                }
+            } else {
+                $this->label .= $this->lexer->token['value'];
             }
+
+            //$labelCheck = $this->checkLabelLength($prev);
 
             $FwsResult = $this->parseFWS();
             if($FwsResult->isInvalid()) {
@@ -202,12 +209,14 @@ class DomainPart extends Parser
                 return $exceptionsResult;
             }
             $this->lexer->moveNext();
-            //if ($this->lexer->token['type'] === EmailLexer::S_SP) {
-            //    return new InvalidEmail(new CharNotAllowed(), $this->lexer->token['value']);
-            //}
 
         } while (null !== $this->lexer->token['type']);
 
+        $labelCheck = $this->checkLabelLength($this->label);
+        $this->label = '';
+        if ($labelCheck->isInvalid()) {
+            return $labelCheck;
+        }
         $this->addTLDWarnings($tldMissing);
 
         $this->domainPart = $domain;
@@ -277,17 +286,32 @@ class DomainPart extends Parser
         return new ValidEmail();
     }
 
-    protected function checkLabelLength(array $prev) : Result
+
+    private function checkLabelLength(string $label) : Result
     {
-        if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
-            $prev['type'] === EmailLexer::GENERIC &&
-            strlen($prev['value']) > self::LABEL_MAX_LENGTH
-        ) {
-            //$this->warnings[LabelTooLong::CODE] = new LabelTooLong();
-           return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
+        if ($this->isLabelTooLong($label)) {
+            return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
         }
         return new ValidEmail();
     }
+
+
+    private function isLabelTooLong(string $label) : bool
+    {
+        if (preg_match('/[^\x00-\x7F]/', $label)) {
+            idn_to_ascii(utf8_decode($label), IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46, $idnaInfo);
+            return (bool) ($idnaInfo['errors'] & IDNA_ERROR_LABEL_TOO_LONG);
+        }
+        return strlen($label) > self::LABEL_MAX_LENGTH;
+    }
+        //if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
+        //    $prev['type'] === EmailLexer::GENERIC &&
+        //    strlen($prev['value']) > self::LABEL_MAX_LENGTH
+        //) {
+        //   return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
+        //}
+        //return new ValidEmail();
+    //}
 
     private function addTLDWarnings(bool $isTLDMissing) : void
     {

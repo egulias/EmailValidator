@@ -78,6 +78,7 @@ class RFCValidationTest extends TestCase
             ['"\""@iana.org'],
             ['müller@möller.de'],
             ["1500111@профи-инвест.рф"],
+            [sprintf('example@%s.com', str_repeat('ъ', 40))],
         );
     }
 
