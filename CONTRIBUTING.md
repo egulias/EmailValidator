@@ -7,11 +7,14 @@ Please note we have a [code of conduct](#Code of Conduct), please follow it in a
 
 ## Pull Request Process
 
-1. Use the title as a brief description of the changes
-2. Describe the changes you are proposing
+When doing a PR to v2 remember that you also have to do the PR port to v3, or tests confirming the bug is not reproducible.
+
+1. Supported version is v3. If you are fixing a bug in v2, please port to v3
+2. Use the title as a brief description of the changes
+3. Describe the changes you are proposing
     1. If adding an extra validation state the benefits of adding it and the problem is solving
-3. Provide appropiate tests for the code you are submitting: aim to keep the existing coverage percentage.
-4. Add your Twitter handle (if you have) so we can thank you there.
+4. Provide appropiate tests for the code you are submitting: aim to keep the existing coverage percentage.
+5. Add your Twitter handle (if you have) so we can thank you there.
 
 ## License
 By contributing, you agree that your contributions will be licensed under its MIT License.
