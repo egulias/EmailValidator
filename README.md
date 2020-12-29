@@ -30,8 +30,11 @@ This library aims to support RFCs:
 
 ## Requirements ##
 
+ * PHP 7.2
  * [Composer](https://getcomposer.org) is required for installation
  * [Spoofchecking](/src/Validation/SpoofCheckValidation.php) and [DNSCheckValidation](/src/Validation/DNSCheckValidation.php) validation requires that your PHP system has the [PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) (also known as PHP Intl)
+
+**Note**: `PHP version upgrades will happen to accomodate to the pace of major frameworks. Minor versions bumps will go via minor versions of this library (i.e: PHP7.3 -> v3.x+1). Major versions will go with major versions of the library`
 
 ## Installation ##
 
