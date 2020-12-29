@@ -35,6 +35,7 @@ use Egulias\EmailValidator\Warning\TLD;
 class DomainPart extends Parser
 {
     const DOMAIN_MAX_LENGTH = 254;
+    const LABEL_MAX_LENGTH = 63;
 
     /**
      * @var string
@@ -160,6 +161,7 @@ class DomainPart extends Parser
     protected function doParseDomainPart()
     {
         $domain = '';
+        $label = '';
         $openedParenthesis = 0;
         do {
             $prev = $this->lexer->getPrevious();
@@ -190,7 +192,12 @@ class DomainPart extends Parser
                 $this->parseDomainLiteral();
             }
 
-            $this->checkLabelLength($prev);
+            if ($this->lexer->token['type'] === EmailLexer::S_DOT) {
+                $this->checkLabelLength($label);
+                $label = '';
+            } else {
+                $label .= $this->lexer->token['value'];
+            }
 
             if ($this->isFWS()) {
                 $this->parseFWS();
@@ -202,6 +209,8 @@ class DomainPart extends Parser
                 throw new CharNotAllowed();
             }
         } while (null !== $this->lexer->token['type']);
+
+        $this->checkLabelLength($label);
 
         return $domain;
     }
@@ -386,14 +395,29 @@ class DomainPart extends Parser
         return true;
     }
 
-    protected function checkLabelLength(array $prev)
+    /**
+     * @param string $label
+     */
+    protected function checkLabelLength($label)
     {
-        if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
-            $prev['type'] === EmailLexer::GENERIC &&
-            strlen($prev['value']) > 63
-        ) {
+        if ($this->isLabelTooLong($label)) {
             $this->warnings[LabelTooLong::CODE] = new LabelTooLong();
         }
+    }
+
+    /**
+     * @param string $label
+     * @return bool
+     */
+    private function isLabelTooLong($label)
+    {
+        if (preg_match('/[^\x00-\x7F]/', $label)) {
+            idn_to_ascii($label, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46, $idnaInfo);
+
+            return (bool) ($idnaInfo['errors'] & IDNA_ERROR_LABEL_TOO_LONG);
+        }
+
+        return strlen($label) > self::LABEL_MAX_LENGTH;
     }
 
     protected function parseDomainComments()

@@ -24,6 +24,7 @@ use Egulias\EmailValidator\Warning\CFWSWithFWS;
 use Egulias\EmailValidator\Warning\Comment;
 use Egulias\EmailValidator\Warning\DomainLiteral;
 use Egulias\EmailValidator\Warning\DomainTooLong;
+use Egulias\EmailValidator\Warning\EmailTooLong;
 use Egulias\EmailValidator\Warning\IPV6BadChar;
 use Egulias\EmailValidator\Warning\IPV6ColonEnd;
 use Egulias\EmailValidator\Warning\IPV6ColonStart;
@@ -226,12 +227,12 @@ class RFCValidationTest extends TestCase
         $this->assertTrue($this->validator->isValid($email, $this->lexer));
         $warnings = $this->validator->getWarnings();
         $this->assertCount(
-            count($warnings), $expectedWarnings,
+            count($expectedWarnings), $warnings,
             "Expected: " . implode(",", $expectedWarnings) . " and got " . implode(",", $warnings)
         );
 
         foreach ($warnings as $warning) {
-            $this->assertArrayHasKey($warning->code(), $expectedWarnings);
+            $this->assertContains($warning->code(), $expectedWarnings);
         }
     }
 
@@ -278,16 +279,28 @@ class RFCValidationTest extends TestCase
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart.co.uk'
             ],
             [
-                [DomainTooLong::CODE, LabelTooLong::CODE,],
+                [DomainTooLong::CODE, LabelTooLong::CODE, EmailTooLong::CODE],
                 'example2@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'
             ],
             [
-                [DomainTooLong::CODE, LabelTooLong::CODE,],
+                [DomainTooLong::CODE, LabelTooLong::CODE, EmailTooLong::CODE],
                 'example@toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocal'.
                 'parttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpart'.
                 'toolonglocalparttoolonglocalparttoolonglocalparttoolonglocalpar'
+            ],
+            [
+                [LabelTooLong::CODE,],
+                sprintf('example@%s.com', str_repeat('ъ', 60)),
+            ],
+            [
+                [LabelTooLong::CODE,],
+                sprintf('example@%s.com', str_repeat('a4t', 22)),
+            ],
+            [
+                [LabelTooLong::CODE,],
+                sprintf('example@%s', str_repeat('a4t', 22)),
             ],
         ];
     }
