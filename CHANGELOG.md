@@ -3,7 +3,7 @@
 ## New Features
 
 * Access to local part and domain part from EmailParser
-* Validations outside of the scope of the RFC will be considered "extra" validations, thus opening the door for adding new; will live in their own folder "extra". 
+* Validations outside of the scope of the RFC will be considered "extra" validations, thus opening the door for adding new; will live in their own folder "extra" (as requested in #248, #195, #183). 
 
 ## Breacking changes
 
@@ -13,4 +13,21 @@
 
 ## PHP versions upgrade policy
 PHP version upgrade requirement will happen via MINOR (3.x) version upgrades of the library, following the adoption level by major frameworks.
+
+## Changes
+* #235
+* #215
+* #130
+* #258
+* #188
+* #181
+* #217
+* #214
+* #249
+* #236
+* #257
+* #210
+
+## Thanks
+To contributors, be it with PRs, reporting issues or supporting otherwise.
 
