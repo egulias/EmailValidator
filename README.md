@@ -1,9 +1,9 @@
 # EmailValidator
 
-[![Build Status](https://travis-ci.org/egulias/EmailValidator.svg?branch=master)](https://travis-ci.org/egulias/EmailValidator)
-[![Coverage Status](https://coveralls.io/repos/egulias/EmailValidator/badge.svg?branch=master)](https://coveralls.io/r/egulias/EmailValidator?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/small.png)](https://insight.sensiolabs.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
+[![Build Status](https://travis-ci.org/egulias/EmailValidator.svg?branch=3.x)](https://travis-ci.org/egulias/EmailValidator)
+[![Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
+[![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
+[![SymfonyInsight](https://insight.symfony.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/mini.svg)](https://insight.symfony.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
 
 A library for validatin emails against several RFC.
 
