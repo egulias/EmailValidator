@@ -13,6 +13,7 @@ When doing a PR to v2 remember that you also have to do the PR port to v3, or te
 2. Use the title as a brief description of the changes
 3. Describe the changes you are proposing
     1. If adding an extra validation state the benefits of adding it and the problem is solving
+    2. Document in the readme, by adding it to the list
 4. Provide appropiate tests for the code you are submitting: aim to keep the existing coverage percentage.
 5. Add your Twitter handle (if you have) so we can thank you there.
 
