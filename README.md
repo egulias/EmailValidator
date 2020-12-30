@@ -15,7 +15,8 @@ This library aims to support RFCs:
 * [5322](https://tools.ietf.org/html/rfc5322), 
 * [6530](https://tools.ietf.org/html/rfc6530), 
 * [6531](https://tools.ietf.org/html/rfc6531), 
-* [6532](https://tools.ietf.org/html/rfc6532) 
+* [6532](https://tools.ietf.org/html/rfc6532),
+* [1030](https://tools.ietf.org/html/rfc1030) 
 
 ## Supported versions
 
