@@ -47,5 +47,8 @@ class EmailValidatorTest extends TestCase
         $validation->expects($this->once())->method("getError")->willReturn($invalidEmail);
 
         $this->assertFalse($validator->isValid("example@example.com", $validation));
+        $this->assertEquals(false, $validator->hasWarnings());
+        $this->assertEquals([], $validator->getWarnings());
+        $this->assertEquals($invalidEmail, $validator->getError());
     }
 }

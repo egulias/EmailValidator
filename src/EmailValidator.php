@@ -32,7 +32,7 @@ class EmailValidator
      * @param EmailValidation $emailValidation
      * @return bool
      */
-    public function isValid($email, EmailValidation $emailValidation)
+    public function isValid(string $email, EmailValidation $emailValidation)
     {
         $isValid = $emailValidation->isValid($email, $this->lexer);
         $this->warnings = $emailValidation->getWarnings();

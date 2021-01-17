@@ -20,6 +20,9 @@
 <filter>
   <whitelist>
     <directory>./src/</directory>
+      <exclude>
+        <directory suffix=".php">./src/Result/Reason</directory>
+      </exclude>
   </whitelist>
 </filter>
 </phpunit>

@@ -25,11 +25,14 @@ class MultipleErrorsTests extends TestCase
     {
         $error1 = new DummyReason();
         $error2 = new AnotherDummyReason();
+        $expectedReason = $error1->description() . PHP_EOL . $error2->description() . PHP_EOL;
 
         $multiError = new MultipleErrors();
         $multiError->addReason($error1);
         $multiError->addReason($error2);
 
         $this->assertCount(2, $multiError->getReasons());
+        $this->assertEquals($expectedReason, $multiError->description());
+        $this->assertEquals($error1, $multiError->reason());
     }
 }
