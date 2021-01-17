@@ -15,17 +15,18 @@ This library aims to support RFCs:
 * [5322](https://tools.ietf.org/html/rfc5322), 
 * [6530](https://tools.ietf.org/html/rfc6530), 
 * [6531](https://tools.ietf.org/html/rfc6531), 
-* [6532](https://tools.ietf.org/html/rfc6532) 
+* [6532](https://tools.ietf.org/html/rfc6532),
+* [1030](https://tools.ietf.org/html/rfc1030) 
 
 ## Supported versions
 
 **Curent major version with full support is v3**
 
-| Version | EOL  | Only critical bug fixes  | Full |
-| ---- | :----: | :----: | :----: |
-| v3.x  | - | X | X  |
-| v2.1.x | 01/2022 | X |   | 
-| v1.2 | YES |   |   | 
+| Version | Released | EOL  | Only critical bug fixes  | Full |
+| ---- | :----: | :----: | :----: | :----: |
+| v3.x  | 2020/12/29 | - | X | X  |
+| v2.1.x | 2016/05/16 | 01/2022 | X |   | 
+| v1.2 | 2013/19/05 | YES |   |   | 
 
 
 ## Requirements ##
