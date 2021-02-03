@@ -1,6 +1,6 @@
 <?php
 
-namespace Egulias\Tests\EmailValidator\Validation;
+namespace Egulias\EmailValidator\Tests\EmailValidator\Result;
 
 use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\Result\ValidEmail;
