@@ -7,7 +7,7 @@ use Egulias\EmailValidator\Result\MultipleErrors;
 use Egulias\EmailValidator\Tests\EmailValidator\Dummy\AnotherDummyReason;
 use Egulias\EmailValidator\Tests\EmailValidator\Dummy\DummyReason;
 
-class MultipleErrorsTests extends TestCase
+class MultipleErrorsTest extends TestCase
 {
     public function testRegisterSameReason()
     {

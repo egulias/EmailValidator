@@ -6,7 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailParser;
 use PHPUnit\Framework\TestCase;
 
-class EmailParserTests extends TestCase
+class EmailParserTest extends TestCase
 {
     public function emailPartsProvider()
     {
