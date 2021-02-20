@@ -247,17 +247,6 @@ class DomainPart extends Parser
      */
     protected function checkDomainPartExceptions(array $prev, bool $hasComments) : Result
     {
-        $validDomainTokens = array(
-            EmailLexer::GENERIC => true,
-            EmailLexer::S_HYPHEN => true,
-            EmailLexer::S_DOT => true,
-        );
-
-        if ($hasComments) {
-            $validDomainTokens[EmailLexer::S_OPENPARENTHESIS] = true;
-            $validDomainTokens[EmailLexer::S_CLOSEPARENTHESIS] = true;
-        }
-
         if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET && $prev['type'] !== EmailLexer::S_AT) {
             return new InvalidEmail(new ExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token['value']);
         }
@@ -269,6 +258,22 @@ class DomainPart extends Parser
         if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH
             && $this->lexer->isNextToken(EmailLexer::GENERIC)) {
             return new InvalidEmail(new ExpectingATEXT('Escaping following "ATOM"'), $this->lexer->token['value']);
+        }
+
+        return $this->validateTokens($hasComments);
+    }
+
+    private function validateTokens(bool $hasComments) : Result
+    {
+        $validDomainTokens = array(
+            EmailLexer::GENERIC => true,
+            EmailLexer::S_HYPHEN => true,
+            EmailLexer::S_DOT => true,
+        );
+
+        if ($hasComments) {
+            $validDomainTokens[EmailLexer::S_OPENPARENTHESIS] = true;
+            $validDomainTokens[EmailLexer::S_CLOSEPARENTHESIS] = true;
         }
 
         if (!isset($validDomainTokens[$this->lexer->token['type']])) {
