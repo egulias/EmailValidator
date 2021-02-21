@@ -20,20 +20,6 @@ class LocalPart extends Parser
      */
     private $localPart = '';
 
-    /**
-     * Invalid lexer tokens for local part
-     * @var array
-     */
-    private $invalidTokens = array(
-            EmailLexer::S_COMMA => EmailLexer::S_COMMA,
-            EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
-            EmailLexer::S_OPENBRACKET => EmailLexer::S_OPENBRACKET,
-            EmailLexer::S_GREATERTHAN => EmailLexer::S_GREATERTHAN,
-            EmailLexer::S_LOWERTHAN => EmailLexer::S_LOWERTHAN,
-            EmailLexer::S_COLON => EmailLexer::S_COLON,
-            EmailLexer::S_SEMICOLON => EmailLexer::S_SEMICOLON,
-            EmailLexer::INVALID => EmailLexer::INVALID
-        );
 
     public function parse() : Result
     {
@@ -78,8 +64,9 @@ class LocalPart extends Parser
                 return $resultEscaping;
             }
 
-            if (isset($this->invalidTokens[$this->lexer->token['type']])) {
-                return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+            $resultToken = $this->validateTokens(false);
+            if ($resultToken->isInvalid()) {
+                return $resultToken;
             }
 
             $resultFWS = $this->parseLocalFWS();
@@ -96,6 +83,24 @@ class LocalPart extends Parser
             $this->warnings[LocalTooLong::CODE] = new LocalTooLong();
         }
 
+        return new ValidEmail();
+    }
+
+    protected function validateTokens(bool $hasComments) : Result
+    {
+        $invalidTokens = array(
+            EmailLexer::S_COMMA => EmailLexer::S_COMMA,
+            EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
+            EmailLexer::S_OPENBRACKET => EmailLexer::S_OPENBRACKET,
+            EmailLexer::S_GREATERTHAN => EmailLexer::S_GREATERTHAN,
+            EmailLexer::S_LOWERTHAN => EmailLexer::S_LOWERTHAN,
+            EmailLexer::S_COLON => EmailLexer::S_COLON,
+            EmailLexer::S_SEMICOLON => EmailLexer::S_SEMICOLON,
+            EmailLexer::INVALID => EmailLexer::INVALID
+        );
+        if (isset($invalidTokens[$this->lexer->token['type']])) {
+            return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+        }
         return new ValidEmail();
     }
 

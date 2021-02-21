@@ -234,7 +234,6 @@ class DomainPart extends Parser
      */
     protected function parseDomainLiteral() : Result
     {
-
         try {
             $this->lexer->find(EmailLexer::S_CLOSEBRACKET);
         } catch (\RuntimeException $e) {
@@ -268,7 +267,7 @@ class DomainPart extends Parser
         return $this->validateTokens($hasComments);
     }
 
-    private function validateTokens(bool $hasComments) : Result
+    protected function validateTokens(bool $hasComments) : Result
     {
         $validDomainTokens = array(
             EmailLexer::GENERIC => true,
@@ -287,7 +286,6 @@ class DomainPart extends Parser
 
         return new ValidEmail();
     }
-
 
     private function checkLabelLength(bool $isEndOfDomain = false) : Result
     {
