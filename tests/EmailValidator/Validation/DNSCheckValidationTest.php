@@ -2,14 +2,15 @@
 
 namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
-use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
-use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Result\Reason\DomainAcceptsNoMail;
 use Egulias\EmailValidator\Result\Reason\LocalOrReservedDomain;
 use Egulias\EmailValidator\Result\Reason\NoDNSRecord;
+use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
+use Egulias\EmailValidator\Validation\DNSCheckValidation;
+use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use PHPUnit\Framework\TestCase;
 
 class DNSCheckValidationTest extends TestCase
 {
@@ -104,6 +105,16 @@ class DNSCheckValidationTest extends TestCase
         $validation = new DNSCheckValidation();
         $expectedError = new InvalidEmail(new NoDNSRecord(), '');
         $validation->isValid("example@invalid.example.com", new EmailLexer());
+        $this->assertEquals($expectedError, $validation->getError());
+    }
+
+    public function testUnableToGetDNSRecord()
+    {
+        error_reporting(\E_ALL);
+
+        $validation = new DNSCheckValidation();
+        $expectedError = new InvalidEmail(new UnableToGetDNSRecord(), '');
+        $validation->isValid("example@invalid-domain.com", new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
     }
 }
