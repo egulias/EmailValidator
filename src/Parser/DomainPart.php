@@ -39,6 +39,9 @@ class DomainPart extends Parser
 
     public function parse() : Result
     {
+        $this->lexer->clearRecorded();
+        $this->lexer->startRecording();
+
         $this->lexer->moveNext();
 
         $domainChecks = $this->performDomainStartChecks();
@@ -49,20 +52,22 @@ class DomainPart extends Parser
         if ($this->lexer->token['type'] === EmailLexer::S_AT) {
             return new InvalidEmail(new ConsecutiveAt(), $this->lexer->token['value']);
         }
-        $domain = $this->doParseDomainPart();
-        if ($domain->isInvalid()) {
-            return $domain;
-        }
 
-        $length = strlen($this->domainPart);
+        $result = $this->doParseDomainPart();
+        if ($result->isInvalid()) {
+            return $result;
+        }
 
         $end = $this->checkEndOfDomain();
         if ($end->isInvalid()) {
             return $end;
         }
 
+        $this->lexer->stopRecording();
+        $this->domainPart = $this->lexer->getAccumulatedValues();
+
+        $length = strlen($this->domainPart);
         if ($length > self::DOMAIN_MAX_LENGTH) {
-            //$this->warnings[DomainTooLong::CODE] = new DomainTooLong();
             return new InvalidEmail(new DomainTooLong(), $this->lexer->token['value']);
         }
 
@@ -311,5 +316,10 @@ class DomainPart extends Parser
         if ($isTLDMissing) {
             $this->warnings[TLD::CODE] = new TLD();
         }
+    }
+
+    public function domainPart() : string
+    {
+        return $this->domainPart;
     }
 }

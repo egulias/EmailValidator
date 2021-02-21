@@ -15,6 +15,10 @@ use Egulias\EmailValidator\Parser\CommentStrategy\LocalComment;
 
 class LocalPart extends Parser
 {
+    /**
+     * @var string
+     */
+    private $localPart = '';
 
     /**
      * Invalid lexer tokens for local part
@@ -33,7 +37,7 @@ class LocalPart extends Parser
 
     public function parse() : Result
     {
-        $totalLength = 0;
+        $this->lexer->startRecording();
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->hasDotAtStart()) {
@@ -83,15 +87,21 @@ class LocalPart extends Parser
                 return $resultFWS;
             }
 
-            $totalLength += strlen($this->lexer->token['value']);
             $this->lexer->moveNext();
         }
 
-        if ($totalLength > LocalTooLong::LOCAL_PART_LENGTH) {
+        $this->lexer->stopRecording();
+        $this->localPart = rtrim($this->lexer->getAccumulatedValues(), '@');
+        if (strlen($this->localPart) > LocalTooLong::LOCAL_PART_LENGTH) {
             $this->warnings[LocalTooLong::CODE] = new LocalTooLong();
         }
 
         return new ValidEmail();
+    }
+
+    public function localPart() : string
+    {
+        return $this->localPart;
     }
 
     private function parseLocalFWS() : Result 
