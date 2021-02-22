@@ -13,6 +13,11 @@ use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 class DNSCheckValidation implements EmailValidation
 {
     /**
+     * @var int
+     */
+    protected const DNS_RECORD_TYPES_TO_CHECK = DNS_MX + DNS_A + DNS_AAAA;
+
+    /**
      * @var array
      */
     private $warnings = [];
@@ -124,7 +129,7 @@ class DNSCheckValidation implements EmailValidation
 
         try {
             // Get all MX, A and AAAA DNS records for host
-            $dnsRecords = dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
+            $dnsRecords = dns_get_record($host, static::DNS_RECORD_TYPES_TO_CHECK);
         } catch (\RuntimeException $exception) {
             $this->error = new InvalidEmail(new UnableToGetDNSRecord(), '');
 
@@ -134,7 +139,7 @@ class DNSCheckValidation implements EmailValidation
         }
 
         // No MX, A or AAAA DNS records
-        if ($dnsRecords === []) {
+        if ($dnsRecords === [] || $dnsRecords === false) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
             return false;
         }

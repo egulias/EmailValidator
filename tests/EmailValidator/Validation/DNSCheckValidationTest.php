@@ -93,7 +93,7 @@ class DNSCheckValidationTest extends TestCase
 
     public function testDNSWarnings()
     {
-        $this->markTestSkipped('Need to found a domain with AAAA redords and no MX that fails later in the validations');
+        $this->markTestSkipped('Need to found a domain with AAAA records and no MX that fails later in the validations');
         $validation = new DNSCheckValidation();
         $expectedWarnings = [NoDNSMXRecord::CODE => new NoDNSMXRecord()];
         $validation->isValid("example@invalid.example.com", new EmailLexer());
@@ -108,13 +108,21 @@ class DNSCheckValidationTest extends TestCase
         $this->assertEquals($expectedError, $validation->getError());
     }
 
+    /**
+     * @group slow
+     */
     public function testUnableToGetDNSRecord()
     {
         error_reporting(\E_ALL);
 
-        $validation = new DNSCheckValidation();
+        // UnableToGetDNSRecord raises on network errors (e.g. timeout) that we can‘t emulate in tests (for sure),
+        // but we can try to get timeout error by trying to fetch all DNS records
+        $validation = new class extends DNSCheckValidation {
+            protected const DNS_RECORD_TYPES_TO_CHECK = \DNS_ALL;
+        };
         $expectedError = new InvalidEmail(new UnableToGetDNSRecord(), '');
-        $validation->isValid("example@invalid-domain.com", new EmailLexer());
+
+        $validation->isValid('example@invalid.example.com', new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
     }
 }
