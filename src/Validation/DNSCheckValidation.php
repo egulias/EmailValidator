@@ -3,14 +3,20 @@
 namespace Egulias\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\DomainAcceptsNoMail;
 use Egulias\EmailValidator\Exception\InvalidEmail;
 use Egulias\EmailValidator\Exception\LocalOrReservedDomain;
-use Egulias\EmailValidator\Exception\DomainAcceptsNoMail;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Exception\NoDNSRecord;
+use Egulias\EmailValidator\Exception\UnableToGetDNSRecord;
+use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 
 class DNSCheckValidation implements EmailValidation
 {
+    /**
+     * @var int
+     */
+    protected $dnsRecordTypesToCheck = \DNS_MX;
+
     /**
      * @var array
      */
@@ -32,6 +38,8 @@ class DNSCheckValidation implements EmailValidation
         if (!function_exists('idn_to_ascii')) {
             throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
         }
+
+        $this->dnsRecordTypesToCheck = DNS_MX + DNS_A + DNS_AAAA;
     }
 
     public function isValid($email, EmailLexer $emailLexer)
@@ -114,10 +122,24 @@ class DNSCheckValidation implements EmailValidation
      */
     private function validateDnsRecords($host)
     {
-        // Get all MX, A and AAAA DNS records for host
-        // Using @ as workaround to fix https://bugs.php.net/bug.php?id=73149
-        $dnsRecords = @dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
+        // A workaround to fix https://bugs.php.net/bug.php?id=73149
+        /** @psalm-suppress InvalidArgument */
+        set_error_handler(
+            static function ($errorLevel, $errorMessage) {
+                throw new \RuntimeException("Unable to get DNS record for the host: $errorMessage");
+            }
+        );
 
+        try {
+        // Get all MX, A and AAAA DNS records for host
+            $dnsRecords = dns_get_record($host, $this->dnsRecordTypesToCheck);
+        } catch (\RuntimeException $exception) {
+            $this->error = new UnableToGetDNSRecord();
+
+            return false;
+        } finally {
+            restore_error_handler();
+        }
 
         // No MX, A or AAAA DNS records
         if (empty($dnsRecords)) {
