@@ -121,6 +121,7 @@ class DNSCheckValidation implements EmailValidation
     private function validateDnsRecords($host) : bool
     {
         // A workaround to fix https://bugs.php.net/bug.php?id=73149
+        /** @psalm-suppress InvalidArgument */
         set_error_handler(
             static function (int $errorLevel, string $errorMessage): ?bool {
                 throw new \RuntimeException("Unable to get DNS record for the host: $errorMessage");
