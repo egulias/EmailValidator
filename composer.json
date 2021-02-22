@@ -34,5 +34,9 @@
     "psr-4": {
       "Egulias\\EmailValidator\\Tests\\": "tests"
     }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test:ci": "phpunit --exclude-group=slow"
   }
 }
