@@ -123,8 +123,8 @@ class DNSCheckValidation implements EmailValidation
     private function validateDnsRecords($host)
     {
         // A workaround to fix https://bugs.php.net/bug.php?id=73149
-        /** @psalm-suppress InvalidArgument */
         set_error_handler(
+            /** @return never-return */
             static function ($errorLevel, $errorMessage) {
                 throw new \RuntimeException("Unable to get DNS record for the host: $errorMessage");
             }
