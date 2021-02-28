@@ -5,12 +5,18 @@ namespace Egulias\EmailValidator\Validation;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\DomainAcceptsNoMail;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Result\Reason\LocalOrReservedDomain;
 use Egulias\EmailValidator\Result\Reason\NoDNSRecord as ReasonNoDNSRecord;
+use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
+use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 
 class DNSCheckValidation implements EmailValidation
 {
+    /**
+     * @var int
+     */
+    protected const DNS_RECORD_TYPES_TO_CHECK = DNS_MX + DNS_A + DNS_AAAA;
+
     /**
      * @var array
      */
@@ -114,12 +120,27 @@ class DNSCheckValidation implements EmailValidation
      */
     private function validateDnsRecords($host) : bool
     {
-        // Get all MX, A and AAAA DNS records for host
-        $dnsRecords = @dns_get_record($host, DNS_MX + DNS_A + DNS_AAAA);
+        // A workaround to fix https://bugs.php.net/bug.php?id=73149
+        /** @psalm-suppress InvalidArgument */
+        set_error_handler(
+            static function (int $errorLevel, string $errorMessage): ?bool {
+                throw new \RuntimeException("Unable to get DNS record for the host: $errorMessage");
+            }
+        );
 
+        try {
+            // Get all MX, A and AAAA DNS records for host
+            $dnsRecords = dns_get_record($host, static::DNS_RECORD_TYPES_TO_CHECK);
+        } catch (\RuntimeException $exception) {
+            $this->error = new InvalidEmail(new UnableToGetDNSRecord(), '');
+
+            return false;
+        } finally {
+            restore_error_handler();
+        }
 
         // No MX, A or AAAA DNS records
-        if (empty($dnsRecords)) {
+        if ($dnsRecords === [] || $dnsRecords === false) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
             return false;
         }
