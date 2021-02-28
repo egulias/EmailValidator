@@ -133,14 +133,6 @@ class DomainPart extends PartParser
         return new ValidEmail();
     }
 
-    /**
-     * @return string
-     */
-    public function getDomainPart()
-    {
-        return $this->domainPart;
-    }
-
     protected function parseComments(): Result
     {
         $commentParser = new Comment($this->lexer, new DomainComment());

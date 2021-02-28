@@ -5,7 +5,7 @@ namespace Egulias\EmailValidator;
 use Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;
-use Egulias\EmailValidator\Parser\LocalPart;
+use Egulias\EmailValidator\Parser\IDLeftPart;
 use Egulias\EmailValidator\Parser\IDRightPart;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
@@ -61,7 +61,7 @@ class MessageIDParser extends Parser
 
     private function processIDLeft() : Result
     {
-        $localPartParser = new LocalPart($this->lexer);
+        $localPartParser = new IDLeftPart($this->lexer);
         $localPartResult = $localPartParser->parse();
         $this->idLeft = $localPartParser->localPart();
         $this->warnings = array_merge($localPartParser->getWarnings(), $this->warnings);
