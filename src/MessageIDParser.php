@@ -6,7 +6,7 @@ use Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Parser\LocalPart;
-use Egulias\EmailValidator\Parser\IDLeftPart;
+use Egulias\EmailValidator\Parser\IDRightPart;
 use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\EmailTooLong;
@@ -36,12 +36,12 @@ class MessageIDParser extends Parser
     {
         $result = parent::parse($str);
 
-        $this->addLongEmailWarning($this->localPart, $this->domainPart);
+        $this->addLongEmailWarning($this->idLeft, $this->idRight);
 
         return $result;
     }
     
-    protected function preRightParsing(): Result
+    protected function preLeftParsing(): Result
     {
         if (!$this->hasAtToken()) {
             return new InvalidEmail(new NoLocalPart(), $this->lexer->token["value"]);
@@ -49,17 +49,17 @@ class MessageIDParser extends Parser
         return new ValidEmail();
     }
 
-    protected function parseRightFromAt(): Result
-    {
-        return $this->processIDRight();
-    }
-
     protected function parseLeftFromAt(): Result
     {
         return $this->processIDLeft();
     }
 
-    private function processIDRight() : Result
+    protected function parseRightFromAt(): Result
+    {
+        return $this->processIDRight();
+    }
+
+    private function processIDLeft() : Result
     {
         $localPartParser = new LocalPart($this->lexer);
         $localPartResult = $localPartParser->parse();
@@ -69,9 +69,9 @@ class MessageIDParser extends Parser
         return $localPartResult;
     }
 
-    private function processIDLeft() : Result
+    private function processIDRight() : Result
     {
-        $domainPartParser = new IDLeftPart($this->lexer);
+        $domainPartParser = new IDRightPart($this->lexer);
         $domainPartResult = $domainPartParser->parse();
         $this->domainPart = $domainPartParser->domainPart();
         $this->warnings = array_merge($domainPartParser->getWarnings(), $this->warnings);

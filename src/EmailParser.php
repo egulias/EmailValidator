@@ -39,7 +39,7 @@ class EmailParser extends Parser
         return $result;
     }
     
-    protected function preRightParsing(): Result
+    protected function preLeftParsing(): Result
     {
         if (!$this->hasAtToken()) {
             return new InvalidEmail(new NoLocalPart(), $this->lexer->token["value"]);
@@ -47,12 +47,12 @@ class EmailParser extends Parser
         return new ValidEmail();
     }
 
-    protected function parseRightFromAt(): Result
+    protected function parseLeftFromAt(): Result
     {
         return $this->processLocalPart();
     }
 
-    protected function parseLeftFromAt(): Result
+    protected function parseRightFromAt(): Result
     {
         return $this->processDomainPart();
     }

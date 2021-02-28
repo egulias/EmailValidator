@@ -42,6 +42,9 @@ class MessageIDValidationTest extends TestCase
     {
         return [
             ['example'],
+            ['example@with space'],
+            ['example@iana.'],
+            ['example@ia\na.'],
         ];
     }
 }

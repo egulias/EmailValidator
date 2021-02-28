@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Result\ValidEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 
-class IDLeftPart extends DomainPart
+class IDRightPart extends DomainPart
 {
     protected function validateTokens(bool $hasComments) : Result
     {

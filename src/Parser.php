@@ -22,8 +22,11 @@ abstract class Parser
 
     abstract protected function parseRightFromAt() : Result;
     abstract protected function parseLeftFromAt() : Result;
-    abstract protected function preRightParsing() : Result;
+    abstract protected function preLeftParsing() : Result;
 
+    /**
+     * id-left "@" id-right
+     */
     public function parse(string $str) : Result
     {
         $this->lexer->setInput($str);
@@ -32,18 +35,18 @@ abstract class Parser
             return new InvalidEmail(new ExpectingATEXT("Invalid tokens found"), $this->lexer->token["value"]);
         }
 
-        $preParsingResult = $this->preRightParsing();
+        $preParsingResult = $this->preLeftParsing();
         if ($preParsingResult->isInvalid()) {
             return $preParsingResult;
         }
 
-        $localPartResult = $this->parseRightFromAt();
+        $localPartResult = $this->parseLeftFromAt();
 
         if ($localPartResult->isInvalid()) {
             return $localPartResult;
         }
 
-        $domainPartResult = $this->parseLeftFromAt();
+        $domainPartResult = $this->parseRightFromAt(); 
 
         if ($domainPartResult->isInvalid()) {
             return $domainPartResult;
