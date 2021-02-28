@@ -246,9 +246,6 @@ class DomainPart extends Parser
         return $result;
     }
 
-    /**
-     * @return InvalidEmail|ValidEmail
-     */
     protected function checkDomainPartExceptions(array $prev, bool $hasComments) : Result
     {
         if ($this->lexer->token['type'] === EmailLexer::S_OPENBRACKET && $prev['type'] !== EmailLexer::S_AT) {

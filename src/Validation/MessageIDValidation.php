@@ -9,12 +9,23 @@ use Egulias\EmailValidator\Result\Reason\ExceptionFound;
 
 class MessageIDValidation implements EmailValidation
 {
+
+    /**
+     * @var array
+     */
+    private $warnings = [];
+
+    /**
+     * @var ?InvalidEmail
+     */
+    private $error;
+
     public function isValid(string $email, EmailLexer $emailLexer): bool
     {
-        $this->parser = new MessageIDParser($emailLexer);
+        $parser = new MessageIDParser($emailLexer);
         try {
-            $result = $this->parser->parse($email);
-            $this->warnings = $this->parser->getWarnings();
+            $result = $parser->parse($email);
+            $this->warnings = $parser->getWarnings();
             if ($result->isInvalid()) {
                 /** @psalm-suppress PropertyTypeCoercion */
                 $this->error = $result;
@@ -30,11 +41,11 @@ class MessageIDValidation implements EmailValidation
 
     public function getWarnings(): array
     {
-        return [];
+        return $this->warnings;
     }
 
     public function getError(): ?InvalidEmail
     {
-        return null;
+        return $this->error;
     }
 }

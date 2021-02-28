@@ -47,4 +47,10 @@ class MessageIDValidationTest extends TestCase
             ['example@ia\na.'],
         ];
     }
+
+    public function testInvalidMessageIDsWithError()
+    {
+        $this->markTestIncomplete("missing error check");
+
+    }
 }

@@ -20,13 +20,13 @@ abstract class Parser
      */
     protected $lexer;
 
+    /**
+     * id-left "@" id-right
+     */
     abstract protected function parseRightFromAt() : Result;
     abstract protected function parseLeftFromAt() : Result;
     abstract protected function preLeftParsing() : Result;
 
-    /**
-     * id-left "@" id-right
-     */
     public function parse(string $str) : Result
     {
         $this->lexer->setInput($str);
@@ -61,5 +61,16 @@ abstract class Parser
     public function getWarnings() : array
     {
         return $this->warnings;
+    }
+
+    protected function hasAtToken() : bool
+    {
+        $this->lexer->moveNext();
+        $this->lexer->moveNext();
+        if ($this->lexer->token['type'] === EmailLexer::S_AT) {
+            return false;
+        }
+
+        return true;
     }
 }

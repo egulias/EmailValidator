@@ -63,7 +63,7 @@ class MessageIDParser extends Parser
     {
         $localPartParser = new LocalPart($this->lexer);
         $localPartResult = $localPartParser->parse();
-        $this->localPart = $localPartParser->localPart();
+        $this->idLeft = $localPartParser->localPart();
         $this->warnings = array_merge($localPartParser->getWarnings(), $this->warnings);
 
         return $localPartResult;
@@ -73,7 +73,7 @@ class MessageIDParser extends Parser
     {
         $domainPartParser = new IDRightPart($this->lexer);
         $domainPartResult = $domainPartParser->parse();
-        $this->domainPart = $domainPartParser->domainPart();
+        $this->idRight = $domainPartParser->domainPart();
         $this->warnings = array_merge($domainPartParser->getWarnings(), $this->warnings);
         
         return $domainPartResult;
@@ -87,17 +87,6 @@ class MessageIDParser extends Parser
     public function getRightPart() : string
     {
         return $this->idRight;
-    }
-
-    private function hasAtToken() : bool
-    {
-        $this->lexer->moveNext();
-        $this->lexer->moveNext();
-        if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            return false;
-        }
-
-        return true;
     }
 
     private function addLongEmailWarning(string $localPart, string $parsedDomainPart) : void

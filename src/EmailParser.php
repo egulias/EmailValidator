@@ -87,17 +87,6 @@ class EmailParser extends Parser
         return $this->localPart;
     }
 
-    private function hasAtToken() : bool
-    {
-        $this->lexer->moveNext();
-        $this->lexer->moveNext();
-        if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            return false;
-        }
-
-        return true;
-    }
-
     private function addLongEmailWarning(string $localPart, string $parsedDomainPart) : void
     {
         if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAIL_MAX_LENGTH) {
