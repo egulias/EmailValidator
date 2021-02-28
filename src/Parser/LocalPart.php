@@ -13,7 +13,7 @@ use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Parser\CommentStrategy\LocalComment;
 
-class LocalPart extends Parser
+class LocalPart extends PartParser
 {
     /**
      * @var string

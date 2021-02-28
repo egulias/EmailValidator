@@ -13,7 +13,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingCTEXT;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 
-class  FoldingWhiteSpace extends Parser
+class  FoldingWhiteSpace extends PartParser
 {
     public function parse() : Result
     {

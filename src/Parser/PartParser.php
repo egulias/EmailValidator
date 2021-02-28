@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 
-abstract class Parser
+abstract class PartParser
 {
     /**
      * @var array

@@ -22,7 +22,7 @@ use Egulias\EmailValidator\Parser\CommentStrategy\DomainComment;
 use Egulias\EmailValidator\Result\Reason\ExpectingDomainLiteralClose;
 use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
 
-class DomainPart extends Parser
+class DomainPart extends PartParser
 {
     const DOMAIN_MAX_LENGTH = 253;
     const LABEL_MAX_LENGTH = 63;
