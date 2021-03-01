@@ -3,11 +3,11 @@
 namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Exception\NoDNSRecord;
-use Egulias\EmailValidator\Exception\LocalOrReservedDomain;
 use Egulias\EmailValidator\Exception\DomainAcceptsNoMail;
+use Egulias\EmailValidator\Exception\LocalOrReservedDomain;
+use Egulias\EmailValidator\Exception\NoDNSRecord;
+use Egulias\EmailValidator\Exception\UnableToGetDNSRecord;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use PHPUnit\Framework\TestCase;
 
 class DNSCheckValidationTest extends TestCase
@@ -104,6 +104,28 @@ class DNSCheckValidationTest extends TestCase
         $validation = new DNSCheckValidation();
         $expectedError = new NoDNSRecord();
         $validation->isValid("example@invalid.example.com", new EmailLexer());
+        $this->assertEquals($expectedError, $validation->getError());
+    }
+
+    /**
+     * @group slow
+     */
+    public function testUnableToGetDNSRecord()
+    {
+        error_reporting(\E_ALL);
+
+        $validation = new DNSCheckValidation();
+        $reflection = new \ReflectionClass($validation);
+        $reflectionProperty = $reflection->getProperty('dnsRecordTypesToCheck');
+        $reflectionProperty->setAccessible(true);
+
+        // UnableToGetDNSRecord raises on network errors (e.g. timeout) that we can‘t emulate in tests (for sure),
+        // but we can try to get timeout error by trying to fetch all DNS records
+        $reflectionProperty->setValue($validation, \DNS_ALL);
+
+        $expectedError = new UnableToGetDNSRecord();
+
+        $validation->isValid('example@invalid.example.com', new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
     }
 }
