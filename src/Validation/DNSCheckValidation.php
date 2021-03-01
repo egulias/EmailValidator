@@ -124,7 +124,10 @@ class DNSCheckValidation implements EmailValidation
     {
         // A workaround to fix https://bugs.php.net/bug.php?id=73149
         set_error_handler(
-            /** @return never-return */
+            /**
+             * @psalm-suppress MissingClosureParamType
+             * @return never-return
+             */
             static function ($errorLevel, $errorMessage) {
                 throw new \RuntimeException("Unable to get DNS record for the host: $errorMessage");
             }
