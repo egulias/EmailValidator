@@ -13,27 +13,17 @@ use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Parser\CommentStrategy\LocalComment;
 
-class LocalPart extends Parser
+class LocalPart extends PartParser
 {
-
     /**
-     * Invalid lexer tokens for local part
-     * @var array
+     * @var string
      */
-    private $invalidTokens = array(
-            EmailLexer::S_COMMA => EmailLexer::S_COMMA,
-            EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
-            EmailLexer::S_OPENBRACKET => EmailLexer::S_OPENBRACKET,
-            EmailLexer::S_GREATERTHAN => EmailLexer::S_GREATERTHAN,
-            EmailLexer::S_LOWERTHAN => EmailLexer::S_LOWERTHAN,
-            EmailLexer::S_COLON => EmailLexer::S_COLON,
-            EmailLexer::S_SEMICOLON => EmailLexer::S_SEMICOLON,
-            EmailLexer::INVALID => EmailLexer::INVALID
-        );
+    private $localPart = '';
+
 
     public function parse() : Result
     {
-        $totalLength = 0;
+        $this->lexer->startRecording();
 
         while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
             if ($this->hasDotAtStart()) {
@@ -74,8 +64,9 @@ class LocalPart extends Parser
                 return $resultEscaping;
             }
 
-            if (isset($this->invalidTokens[$this->lexer->token['type']])) {
-                return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+            $resultToken = $this->validateTokens(false);
+            if ($resultToken->isInvalid()) {
+                return $resultToken;
             }
 
             $resultFWS = $this->parseLocalFWS();
@@ -83,15 +74,39 @@ class LocalPart extends Parser
                 return $resultFWS;
             }
 
-            $totalLength += strlen($this->lexer->token['value']);
             $this->lexer->moveNext();
         }
 
-        if ($totalLength > LocalTooLong::LOCAL_PART_LENGTH) {
+        $this->lexer->stopRecording();
+        $this->localPart = rtrim($this->lexer->getAccumulatedValues(), '@');
+        if (strlen($this->localPart) > LocalTooLong::LOCAL_PART_LENGTH) {
             $this->warnings[LocalTooLong::CODE] = new LocalTooLong();
         }
 
         return new ValidEmail();
+    }
+
+    protected function validateTokens(bool $hasComments) : Result
+    {
+        $invalidTokens = array(
+            EmailLexer::S_COMMA => EmailLexer::S_COMMA,
+            EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
+            EmailLexer::S_OPENBRACKET => EmailLexer::S_OPENBRACKET,
+            EmailLexer::S_GREATERTHAN => EmailLexer::S_GREATERTHAN,
+            EmailLexer::S_LOWERTHAN => EmailLexer::S_LOWERTHAN,
+            EmailLexer::S_COLON => EmailLexer::S_COLON,
+            EmailLexer::S_SEMICOLON => EmailLexer::S_SEMICOLON,
+            EmailLexer::INVALID => EmailLexer::INVALID
+        );
+        if (isset($invalidTokens[$this->lexer->token['type']])) {
+            return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+        }
+        return new ValidEmail();
+    }
+
+    public function localPart() : string
+    {
+        return $this->localPart;
     }
 
     private function parseLocalFWS() : Result 
@@ -118,7 +133,7 @@ class LocalPart extends Parser
         return $parseAgain;
     }
 
-    private function parseComments(): Result
+    protected function parseComments(): Result
     {
         $commentParser = new Comment($this->lexer, new LocalComment());
         $result = $commentParser->parse();

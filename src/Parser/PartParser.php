@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 
-abstract class Parser
+abstract class PartParser
 {
     /**
      * @var array
@@ -25,6 +25,8 @@ abstract class Parser
         $this->lexer = $lexer;
     }
 
+    abstract public function parse() : Result;
+
     /**
      * @return \Egulias\EmailValidator\Warning\Warning[]
      */
@@ -32,8 +34,6 @@ abstract class Parser
     {
         return $this->warnings;
     }
-
-    abstract public function parse() : Result;
 
     protected function parseFWS() : Result
     {
@@ -52,9 +52,6 @@ abstract class Parser
         return new ValidEmail();
     }
 
-    /**
-     * @return bool
-     */
     protected function escaped() : bool
     {
         $previous = $this->lexer->getPrevious();

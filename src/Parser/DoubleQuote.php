@@ -11,7 +11,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Result\Reason\UnclosedQuotedString;
 use Egulias\EmailValidator\Result\Result;
 
-class DoubleQuote extends Parser
+class DoubleQuote extends PartParser
 {
     public function parse() : Result
     {

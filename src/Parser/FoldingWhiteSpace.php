@@ -13,7 +13,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingCTEXT;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 
-class  FoldingWhiteSpace extends Parser
+class  FoldingWhiteSpace extends PartParser
 {
     public function parse() : Result
     {
@@ -23,7 +23,10 @@ class  FoldingWhiteSpace extends Parser
 
         $previous = $this->lexer->getPrevious();
 
-        $this->checkCRLFInFWS();
+        $resultCRLF = $this->checkCRLFInFWS();
+        if ($resultCRLF->isInvalid()) {
+            return $resultCRLF;
+        }
 
         if ($this->lexer->token['type'] === EmailLexer::S_CR) {
             return new InvalidEmail(new CRNoLF(), $this->lexer->token['value']);
@@ -46,10 +49,7 @@ class  FoldingWhiteSpace extends Parser
         return new ValidEmail();
     }
 
-    /**
-     * @return InvalidEmail|ValidEmail|null
-     */
-    protected function checkCRLFInFWS()
+    protected function checkCRLFInFWS() : Result
     {
         if ($this->lexer->token['type'] !== EmailLexer::CRLF) {
             return new ValidEmail();
@@ -63,12 +63,11 @@ class  FoldingWhiteSpace extends Parser
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
             return new InvalidEmail(new CRLFAtTheEnd(), $this->lexer->token['value']);
         }
+
+        return new ValidEmail();
     }
      
-    /**
-     * @return bool
-     */
-    protected function isFWS()
+    protected function isFWS() : bool
     {
         if ($this->escaped()) {
             return false;

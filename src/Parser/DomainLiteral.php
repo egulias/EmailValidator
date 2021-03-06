@@ -20,7 +20,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingDTEXT;
 use Egulias\EmailValidator\Result\Reason\UnusualElements;
 use Egulias\EmailValidator\Warning\DomainLiteral as WarningDomainLiteral;
 
-class DomainLiteral extends Parser
+class DomainLiteral extends PartParser
 {
     public function parse() : Result
     {

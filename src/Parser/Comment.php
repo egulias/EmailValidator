@@ -11,7 +11,7 @@ use Egulias\EmailValidator\Result\Reason\UnclosedComment;
 use Egulias\EmailValidator\Result\Reason\UnOpenedComment;
 use Egulias\EmailValidator\Warning\Comment as WarningComment;
 
-class Comment extends Parser
+class Comment extends PartParser
 {
     /**
      * @var int
