@@ -27,6 +27,12 @@ abstract class Parser
     abstract protected function parseLeftFromAt() : Result;
     abstract protected function preLeftParsing() : Result;
 
+
+    public function __construct(EmailLexer $lexer)
+    {
+        $this->lexer = $lexer;   
+    }
+
     public function parse(string $str) : Result
     {
         $this->lexer->setInput($str);

@@ -25,11 +25,6 @@ class EmailParser extends Parser
      */
     protected $localPart = '';
 
-    public function __construct(EmailLexer $lexer)
-    {
-        $this->lexer = $lexer;
-    }
-
     public function parse(string $str) : Result
     {
         $result = parent::parse($str);
