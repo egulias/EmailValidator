@@ -10,9 +10,8 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 abstract class Parser
 {
     /**
-     * @var array
+     * @var Warning\Warning[]
      */
-
     protected $warnings = [];
 
     /**
@@ -73,10 +72,7 @@ abstract class Parser
     {
         $this->lexer->moveNext();
         $this->lexer->moveNext();
-        if ($this->lexer->token['type'] === EmailLexer::S_AT) {
-            return false;
-        }
 
-        return true;
+        return $this->lexer->token['type'] !== EmailLexer::S_AT;
     }
 }
