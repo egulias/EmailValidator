@@ -10,9 +10,8 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 abstract class Parser
 {
     /**
-     * @var array
+     * @var Warning\Warning[]
      */
-
     protected $warnings = [];
 
     /**
