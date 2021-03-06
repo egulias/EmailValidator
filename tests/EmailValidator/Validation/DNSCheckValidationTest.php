@@ -2,14 +2,15 @@
 
 namespace Egulias\EmailValidator\Tests\EmailValidator\Validation;
 
-use PHPUnit\Framework\TestCase;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Warning\NoDNSMXRecord;
-use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Result\Reason\DomainAcceptsNoMail;
 use Egulias\EmailValidator\Result\Reason\LocalOrReservedDomain;
 use Egulias\EmailValidator\Result\Reason\NoDNSRecord;
+use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
+use Egulias\EmailValidator\Validation\DNSCheckValidation;
+use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use PHPUnit\Framework\TestCase;
 
 class DNSCheckValidationTest extends TestCase
 {
@@ -92,7 +93,7 @@ class DNSCheckValidationTest extends TestCase
 
     public function testDNSWarnings()
     {
-        $this->markTestSkipped('Need to found a domain with AAAA redords and no MX that fails later in the validations');
+        $this->markTestSkipped('Need to found a domain with AAAA records and no MX that fails later in the validations');
         $validation = new DNSCheckValidation();
         $expectedWarnings = [NoDNSMXRecord::CODE => new NoDNSMXRecord()];
         $validation->isValid("example@invalid.example.com", new EmailLexer());
@@ -104,6 +105,24 @@ class DNSCheckValidationTest extends TestCase
         $validation = new DNSCheckValidation();
         $expectedError = new InvalidEmail(new NoDNSRecord(), '');
         $validation->isValid("example@invalid.example.com", new EmailLexer());
+        $this->assertEquals($expectedError, $validation->getError());
+    }
+
+    /**
+     * @group slow
+     */
+    public function testUnableToGetDNSRecord()
+    {
+        error_reporting(\E_ALL);
+
+        // UnableToGetDNSRecord raises on network errors (e.g. timeout) that we can‘t emulate in tests (for sure),
+        // but we can try to get timeout error by trying to fetch all DNS records
+        $validation = new class extends DNSCheckValidation {
+            protected const DNS_RECORD_TYPES_TO_CHECK = \DNS_ALL;
+        };
+        $expectedError = new InvalidEmail(new UnableToGetDNSRecord(), '');
+
+        $validation->isValid('example@invalid.example.com', new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
     }
 }

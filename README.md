@@ -5,7 +5,7 @@
 [![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
 [![SymfonyInsight](https://insight.symfony.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/mini.svg)](https://insight.symfony.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
 
-A library for validatin emails against several RFC.
+A library for validating emails against several RFC.
 
 ## Supported RFCs ##
 
@@ -16,7 +16,7 @@ This library aims to support RFCs:
 * [6530](https://tools.ietf.org/html/rfc6530), 
 * [6531](https://tools.ietf.org/html/rfc6531), 
 * [6532](https://tools.ietf.org/html/rfc6532),
-* [1030](https://tools.ietf.org/html/rfc1030) 
+* [1035](https://tools.ietf.org/html/rfc1035) 
 
 ## Supported versions
 

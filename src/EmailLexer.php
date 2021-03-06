@@ -126,6 +126,7 @@ class EmailLexer extends AbstractLexer
      *
      * @psalm-suppress NonInvariantDocblockPropertyType
      * @psalm-var array{value:string, type:null|int, position:int}
+     * @psalm-suppress NonInvariantDocblockPropertyType
      */
     public $token;
 
