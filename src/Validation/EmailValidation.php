@@ -21,7 +21,7 @@ interface EmailValidation
     /**
      * Returns the validation error.
      *
-     * @return InvalidEmail
+     * @return InvalidEmail|null
      */
     public function getError() : ?InvalidEmail;
 
