@@ -280,9 +280,9 @@ class DomainPart extends PartParser
     {
         if ($this->lexer->token['type'] === EmailLexer::S_DOT || $isEndOfDomain) {
             if ($this->isLabelTooLong($this->label)) {
-                $this->label = '';
                 return new InvalidEmail(new LabelTooLong(), $this->lexer->token['value']);
             }
+            $this->label = '';
         }
         $this->label .= $this->lexer->token['value'];
         return new ValidEmail();
