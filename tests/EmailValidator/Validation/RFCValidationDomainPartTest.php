@@ -76,6 +76,7 @@ class RFCValidationDomainPartTest extends TestCase
             ['validipv4@[127.0.0.0]'],
             ['validipv4@127.0.0.0'],
             ['withhyphen@domain-exam.com'],
+            ['valid_long_domain@71846jnrsoj91yfhc18rkbrf90ue3onl8y46js38kae8inz0t1.5a-xdycuau.na49.le.example.com']
         );
     }
 
