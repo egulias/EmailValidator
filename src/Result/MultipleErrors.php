@@ -2,9 +2,8 @@
 
 namespace Egulias\EmailValidator\Result;
 
-use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\EmptyReason;
 use Egulias\EmailValidator\Result\Reason\Reason;
-use Egulias\EmailValidator\Result\Exception\EmptyReasonList;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
@@ -35,11 +34,9 @@ class MultipleErrors extends InvalidEmail
 
     public function reason() : Reason
     {
-        if (count($this->reasons) == 0) {
-            throw new EmptyReasonList();
-        }
-
-        return current($this->reasons);
+        return 0 !== count($this->reasons)
+            ? current($this->reasons)
+            : new EmptyReason();
     }
 
     public function description() : string

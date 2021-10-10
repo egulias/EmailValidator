@@ -2,8 +2,8 @@
 
 namespace Egulias\EmailValidator\Tests\EmailValidator\Reason;
 
-use Egulias\EmailValidator\Result\Exception\EmptyReasonList;
 use Egulias\EmailValidator\Result\MultipleErrors;
+use Egulias\EmailValidator\Result\Reason\EmptyReason;
 use Egulias\EmailValidator\Tests\EmailValidator\Dummy\AnotherDummyReason;
 use Egulias\EmailValidator\Tests\EmailValidator\Dummy\DummyReason;
 use PHPUnit\Framework\TestCase;
@@ -59,10 +59,8 @@ class MultipleErrorsTest extends TestCase
 
     public function testRetrieveFirstReasonWithNoReasonAdded()
     {
-        $this->expectException(EmptyReasonList::class);
-
-        $error1 = new DummyReason();
+        $emptyReason = new EmptyReason();
         $multiError = new MultipleErrors();
-        $this->assertEquals($error1, $multiError->reason());
+        $this->assertEquals($emptyReason, $multiError->reason());
     }
 }
