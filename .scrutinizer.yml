@@ -11,3 +11,4 @@ build:
                 coverage:
                     file: 'clover.xml'
                     format: 'clover'
+            - php-scrutinizer-run
