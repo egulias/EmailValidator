@@ -1,9 +1,8 @@
 # EmailValidator
 
-[![Build Status](https://travis-ci.org/egulias/EmailValidator.svg?branch=3.x)](https://travis-ci.org/egulias/EmailValidator)
+[![Build Status](https://app.travis-ci.com/egulias/EmailValidator.svg?branch=3.x)](https://app.travis-ci.com/github/egulias/EmailValidator)
 [![Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
 [![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
-[![SymfonyInsight](https://insight.symfony.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6/mini.svg)](https://insight.symfony.com/projects/22ba6692-9c02-42e5-a65d-1c5696bfffc6)
 
 A library for validating emails against several RFC.
 
