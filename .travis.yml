@@ -2,24 +2,20 @@ language: php
 
 matrix:
   include:
-    - php: 7.2
-      env:
-        - psalm=yes
-      dist: bionic
     - php: 7.3
-      dist: bionic
       env:
         - psalm=yes
+      dist: bionic
     - php: 7.4
+      dist: bionic
       env:
         - psalm=yes
-      dist: bionic
     - php: 8.0
       env:
         - psalm=yes
       dist: bionic
 #ppc64le support code
-    - php: 7.2
+    - php: 7.3
       arch: ppc64le
       env:
         - psalm=yes
