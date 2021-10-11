@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         executionOrder="defects"
-         processIsolation="false"
-         stopOnFailure="false"
->
-<testsuites>
-  <testsuite name="EmailValidator Test Suite">
-    <directory>./tests/EmailValidator</directory>
-    <exclude>./vendor/</exclude>
-  </testsuite>
-</testsuites>
-
-<filter>
-  <whitelist>
-    <directory>./src/</directory>
-      <exclude>
-        <directory suffix=".php">./src/Result/Reason</directory>
-      </exclude>
-  </whitelist>
-</filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" backupStaticAttributes="false" bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" executionOrder="defects" processIsolation="false" stopOnFailure="false">
+  <coverage>
+    <include>
+      <directory>./src/</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./src/Result/Reason</directory>
+    </exclude>
+  </coverage>
+  <testsuites>
+    <testsuite name="EmailValidator Test Suite">
+      <directory>./tests/EmailValidator</directory>
+      <exclude>./vendor/</exclude>
+    </testsuite>
+  </testsuites>
 </phpunit>

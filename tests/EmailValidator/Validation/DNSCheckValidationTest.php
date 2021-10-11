@@ -109,7 +109,7 @@ class DNSCheckValidationTest extends TestCase
     }
 
     /**
-     * @group slow
+     * @group flaky
      */
     public function testUnableToGetDNSRecord()
     {
