@@ -22,6 +22,15 @@ use Egulias\EmailValidator\Warning\DomainLiteral as WarningDomainLiteral;
 
 class DomainLiteral extends PartParser
 {
+    const IPV4_REGEX = '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+
+    const OBSOLETE_WARNINGS = [
+        EmailLexer::INVALID,
+        EmailLexer::C_DEL,
+        EmailLexer::S_LF,
+        EmailLexer::S_BACKSLASH
+    ];
+
     public function parse() : Result
     {
         $this->addTagWarnings();
@@ -138,11 +147,8 @@ class DomainLiteral extends PartParser
     
     public function convertIPv4ToIPv6(string $addressLiteralIPv4) : string
     {
-        $matchesIP  = array();
-        $IPv4Match = preg_match(
-            '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/',
-            $addressLiteralIPv4,
-            $matchesIP);
+        $matchesIP  = [];
+        $IPv4Match = preg_match(self::IPV4_REGEX, $addressLiteralIPv4, $matchesIP);
 
         // Extract IPv4 part from the end of the address-literal (if there is one)
         if ($IPv4Match > 0) {
@@ -164,11 +170,8 @@ class DomainLiteral extends PartParser
      */
     protected function checkIPV4Tag($addressLiteral) : bool
     {
-        $matchesIP  = array();
-        $IPv4Match = preg_match(
-            '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/',
-            $addressLiteral,
-            $matchesIP);
+        $matchesIP  = [];
+        $IPv4Match = preg_match(self::IPV4_REGEX, $addressLiteral, $matchesIP);
 
         // Extract IPv4 part from the end of the address-literal (if there is one)
 
@@ -186,11 +189,7 @@ class DomainLiteral extends PartParser
 
     private function addObsoleteWarnings() : void
     {
-        if ($this->lexer->token['type'] === EmailLexer::INVALID ||
-            $this->lexer->token['type'] === EmailLexer::C_DEL   ||
-            $this->lexer->token['type'] === EmailLexer::S_LF ||
-            $this->lexer->token['type'] === EmailLexer::S_BACKSLASH
-        ) {
+        if(in_array($this->lexer->token['type'], self::OBSOLETE_WARNINGS)) {
             $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
         }
     }
