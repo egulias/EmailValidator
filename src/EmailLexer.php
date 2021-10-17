@@ -270,7 +270,7 @@ class EmailLexer extends AbstractLexer
 
     protected function isUTF8Invalid(string $value) : bool
     {
-        return preg_match(self::VALID_UTF8_REGEX, $value);
+        return preg_match(self::VALID_UTF8_REGEX, $value) !== false;
     }
 
     public function hasInvalidTokens() : bool
