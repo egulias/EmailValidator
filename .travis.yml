@@ -34,7 +34,7 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group slow
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
   - if [ "$psalm" = "yes" ]; then vendor/bin/psalm; fi
 
 after_script:

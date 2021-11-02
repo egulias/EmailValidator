@@ -7,7 +7,7 @@ build:
     tests:
         override:
             -
-                command: 'vendor/bin/phpunit --coverage-clover=clover.xml --exclude-group slow'
+                command: 'vendor/bin/phpunit --coverage-clover=clover.xml --exclude-group flaky'
                 coverage:
                     file: 'clover.xml'
                     format: 'clover'
