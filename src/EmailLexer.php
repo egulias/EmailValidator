@@ -212,7 +212,7 @@ class EmailLexer extends AbstractLexer
 
         $this->previous = $this->token;
         $hasNext = parent::moveNext();
-        $this->token = $this->token ?: self::$nullToken;
+        $this->token = $this->token ?? self::$nullToken;
 
         if ($this->hasToRecord) {
             $this->accumulator .= $this->token['value'];
