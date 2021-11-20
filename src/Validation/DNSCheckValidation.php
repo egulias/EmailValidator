@@ -18,6 +18,29 @@ class DNSCheckValidation implements EmailValidation
     protected const DNS_RECORD_TYPES_TO_CHECK = DNS_MX + DNS_A + DNS_AAAA;
 
     /**
+     * Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
+     * mDNS and private DNS Namespaces (https://tools.ietf.org/html/rfc6762#appendix-G)
+     */
+    const RESERVED_DNS_TOP_LEVEL_NAMES = [
+        // Reserved Top Level DNS Names
+        'test',
+        'example',
+        'invalid',
+        'localhost',
+
+        // mDNS
+        'local',
+
+        // Private DNS Namespaces
+        'intranet',
+        'internal',
+        'private',
+        'corp',
+        'home',
+        'lan',
+    ];
+    
+    /**
      * @var array
      */
     private $warnings = [];
@@ -31,7 +54,6 @@ class DNSCheckValidation implements EmailValidation
      * @var array
      */
     private $mxRecords = [];
-
 
     public function __construct()
     {
@@ -53,29 +75,8 @@ class DNSCheckValidation implements EmailValidation
         // Get the domain parts
         $hostParts = explode('.', $host);
 
-        // Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
-        // mDNS and private DNS Namespaces (https://tools.ietf.org/html/rfc6762#appendix-G)
-        $reservedTopLevelDnsNames = [
-            // Reserved Top Level DNS Names
-            'test',
-            'example',
-            'invalid',
-            'localhost',
-
-            // mDNS
-            'local',
-
-            // Private DNS Namespaces
-            'intranet',
-            'internal',
-            'private',
-            'corp',
-            'home',
-            'lan',
-        ];
-
         $isLocalDomain = count($hostParts) <= 1;
-        $isReservedTopLevel = in_array($hostParts[(count($hostParts) - 1)], $reservedTopLevelDnsNames, true);
+        $isReservedTopLevel = in_array($hostParts[(count($hostParts) - 1)], self::RESERVED_DNS_TOP_LEVEL_NAMES, true);
 
         // Exclude reserved top level DNS names
         if ($isLocalDomain || $isReservedTopLevel) {
