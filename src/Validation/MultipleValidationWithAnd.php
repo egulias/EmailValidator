@@ -10,7 +10,7 @@ use Egulias\EmailValidator\Result\MultipleErrors;
 class MultipleValidationWithAnd implements EmailValidation
 {
     /**
-     * If one of validations fails, the remaining validations will be skept.
+     * If one of validations fails, the remaining validations will be skipped.
      * This means MultipleErrors will only contain a single error, the first found.
      */
     const STOP_ON_ERROR = 0;
