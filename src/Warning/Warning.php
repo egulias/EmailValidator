@@ -42,6 +42,6 @@ abstract class Warning
 
     public function __toString()
     {
-        return $this->message() . " rfc: " .  $this->rfcNumber . "interal code: " . static::CODE;
+        return $this->message() . " rfc: " .  $this->rfcNumber . "internal code: " . static::CODE;
     }
 }
