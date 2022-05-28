@@ -9,6 +9,8 @@ use Egulias\EmailValidator\Result\Reason\LocalOrReservedDomain;
 use Egulias\EmailValidator\Result\Reason\NoDNSRecord;
 use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
+use Egulias\EmailValidator\Validation\DNSGetRecordWrapper;
+use Egulias\EmailValidator\Validation\DNSRecords;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use PHPUnit\Framework\TestCase;
 
@@ -116,11 +118,33 @@ class DNSCheckValidationTest extends TestCase
         error_reporting(\E_ALL);
 
         // UnableToGetDNSRecord raises on network errors (e.g. timeout) that we can‘t emulate in tests (for sure),
-        // but we can try to get timeout error by trying to fetch all DNS records
-        $validation = new class extends DNSCheckValidation {
-            protected const DNS_RECORD_TYPES_TO_CHECK = \DNS_ALL;
+        // but we can simulate with the wrapper helper
+
+        $wrapper = new class extends DNSGetRecordWrapper {
+            public function getRecords(string $host, int $type) : DNSRecords
+            {
+                return new DNSRecords([], true);
+            }
         };
+
+        $validation = new DNSCheckValidation($wrapper);
         $expectedError = new InvalidEmail(new UnableToGetDNSRecord(), '');
+
+        $validation->isValid('example@invalid.example.com', new EmailLexer());
+        $this->assertEquals($expectedError, $validation->getError());
+    }
+
+    public function testMissingTypeKey()
+    {
+        $wrapper = new class extends DNSGetRecordWrapper {
+            public function getRecords(string $host, int $type): DNSRecords
+            {
+                return new DNSRecords(['host' => 'test']);
+            }
+        };
+
+        $validation = new DNSCheckValidation($wrapper);
+        $expectedError = new InvalidEmail(new NoDNSRecord(), '');
 
         $validation->isValid('example@invalid.example.com', new EmailLexer());
         $this->assertEquals($expectedError, $validation->getError());
