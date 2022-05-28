@@ -2,10 +2,6 @@ language: php
 
 matrix:
   include:
-    - php: 7.3
-      env:
-        - psalm=yes
-      dist: bionic
     - php: 7.4
       dist: bionic
       env:
