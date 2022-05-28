@@ -11,8 +11,6 @@ use Egulias\EmailValidator\Result\Reason\NoDNSRecord as ReasonNoDNSRecord;
 use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 
-use function PHPSTORM_META\type;
-
 class DNSCheckValidation implements EmailValidation
 {
     /**
