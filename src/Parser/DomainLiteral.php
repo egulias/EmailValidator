@@ -50,7 +50,7 @@ class DomainLiteral extends PartParser
             }
 
             if ($this->lexer->isNextTokenAny(
-                array(EmailLexer::S_HTAB, EmailLexer::S_SP, $this->lexer->token['type'] === EmailLexer::CRLF)
+                array(EmailLexer::S_HTAB, EmailLexer::S_SP, EmailLexer::CRLF)
             )) {
                 $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
                 $this->parseFWS();

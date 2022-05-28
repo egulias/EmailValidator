@@ -151,7 +151,7 @@ class EmailLexer extends AbstractLexer
     /**
      * The next token in the input.
      *
-     * @var array|null
+     * @var array{position: int, type: int|null|string, value: int|string}|null
      */
     public $lookahead;
 
