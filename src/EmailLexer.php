@@ -237,7 +237,7 @@ class EmailLexer extends AbstractLexer
         $encoded = $value;
 
         if (mb_detect_encoding($value, 'auto', true) !== 'UTF-8') {
-            $encoded = utf8_encode($value);
+            $encoded = mb_convert_encoding($value, 'UTF-8', 'Windows-1252');
         }
 
         if ($this->isValid($encoded)) {
