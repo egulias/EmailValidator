@@ -30,7 +30,7 @@ abstract class PartParser
     /**
      * @return \Egulias\EmailValidator\Warning\Warning[]
      */
-    public function getWarnings()
+    final public function getWarnings()
     {
         return $this->warnings;
     }

@@ -32,7 +32,7 @@ abstract class Parser
         $this->lexer = $lexer;   
     }
 
-    public function parse(string $str) : Result
+    final public function parse(string $str) : Result
     {
         $this->lexer->setInput($str);
 
@@ -63,7 +63,7 @@ abstract class Parser
     /**
      * @return Warning\Warning[]
      */
-    public function getWarnings() : array
+    final public function getWarnings() : array
     {
         return $this->warnings;
     }

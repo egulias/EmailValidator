@@ -19,7 +19,7 @@ abstract class Warning
     /**
      * @return string
      */
-    public function message()
+    final public function message()
     {
         return $this->message;
     }
@@ -27,7 +27,7 @@ abstract class Warning
     /**
      * @return int
      */
-    public function code()
+    final public function code()
     {
         return self::CODE;
     }
@@ -35,7 +35,7 @@ abstract class Warning
     /**
      * @return int
      */
-    public function RFCNumber()
+    final public function RFCNumber()
     {
         return $this->rfcNumber;
     }
