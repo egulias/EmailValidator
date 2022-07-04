@@ -2,7 +2,6 @@
 
 namespace Egulias\EmailValidator\Validation;
 
-use Egulias\EmailValidator\Validation\DNSGetRecordWrapper;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\DomainAcceptsNoMail;

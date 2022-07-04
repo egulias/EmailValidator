@@ -2,7 +2,6 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Parser\LocalPart;
 use Egulias\EmailValidator\Parser\DomainPart;

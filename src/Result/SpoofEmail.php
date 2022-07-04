@@ -1,7 +1,6 @@
 <?php
 namespace Egulias\EmailValidator\Result;
 
-use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\SpoofEmail as ReasonSpoofEmail;
 
 class SpoofEmail extends InvalidEmail
