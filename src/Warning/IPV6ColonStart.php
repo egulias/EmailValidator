@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Warning;
 
 class IPV6ColonStart extends Warning
 {
-    const CODE = 76;
+    public const CODE = 76;
 
     public function __construct()
     {

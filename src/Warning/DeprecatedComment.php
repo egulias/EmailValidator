@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Warning;
 
 class DeprecatedComment extends Warning
 {
-    const CODE = 37;
+    public const CODE = 37;
 
     public function __construct()
     {

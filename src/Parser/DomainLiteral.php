@@ -22,9 +22,9 @@ use Egulias\EmailValidator\Warning\DomainLiteral as WarningDomainLiteral;
 
 class DomainLiteral extends PartParser
 {
-    const IPV4_REGEX = '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+    public const IPV4_REGEX = '/\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
 
-    const OBSOLETE_WARNINGS = [
+    public const OBSOLETE_WARNINGS = [
         EmailLexer::INVALID,
         EmailLexer::C_DEL,
         EmailLexer::S_LF,

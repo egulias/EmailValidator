@@ -4,8 +4,8 @@ namespace Egulias\EmailValidator\Result\Reason;
 
 class CRLFAtTheEnd implements Reason
 {
-    const CODE = 149;
-    const REASON = "CRLF at the end";
+    public const CODE = 149;
+    public const REASON = "CRLF at the end";
 
     public function code() : int
     {

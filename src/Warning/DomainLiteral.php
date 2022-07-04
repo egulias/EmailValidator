@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Warning;
 
 class DomainLiteral extends Warning
 {
-    const CODE = 70;
+    public const CODE = 70;
 
     public function __construct()
     {

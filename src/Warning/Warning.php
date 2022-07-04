@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Warning;
 
 abstract class Warning
 {
-    const CODE = 0;
+    public const CODE = 0;
 
     /**
      * @var string

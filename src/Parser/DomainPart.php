@@ -24,8 +24,8 @@ use Egulias\EmailValidator\Parser\DomainLiteral as DomainLiteralParser;
 
 class DomainPart extends PartParser
 {
-    const DOMAIN_MAX_LENGTH = 253;
-    const LABEL_MAX_LENGTH = 63;
+    public const DOMAIN_MAX_LENGTH = 253;
+    public const LABEL_MAX_LENGTH = 63;
 
     /**
      * @var string

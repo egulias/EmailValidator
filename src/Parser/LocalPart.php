@@ -15,7 +15,7 @@ use Egulias\EmailValidator\Parser\CommentStrategy\LocalComment;
 
 class LocalPart extends PartParser
 {
-    const INVALID_TOKENS = [
+    public const INVALID_TOKENS = [
         EmailLexer::S_COMMA => EmailLexer::S_COMMA,
         EmailLexer::S_CLOSEBRACKET => EmailLexer::S_CLOSEBRACKET,
         EmailLexer::S_OPENBRACKET => EmailLexer::S_OPENBRACKET,
