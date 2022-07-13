@@ -2,7 +2,6 @@
 
 namespace Egulias\EmailValidator;
 
-use Egulias\EmailValidator\Parser;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Parser\IDLeftPart;
 use Egulias\EmailValidator\Parser\IDRightPart;
