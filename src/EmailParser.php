@@ -12,7 +12,7 @@ use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 
 class EmailParser extends Parser
 {
-    const EMAIL_MAX_LENGTH = 254;
+    public const EMAIL_MAX_LENGTH = 254;
 
     /**
      * @var string

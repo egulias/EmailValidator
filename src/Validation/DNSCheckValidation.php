@@ -21,7 +21,7 @@ class DNSCheckValidation implements EmailValidation
      * Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
      * mDNS and private DNS Namespaces (https://tools.ietf.org/html/rfc6762#appendix-G)
      */
-    const RESERVED_DNS_TOP_LEVEL_NAMES = [
+    public const RESERVED_DNS_TOP_LEVEL_NAMES = [
         // Reserved Top Level DNS Names
         'test',
         'example',

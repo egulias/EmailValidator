@@ -7,54 +7,54 @@ use Doctrine\Common\Lexer\AbstractLexer;
 class EmailLexer extends AbstractLexer
 {
     //ASCII values
-    const S_EMPTY            = null;
-    const C_NUL              = 0;
-    const S_HTAB             = 9;
-    const S_LF               = 10;
-    const S_CR               = 13;
-    const S_SP               = 32;
-    const EXCLAMATION        = 33;
-    const S_DQUOTE           = 34;
-    const NUMBER_SIGN        = 35;
-    const DOLLAR             = 36;
-    const PERCENTAGE         = 37;
-    const AMPERSAND          = 38;
-    const S_SQUOTE           = 39;
-    const S_OPENPARENTHESIS  = 40;
-    const S_CLOSEPARENTHESIS = 41;
-    const ASTERISK           = 42;
-    const S_PLUS             = 43;
-    const S_COMMA            = 44;
-    const S_HYPHEN           = 45;
-    const S_DOT              = 46;
-    const S_SLASH            = 47;
-    const S_COLON            = 58;
-    const S_SEMICOLON        = 59;
-    const S_LOWERTHAN        = 60;
-    const S_EQUAL            = 61;
-    const S_GREATERTHAN      = 62;
-    const QUESTIONMARK       = 63;
-    const S_AT               = 64;
-    const S_OPENBRACKET      = 91;
-    const S_BACKSLASH        = 92;
-    const S_CLOSEBRACKET     = 93;
-    const CARET              = 94;
-    const S_UNDERSCORE       = 95;
-    const S_BACKTICK         = 96;
-    const S_OPENCURLYBRACES  = 123;
-    const S_PIPE             = 124;
-    const S_CLOSECURLYBRACES = 125;
-    const S_TILDE            = 126;
-    const C_DEL              = 127;
-    const INVERT_QUESTIONMARK= 168;
-    const INVERT_EXCLAMATION = 173;
-    const GENERIC            = 300;
-    const S_IPV6TAG          = 301;
-    const INVALID            = 302;
-    const CRLF               = 1310;
-    const S_DOUBLECOLON      = 5858;
-    const ASCII_INVALID_FROM = 127;
-    const ASCII_INVALID_TO   = 199;
+    public const S_EMPTY            = null;
+    public const C_NUL              = 0;
+    public const S_HTAB             = 9;
+    public const S_LF               = 10;
+    public const S_CR               = 13;
+    public const S_SP               = 32;
+    public const EXCLAMATION        = 33;
+    public const S_DQUOTE           = 34;
+    public const NUMBER_SIGN        = 35;
+    public const DOLLAR             = 36;
+    public const PERCENTAGE         = 37;
+    public const AMPERSAND          = 38;
+    public const S_SQUOTE           = 39;
+    public const S_OPENPARENTHESIS  = 40;
+    public const S_CLOSEPARENTHESIS = 41;
+    public const ASTERISK           = 42;
+    public const S_PLUS             = 43;
+    public const S_COMMA            = 44;
+    public const S_HYPHEN           = 45;
+    public const S_DOT              = 46;
+    public const S_SLASH            = 47;
+    public const S_COLON            = 58;
+    public const S_SEMICOLON        = 59;
+    public const S_LOWERTHAN        = 60;
+    public const S_EQUAL            = 61;
+    public const S_GREATERTHAN      = 62;
+    public const QUESTIONMARK       = 63;
+    public const S_AT               = 64;
+    public const S_OPENBRACKET      = 91;
+    public const S_BACKSLASH        = 92;
+    public const S_CLOSEBRACKET     = 93;
+    public const CARET              = 94;
+    public const S_UNDERSCORE       = 95;
+    public const S_BACKTICK         = 96;
+    public const S_OPENCURLYBRACES  = 123;
+    public const S_PIPE             = 124;
+    public const S_CLOSECURLYBRACES = 125;
+    public const S_TILDE            = 126;
+    public const C_DEL              = 127;
+    public const INVERT_QUESTIONMARK= 168;
+    public const INVERT_EXCLAMATION = 173;
+    public const GENERIC            = 300;
+    public const S_IPV6TAG          = 301;
+    public const INVALID            = 302;
+    public const CRLF               = 1310;
+    public const S_DOUBLECOLON      = 5858;
+    public const ASCII_INVALID_FROM = 127;
+    public const ASCII_INVALID_TO   = 199;
 
     /**
      * US-ASCII visible characters not valid for atext (@link http://tools.ietf.org/html/rfc5322#section-3.2.3)
@@ -107,11 +107,11 @@ class EmailLexer extends AbstractLexer
         '¡'    => self::INVERT_EXCLAMATION,
     ];
 
-    const INVALID_CHARS_REGEX = "/[^\p{S}\p{C}\p{Cc}]+/iu";
+    public const INVALID_CHARS_REGEX = "/[^\p{S}\p{C}\p{Cc}]+/iu";
 
-    const VALID_UTF8_REGEX = '/\p{Cc}+/u';
+    public const VALID_UTF8_REGEX = '/\p{Cc}+/u';
 
-    const CATCHABLE_PATTERNS = [
+    public const CATCHABLE_PATTERNS = [
         '[a-zA-Z]+[46]?', //ASCII and domain literal
         '[^\x00-\x7F]',  //UTF-8
         '[0-9]+',
@@ -121,11 +121,11 @@ class EmailLexer extends AbstractLexer
         '.',
     ];
 
-    const NON_CATCHABLE_PATTERNS = [
+    public const NON_CATCHABLE_PATTERNS = [
         '[\xA0-\xff]+',
     ];
 
-    const MODIFIERS = 'iu';
+    public const MODIFIERS = 'iu';
 
     /** @var bool */
     protected $hasInvalidTokens = false;

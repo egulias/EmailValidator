@@ -13,13 +13,13 @@ class MultipleValidationWithAnd implements EmailValidation
      * If one of validations fails, the remaining validations will be skipped.
      * This means MultipleErrors will only contain a single error, the first found.
      */
-    const STOP_ON_ERROR = 0;
+    public const STOP_ON_ERROR = 0;
 
     /**
      * All of validations will be invoked even if one of them got failure.
      * So MultipleErrors will contain all causes.
      */
-    const ALLOW_ALL_ERRORS = 1;
+    public const ALLOW_ALL_ERRORS = 1;
 
     /**
      * @var EmailValidation[]
