@@ -59,7 +59,8 @@ class Comment extends PartParser
 
         if($this->openedParenthesis >= 1) {
             return new InvalidEmail(new UnclosedComment(), $this->lexer->token['value']);
-        } else if ($this->openedParenthesis < 0) {
+        }
+        if ($this->openedParenthesis < 0) {
             return new InvalidEmail(new UnOpenedComment(), $this->lexer->token['value']);
         }
 
