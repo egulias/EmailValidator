@@ -60,7 +60,7 @@ class DNSCheckValidation implements EmailValidation
      */
     private $dnsGetRecord;
 
-    public function __construct(DNSGetRecordWrapper $dnsGetRecord = null)
+    public function __construct(?DNSGetRecordWrapper $dnsGetRecord = null)
     {
         if (!function_exists('idn_to_ascii')) {
             throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
