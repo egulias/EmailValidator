@@ -12,7 +12,7 @@ use Egulias\EmailValidator\Validation\RFCValidation;
 
 class EmailValidatorFactory
 {
-    /** @var Validator[] */
+    /** @var [] */
     protected static array $defaultValidators = [
         RFCValidation::class,
         NoRFCWarningsValidation::class,
