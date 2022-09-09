@@ -6,30 +6,34 @@ namespace Egulias\EmailValidator;
 
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\DNSGetRecordWrapper;
-use Egulias\EmailValidator\Validation\DNSRecords;
 use Egulias\EmailValidator\Validation\MessageIDValidation;
-use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 
 class EmailValidatorFactory
 {
+    /** @var Validator[] */
+    protected static array $defaultValidators = [
+        RFCValidation::class,
+        NoRFCWarningsValidation::class,
+        MessageIDValidation::class,
+        DNSGetRecordWrapper::class,
+        DNSCheckValidation::class
+    ];
+    
     /**
      * @param string $emailAddress
-     * @return bool
+     * @return array
      */
-    public static function create(string $emailAddress): bool
+    public static function create(string $emailAddress): array
     {
         $validator = new EmailValidator();
+        $result = [];
 
-        $multipleValidations = new MultipleValidationWithAnd([
-            new RFCValidation(),
-            new NoRFCWarningsValidation(),
-            new MessageIDValidation(),
-            new DNSGetRecordWrapper(),
-            new DNSCheckValidation()
-        ]);
+        foreach (self::$defaultValidators as $key => $val) {
+            $result[get_class(new $val)] = $validator->isValid($emailAddress, new $val);
+        }
 
-        return $validator->isValid($emailAddress, $multipleValidations);
+        return $result;
     }
 }
