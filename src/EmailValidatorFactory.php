@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Egulias\EmailValidator;
 
+use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
-use Egulias\EmailValidator\Validation\DNSGetRecordWrapper;
-use Egulias\EmailValidator\Validation\MessageIDValidation;
 use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 
@@ -16,8 +15,6 @@ class EmailValidatorFactory
     protected static array $defaultValidators = [
         RFCValidation::class,
         NoRFCWarningsValidation::class,
-        MessageIDValidation::class,
-        DNSGetRecordWrapper::class,
         DNSCheckValidation::class
     ];
     
