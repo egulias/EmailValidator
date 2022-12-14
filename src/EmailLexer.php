@@ -133,30 +133,23 @@ class EmailLexer extends AbstractLexer
 
     /**
      * @var Token
-     *
-     * @psalm-var array{value:string, type:null|int, position:int}|array<empty, empty>
      */
     protected $previous = null;
 
     /**
      * The last matched/seen token.
      *
-     * @var object
-     *
-     * @psalm-suppress NonInvariantDocblockPropertyType
-     * @psalm-var array{value:string, type:null|int, position:int}
-     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @var Token
      */
     public $token;
 
     /**
      * The next token in the input.
      *
-     * @var array{position: int, type: int|null|string, value: int|string}|null
+     * @var Token|null
      */
     public $lookahead;
 
-    /** @psalm-var array{value:'', type:null, position:0} */
     private $nullToken = null;
 
     /** @var string */
@@ -283,9 +276,9 @@ class EmailLexer extends AbstractLexer
     /**
      * getPrevious
      *
-     * @return object
+     * @return Token
      */
-    public function getPrevious(): object
+    public function getPrevious(): Token
     {
         return $this->previous;
     }

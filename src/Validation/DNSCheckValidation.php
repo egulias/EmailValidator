@@ -179,7 +179,7 @@ class DNSCheckValidation implements EmailValidation
         }
 
         // "Null MX" record indicates the domain accepts no mail (https://tools.ietf.org/html/rfc7505)
-        if (empty($dnsRecord['target']) || $dnsRecord['target'] === '.') {
+        if (empty($dnsRecord->target) || $dnsRecord->target === '.') {
             $this->error = new InvalidEmail(new DomainAcceptsNoMail(), "");
             return false;
         }

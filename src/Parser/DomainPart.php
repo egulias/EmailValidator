@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator\Parser;
 
+use Doctrine\Common\Lexer\Token;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Result\Result;
@@ -81,11 +82,11 @@ class DomainPart extends PartParser
             return new InvalidEmail(new DotAtEnd(), $this->lexer->token->value);
         }
         if ($prev->isA(EmailLexer::S_HYPHEN)) {
-            return new InvalidEmail(new DomainHyphened('Hypen found at the end of the domain'), $prev['value']);
+            return new InvalidEmail(new DomainHyphened('Hypen found at the end of the domain'), $prev->value);
         }
 
         if ($this->lexer->token->isA(EmailLexer::S_SP)) {
-            return new InvalidEmail(new CRLFAtTheEnd(), $prev['value']);
+            return new InvalidEmail(new CRLFAtTheEnd(), $prev->value);
         }
         return new ValidEmail();
     }
@@ -212,7 +213,7 @@ class DomainPart extends PartParser
         return new ValidEmail();
     }
 
-    private function checkNotAllowedChars(object $token): Result
+    private function checkNotAllowedChars(Token $token): Result
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH => true];
         if (isset($notAllowed[$token->type])) {
@@ -238,7 +239,7 @@ class DomainPart extends PartParser
         return $result;
     }
 
-    protected function checkDomainPartExceptions(object $prev, bool $hasComments): Result
+    protected function checkDomainPartExceptions(Token $prev, bool $hasComments): Result
     {
         if ($this->lexer->token->isA(EmailLexer::S_OPENBRACKET) && $prev->type !== EmailLexer::S_AT) {
             return new InvalidEmail(new ExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->token->value);
