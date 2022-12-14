@@ -39,7 +39,7 @@ class DNSCheckValidation implements EmailValidation
         'home',
         'lan',
     ];
-    
+
     /**
      * @var array
      */
@@ -73,7 +73,7 @@ class DNSCheckValidation implements EmailValidation
         $this->dnsGetRecord = $dnsGetRecord;
     }
 
-    public function isValid(string $email, EmailLexer $emailLexer) : bool
+    public function isValid(string $email, EmailLexer $emailLexer): bool
     {
         // use the input to check DNS if we cannot extract something similar to a domain
         $host = $email;
@@ -98,12 +98,12 @@ class DNSCheckValidation implements EmailValidation
         return $this->checkDns($host);
     }
 
-    public function getError() : ?InvalidEmail
+    public function getError(): ?InvalidEmail
     {
         return $this->error;
     }
 
-    public function getWarnings() : array
+    public function getWarnings(): array
     {
         return $this->warnings;
     }
@@ -130,7 +130,7 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True on success.
      */
-    private function validateDnsRecords($host) : bool
+    private function validateDnsRecords($host): bool
     {
         $dnsRecordsResult = $this->dnsGetRecord->getRecords($host, static::DNS_RECORD_TYPES_TO_CHECK);
 
@@ -163,18 +163,18 @@ class DNSCheckValidation implements EmailValidation
     /**
      * Validate an MX record
      *
-     * @param array $dnsRecord Given DNS record.
+     * @param object $dnsRecord Given DNS record.
      *
      * @return bool True if valid.
      */
-    private function validateMxRecord($dnsRecord) : bool
+    private function validateMxRecord($dnsRecord): bool
     {
-        if (!isset($dnsRecord['type'])) {
+        if (!isset($dnsRecord->type)) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
             return false;
         }
 
-        if ($dnsRecord['type'] !== 'MX') {
+        if ($dnsRecord->type !== 'MX') {
             return true;
         }
 
