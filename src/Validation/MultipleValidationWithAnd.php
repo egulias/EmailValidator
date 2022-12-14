@@ -58,7 +58,7 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function isValid(string $email, EmailLexer $emailLexer) : bool
+    public function isValid(string $email, EmailLexer $emailLexer): bool
     {
         $result = true;
         foreach ($this->validations as $validation) {
@@ -78,14 +78,14 @@ class MultipleValidationWithAnd implements EmailValidation
         return $result;
     }
 
-    private function initErrorStorage() : void
+    private function initErrorStorage(): void
     {
         if (null === $this->error) {
             $this->error = new MultipleErrors();
         }
     }
 
-    private function processError(EmailValidation $validation) : void
+    private function processError(EmailValidation $validation): void
     {
         if (null !== $validation->getError()) {
             $this->initErrorStorage();
@@ -94,7 +94,7 @@ class MultipleValidationWithAnd implements EmailValidation
         }
     }
 
-    private function shouldStop(bool $result) : bool
+    private function shouldStop(bool $result): bool
     {
         return !$result && $this->mode === self::STOP_ON_ERROR;
     }
@@ -102,7 +102,7 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * Returns the validation errors.
      */
-    public function getError() : ?InvalidEmail
+    public function getError(): ?InvalidEmail
     {
         return $this->error;
     }
@@ -110,7 +110,7 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function getWarnings() : array
+    public function getWarnings(): array
     {
         return $this->warnings;
     }

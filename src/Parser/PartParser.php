@@ -56,7 +56,7 @@ abstract class PartParser
     {
         $previous = $this->lexer->getPrevious();
 
-        return $previous && $previous->isA(EmailLexer::S_BACKSLASH)
+        return $previous->isA(EmailLexer::S_BACKSLASH)
             && !$this->lexer->token->isA(EmailLexer::GENERIC);
     }
 }

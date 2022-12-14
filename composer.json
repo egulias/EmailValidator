@@ -14,7 +14,7 @@
   },
   "require": {
     "php": ">=7.2",
-    "doctrine/lexer": "^2.0",
+    "doctrine/lexer": "^2.1",
     "symfony/polyfill-intl-idn": "^1.15"
   },
   "require-dev": {

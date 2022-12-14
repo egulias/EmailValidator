@@ -201,7 +201,7 @@ class DomainPart extends PartParser
                 return $exceptionsResult;
             }
             $this->lexer->moveNext();
-        } while (null !== $this->lexer->token->type);
+        } while (!$this->lexer->token->isA(EmailLexer::S_EMPTY));
 
         $labelCheck = $this->checkLabelLength(true);
         if ($labelCheck->isInvalid()) {
@@ -213,6 +213,11 @@ class DomainPart extends PartParser
         return new ValidEmail();
     }
 
+    /**
+     * @param Token<int, string> $token
+     * 
+     * @return Result
+     */
     private function checkNotAllowedChars(Token $token): Result
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH => true];
@@ -239,6 +244,12 @@ class DomainPart extends PartParser
         return $result;
     }
 
+    /**
+     * @param Token<int, string> $prev
+     * @param bool $hasComments
+     * 
+     * @return Result
+     */
     protected function checkDomainPartExceptions(Token $prev, bool $hasComments): Result
     {
         if ($this->lexer->token->isA(EmailLexer::S_OPENBRACKET) && $prev->type !== EmailLexer::S_AT) {

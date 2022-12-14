@@ -36,7 +36,7 @@ class LocalPart extends PartParser
     {
         $this->lexer->startRecording();
 
-        while (!$this->lexer->token->isA(EmailLexer::S_AT) && null !== $this->lexer->token->type) {
+        while (!$this->lexer->token->isA(EmailLexer::S_AT) && !$this->lexer->token->isA(EmailLexer::S_EMPTY)) {
             if ($this->hasDotAtStart()) {
                 return new InvalidEmail(new DotAtStart(), $this->lexer->token->value);
             }
@@ -125,7 +125,7 @@ class LocalPart extends PartParser
 
     private function hasDotAtStart(): bool
     {
-        return $this->lexer->token->isA(EmailLexer::S_DOT) && null === $this->lexer->getPrevious()->type;
+        return $this->lexer->token->isA(EmailLexer::S_DOT) && $this->lexer->getPrevious()->isA(EmailLexer::S_EMPTY);
     }
 
     private function parseDoubleQuote(): Result

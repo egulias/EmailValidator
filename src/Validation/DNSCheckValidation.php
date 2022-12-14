@@ -163,23 +163,23 @@ class DNSCheckValidation implements EmailValidation
     /**
      * Validate an MX record
      *
-     * @param object $dnsRecord Given DNS record.
+     * @param array $dnsRecord Given DNS record.
      *
      * @return bool True if valid.
      */
     private function validateMxRecord($dnsRecord): bool
     {
-        if (!isset($dnsRecord->type)) {
+        if (!isset($dnsRecord['type'])) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
             return false;
         }
 
-        if ($dnsRecord->type !== 'MX') {
+        if ($dnsRecord['type'] !== 'MX') {
             return true;
         }
 
         // "Null MX" record indicates the domain accepts no mail (https://tools.ietf.org/html/rfc7505)
-        if (empty($dnsRecord->target) || $dnsRecord->target === '.') {
+        if (empty($dnsRecord['target']) || $dnsRecord['target'] === '.') {
             $this->error = new InvalidEmail(new DomainAcceptsNoMail(), "");
             return false;
         }

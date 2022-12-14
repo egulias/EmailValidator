@@ -36,7 +36,7 @@ class DoubleQuote extends PartParser
 
         $this->lexer->moveNext();
 
-        while (!$this->lexer->token->isA(EmailLexer::S_DQUOTE) && null !== $this->lexer->token->type) {
+        while (!$this->lexer->token->isA(EmailLexer::S_DQUOTE) && !$this->lexer->token->isA(EmailLexer::S_EMPTY)) {
             if (isset($special[$this->lexer->token->type]) && $setSpecialsWarning) {
                 $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
                 $setSpecialsWarning = false;

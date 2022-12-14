@@ -5,10 +5,11 @@ namespace Egulias\EmailValidator;
 use Doctrine\Common\Lexer\AbstractLexer;
 use Doctrine\Common\Lexer\Token;
 
+/** @extends AbstractLexer<int, string> */
 class EmailLexer extends AbstractLexer
 {
     //ASCII values
-    public const S_EMPTY            = null;
+    public const S_EMPTY            = -1;
     public const C_NUL              = 0;
     public const S_HTAB             = 9;
     public const S_LF               = 10;
@@ -132,25 +133,30 @@ class EmailLexer extends AbstractLexer
     protected $hasInvalidTokens = false;
 
     /**
-     * @var Token
+     * @var Token<int, string>
      */
-    protected $previous = null;
+    protected $previous;
 
     /**
      * The last matched/seen token.
      *
-     * @var Token
+     * @var Token<int, string>
+     * 
+     * @psalm-suppress NonInvariantDocblockPropertyType
      */
     public $token;
 
     /**
      * The next token in the input.
      *
-     * @var Token|null
+     * @var Token<int, string>|null
      */
     public $lookahead;
 
-    private $nullToken = null;
+    /**
+     * @var Token<int, string>
+     */
+    private $nullToken;
 
     /** @var string */
     private $accumulator = '';
@@ -160,7 +166,10 @@ class EmailLexer extends AbstractLexer
 
     public function __construct()
     {
-        $this->nullToken = new Token('', null, 0);
+        /** @var Token<int, string> $nullToken */
+        $nullToken = new Token('', self::S_EMPTY, 0);
+        $this->nullToken = $nullToken;
+
         $this->previous = $this->token = $this->nullToken;
         $this->lookahead = null;
     }
@@ -223,7 +232,7 @@ class EmailLexer extends AbstractLexer
      * @throws \InvalidArgumentException
      * @return integer
      */
-    protected function getType(&$value)
+    protected function getType(&$value): int
     {
         $encoded = $value;
 
@@ -276,7 +285,7 @@ class EmailLexer extends AbstractLexer
     /**
      * getPrevious
      *
-     * @return Token
+     * @return Token<int, string>
      */
     public function getPrevious(): Token
     {
