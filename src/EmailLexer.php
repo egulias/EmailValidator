@@ -252,8 +252,7 @@ class EmailLexer extends AbstractLexer
             return self::INVALID;
         }
 
-
-        return  self::GENERIC;
+        return self::GENERIC;
     }
 
     protected function isValid(string $value): bool

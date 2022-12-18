@@ -7,11 +7,12 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Warning\Warning;
 
 abstract class PartParser
 {
     /**
-     * @var array
+     * @var Warning[]
      */
     protected $warnings = [];
 
@@ -28,7 +29,7 @@ abstract class PartParser
     abstract public function parse(): Result;
 
     /**
-     * @return \Egulias\EmailValidator\Warning\Warning[]
+     * @return Warning[]
      */
     public function getWarnings()
     {

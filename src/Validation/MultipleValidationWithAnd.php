@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 use Egulias\EmailValidator\Result\MultipleErrors;
+use Egulias\EmailValidator\Warning\Warning;
 
 class MultipleValidationWithAnd implements EmailValidation
 {
@@ -27,7 +28,7 @@ class MultipleValidationWithAnd implements EmailValidation
     private $validations = [];
 
     /**
-     * @var array
+     * @var Warning[]
      */
     private $warnings = [];
 
@@ -108,7 +109,7 @@ class MultipleValidationWithAnd implements EmailValidation
     }
 
     /**
-     * {@inheritdoc}
+     * @return Warning[]
      */
     public function getWarnings(): array
     {

@@ -9,6 +9,7 @@ use Egulias\EmailValidator\Result\Reason\LocalOrReservedDomain;
 use Egulias\EmailValidator\Result\Reason\NoDNSRecord as ReasonNoDNSRecord;
 use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Egulias\EmailValidator\Warning\Warning;
 
 class DNSCheckValidation implements EmailValidation
 {
@@ -20,6 +21,8 @@ class DNSCheckValidation implements EmailValidation
     /**
      * Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
      * mDNS and private DNS Namespaces (https://tools.ietf.org/html/rfc6762#appendix-G)
+     * 
+     * @var string
      */
     public const RESERVED_DNS_TOP_LEVEL_NAMES = [
         // Reserved Top Level DNS Names
@@ -41,7 +44,7 @@ class DNSCheckValidation implements EmailValidation
     ];
 
     /**
-     * @var array
+     * @var Warning[]
      */
     private $warnings = [];
 
@@ -103,6 +106,9 @@ class DNSCheckValidation implements EmailValidation
         return $this->error;
     }
 
+    /**
+     * @return Warning[]
+     */
     public function getWarnings(): array
     {
         return $this->warnings;
