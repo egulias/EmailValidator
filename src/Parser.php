@@ -37,7 +37,7 @@ abstract class Parser
         $this->lexer->setInput($str);
 
         if ($this->lexer->hasInvalidTokens()) {
-            return new InvalidEmail(new ExpectingATEXT("Invalid tokens found"), $this->lexer->token?->value);
+            return new InvalidEmail(new ExpectingATEXT("Invalid tokens found"), $this->lexer->current->value);
         }
 
         $preParsingResult = $this->preLeftParsing();
@@ -73,6 +73,6 @@ abstract class Parser
         $this->lexer->moveNext();
         $this->lexer->moveNext();
 
-        return !$this->lexer->token?->isA(EmailLexer::S_AT);
+        return !$this->lexer->current->isA(EmailLexer::S_AT);
     }
 }

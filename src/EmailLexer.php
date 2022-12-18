@@ -135,14 +135,14 @@ class EmailLexer extends AbstractLexer
     /**
      * @var Token<int, string>
      */
-    protected $previous;
+    protected Token $previous;
 
     /**
      * The last matched/seen token.
      *
-     * @var Token<int, string>|null
+     * @var Token<int, string>
      */
-    public Token|null $token;
+    public Token $current;
 
     /**
      * The next token in the input.
@@ -154,7 +154,7 @@ class EmailLexer extends AbstractLexer
     /**
      * @var Token<int, string>
      */
-    private Token|null $nullToken;
+    private Token $nullToken;
 
     /** @var string */
     private $accumulator = '';
@@ -168,7 +168,7 @@ class EmailLexer extends AbstractLexer
         $nullToken = new Token('', self::S_EMPTY, 0);
         $this->nullToken = $nullToken;
 
-        $this->previous = $this->token = $this->nullToken;
+        $this->current = $this->previous = $this->nullToken;
         $this->lookahead = null;
     }
 
@@ -176,7 +176,7 @@ class EmailLexer extends AbstractLexer
     {
         $this->hasInvalidTokens = false;
         parent::reset();
-        $this->previous = $this->token = $this->nullToken;
+        $this->current = $this->previous = $this->nullToken;
     }
 
     /**
@@ -205,19 +205,20 @@ class EmailLexer extends AbstractLexer
     public function moveNext(): bool
     {
         if ($this->hasToRecord && $this->previous === $this->nullToken) {
-            $this->accumulator .= $this->token->value;
+            $this->accumulator .= $this->current->value;
         }
 
-        $this->previous = $this->token;
+        $this->previous = $this->current;
 
         if ($this->lookahead === null) {
             $this->lookahead = $this->nullToken;
         }
 
         $hasNext = parent::moveNext();
+        $this->current = $this->token ?? $this->nullToken;
 
         if ($this->hasToRecord) {
-            $this->accumulator .= $this->token->value;
+            $this->accumulator .= $this->current->value;
         }
 
         return $hasNext;

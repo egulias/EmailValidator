@@ -24,7 +24,7 @@ class EmailLexerTest extends TestCase
         $lexer->setInput($str);
         $lexer->moveNext();
         $lexer->moveNext();
-        $this->assertEquals($token, $lexer->token?->type);
+        $this->assertEquals($token, $lexer->current->type);
     }
 
     public function testLexerParsesMultipleSpaces()
@@ -33,9 +33,9 @@ class EmailLexerTest extends TestCase
         $lexer->setInput('  ');
         $lexer->moveNext();
         $lexer->moveNext();
-        $this->assertEquals(EmailLexer::S_SP, $lexer->token?->type);
+        $this->assertEquals(EmailLexer::S_SP, $lexer->current->type);
         $lexer->moveNext();
-        $this->assertEquals(EmailLexer::S_SP, $lexer->token?->type);
+        $this->assertEquals(EmailLexer::S_SP, $lexer->current->type);
     }
 
     /**
@@ -48,7 +48,7 @@ class EmailLexerTest extends TestCase
         $lexer->moveNext();
         $lexer->moveNext();
 
-        $this->assertEquals(EmailLexer::INVALID, $lexer->token?->type);
+        $this->assertEquals(EmailLexer::INVALID, $lexer->current->type);
     }
 
     public function invalidUTF8CharsProvider()
@@ -101,7 +101,7 @@ class EmailLexerTest extends TestCase
         $lexer->moveNext();
         $lexer->skipUntil(EmailLexer::S_HTAB);
         $lexer->moveNext();
-        $this->assertEquals(EmailLexer::S_HTAB, $lexer->token?->type);
+        $this->assertEquals(EmailLexer::S_HTAB, $lexer->current->type);
     }
 
     public function testLexerForUTF8()
@@ -110,9 +110,9 @@ class EmailLexerTest extends TestCase
         $lexer->setInput("áÇ@bar.com");
         $lexer->moveNext();
         $lexer->moveNext();
-        $this->assertEquals(EmailLexer::GENERIC, $lexer->token?->type);
+        $this->assertEquals(EmailLexer::GENERIC, $lexer->current->type);
         $lexer->moveNext();
-        $this->assertEquals(EmailLexer::GENERIC, $lexer->token?->type);
+        $this->assertEquals(EmailLexer::GENERIC, $lexer->current->type);
     }
 
     public function testLexerSearchToken()
