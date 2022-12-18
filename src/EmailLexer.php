@@ -144,19 +144,19 @@ class EmailLexer extends AbstractLexer
      * 
      * @psalm-suppress NonInvariantDocblockPropertyType
      */
-    public $token;
+    public Token|null $token;
 
     /**
      * The next token in the input.
      *
      * @var Token<int, string>|null
      */
-    public $lookahead;
+    public Token|null $lookahead;
 
     /**
      * @var Token<int, string>
      */
-    private $nullToken;
+    private Token|null $nullToken;
 
     /** @var string */
     private $accumulator = '';

@@ -1,20 +1,28 @@
 {
-  "name":         "egulias/email-validator",
-  "description":  "A library for validating emails against several RFCs",
-  "homepage":     "https://github.com/egulias/EmailValidator",
-  "keywords":     ["email", "validation", "validator", "emailvalidation", "emailvalidator"],
-  "license":      "MIT",
+  "name": "egulias/email-validator",
+  "description": "A library for validating emails against several RFCs",
+  "homepage": "https://github.com/egulias/EmailValidator",
+  "keywords": [
+    "email",
+    "validation",
+    "validator",
+    "emailvalidation",
+    "emailvalidator"
+  ],
+  "license": "MIT",
   "authors": [
-    {"name": "Eduardo Gulias Davis"}
+    {
+      "name": "Eduardo Gulias Davis"
+    }
   ],
   "extra": {
     "branch-alias": {
-      "dev-master": "3.0.x-dev"
+      "dev-master": "4.0.x-dev"
     }
   },
   "require": {
-    "php": ">=7.2",
-    "doctrine/lexer": "^2.1",
+    "php": ">=8.1",
+    "doctrine/lexer": "^3.0",
     "symfony/polyfill-intl-idn": "^1.15"
   },
   "require-dev": {
