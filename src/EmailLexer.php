@@ -140,9 +140,7 @@ class EmailLexer extends AbstractLexer
     /**
      * The last matched/seen token.
      *
-     * @var Token<int, string>
-     * 
-     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @var Token<int, string>|null
      */
     public Token|null $token;
 

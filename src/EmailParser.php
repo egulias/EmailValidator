@@ -36,7 +36,7 @@ class EmailParser extends Parser
     protected function preLeftParsing(): Result
     {
         if (!$this->hasAtToken()) {
-            return new InvalidEmail(new NoLocalPart(), $this->lexer->token->value);
+            return new InvalidEmail(new NoLocalPart(), $this->lexer->token?->value);
         }
         return new ValidEmail();
     }
