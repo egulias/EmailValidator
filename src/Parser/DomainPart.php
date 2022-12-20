@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator\Parser;
 
+use Doctrine\Common\Lexer\Token;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Warning\TLD;
 use Egulias\EmailValidator\Result\Result;
@@ -212,7 +213,10 @@ class DomainPart extends PartParser
         return new ValidEmail();
     }
 
-    private function checkNotAllowedChars(array $token) : Result
+    /**
+     * @psalm-param array|Token<int, string> $token
+     */
+    private function checkNotAllowedChars($token) : Result
     {
         $notAllowed = [EmailLexer::S_BACKSLASH => true, EmailLexer::S_SLASH=> true];
         if (isset($notAllowed[$token['type']])) {
