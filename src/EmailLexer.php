@@ -3,7 +3,11 @@
 namespace Egulias\EmailValidator;
 
 use Doctrine\Common\Lexer\AbstractLexer;
+use Doctrine\Common\Lexer\Token;
 
+/**
+ * @extends AbstractLexer<int, string>
+ */
 class EmailLexer extends AbstractLexer
 {
     //ASCII values
@@ -140,18 +144,20 @@ class EmailLexer extends AbstractLexer
     /**
      * The last matched/seen token.
      *
-     * @var array
+     * @var array|Token
      *
      * @psalm-suppress NonInvariantDocblockPropertyType
-     * @psalm-var array{value:string, type:null|int, position:int}
-     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @psalm-var array{value:string, type:null|int, position:int}|Token<int, string>
      */
     public $token;
 
     /**
      * The next token in the input.
      *
-     * @var array{position: int, type: int|null|string, value: int|string}|null
+     * @var array|Token|null
+     *
+     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @psalm-var array{position: int, type: int|null|string, value: int|string}|Token<int, string>|null
      */
     public $lookahead;
 
@@ -210,7 +216,9 @@ class EmailLexer extends AbstractLexer
             $this->accumulator .= $this->token['value'];
         }
 
-        $this->previous = $this->token;
+        $this->previous = $this->token instanceof Token
+            ? ['value' => $this->token->value, 'type' => $this->token->type, 'position' => $this->token->position]
+            : $this->token;
         
         if($this->lookahead === null) {
             $this->lookahead = self::$nullToken;

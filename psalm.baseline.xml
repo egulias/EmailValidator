@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.8.3@389af1bfc739bfdff3f9e3dc7bd6499aee51a831">
-  <file src="src/EmailLexer.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>self::$nullToken</code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="src/Parser/Parser.php">
-    <MissingReturnType occurrences="1">
-      <code>parse</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Validation/SpoofCheckValidation.php">
-    <UndefinedClass occurrences="2">
-      <code>Spoofchecker</code>
-      <code>Spoofchecker</code>
-    </UndefinedClass>
+<files psalm-version="5.4.0@62db5d4f6a7ae0a20f7cc5a4952d730272fc0863">
+  <file src="src/Parser/DomainPart.php">
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>null !== $this-&gt;lexer-&gt;token['type']</code>
+    </RedundantConditionGivenDocblockType>
   </file>
 </files>
