@@ -133,34 +133,18 @@ class EmailLexer extends AbstractLexer
     /**
      * @var array
      *
-     * @psalm-var array{value:string, type:null|int, position:int}|array<empty, empty>
+     * @psalm-suppress UndefinedDocblockClass
+     * @psalm-var array{value:string, type:null|int, position:int}|array<empty, empty>|\Doctrine\Common\Lexer\Token|null
      */
     protected $previous = [];
 
     /**
-     * The last matched/seen token.
-     *
      * @var array
      *
-     * @psalm-suppress NonInvariantDocblockPropertyType
-     * @psalm-var array{value:string, type:null|int, position:int}
-     * @psalm-suppress NonInvariantDocblockPropertyType
+     * @psalm-suppress UndefinedDocblockClass
+     * @psalm-var array{value:string, type:null|int, position:int}|array<empty, empty>|\Doctrine\Common\Lexer\Token|null
      */
-    public $token;
-
-    /**
-     * The next token in the input.
-     *
-     * @var array{position: int, type: int|null|string, value: int|string}|null
-     */
-    public $lookahead;
-
-    /** @psalm-var array{value:'', type:null, position:0} */
-    private static $nullToken = [
-        'value' => '',
-        'type' => null,
-        'position' => 0,
-    ];
+    private static $nullToken = null;
 
     /** @var string */
     private $accumulator = '';
@@ -168,12 +152,28 @@ class EmailLexer extends AbstractLexer
     /** @var bool */
     private $hasToRecord = false;
 
+    /**
+     * @psalm-suppress InvalidPropertyAssignmentValue
+     * @psalm-suppress PropertyTypeCoercion
+     */
     public function __construct()
     {
+        if (null === self::$nullToken) {
+            self::$nullToken = $this->denormalizeToken([
+                'value' => '',
+                'type' => null,
+                'position' => 0,
+            ]);
+        }
+
         $this->previous = $this->token = self::$nullToken;
         $this->lookahead = null;
     }
 
+    /**
+     * @psalm-suppress InvalidPropertyAssignmentValue
+     * @psalm-suppress PropertyTypeCoercion
+     */
     public function reset() : void
     {
         $this->hasInvalidTokens = false;
@@ -187,6 +187,7 @@ class EmailLexer extends AbstractLexer
      * @return boolean
      *
      * @psalm-suppress InvalidScalarArgument
+     * @psalm-suppress InvalidArgument
      */
     public function find($type) : bool
     {
@@ -202,12 +203,14 @@ class EmailLexer extends AbstractLexer
     /**
      * moveNext
      *
+     * @psalm-suppress InvalidPropertyAssignmentValue
+     * @psalm-suppress PropertyTypeCoercion
      * @return boolean
      */
     public function moveNext() : bool
     {
         if ($this->hasToRecord && $this->previous === self::$nullToken) {
-            $this->accumulator .= $this->token['value'];
+            $this->accumulator .= $this->getToken()['value'];
         }
 
         $this->previous = $this->token;
@@ -219,7 +222,7 @@ class EmailLexer extends AbstractLexer
         $hasNext = parent::moveNext();
 
         if ($this->hasToRecord) {
-            $this->accumulator .= $this->token['value'];
+            $this->accumulator .= $this->getToken()['value'];
         }
 
         return $hasNext;
@@ -282,14 +285,61 @@ class EmailLexer extends AbstractLexer
         return $this->hasInvalidTokens;
     }
 
-    /**
-     * getPrevious
-     *
-     * @return array
-     */
     public function getPrevious() : array
     {
-        return $this->previous;
+        return $this->normalizeToken($this->previous);
+    }
+
+    public function getToken() : array
+    {
+        return $this->normalizeToken($this->token);
+    }
+
+    /**
+     * @psalm-suppress UndefinedDocblockClass
+     *
+     * @param array|\ArrayAccess|\Doctrine\Common\Lexer\Token $token
+     * @return array|\Doctrine\Common\Lexer\Token
+     */
+    private function denormalizeToken($token)
+    {
+        if (class_exists('Doctrine\Common\Lexer\Token')) {
+            if ($token instanceof \Doctrine\Common\Lexer\Token) {
+                return $token;
+            }
+
+            if (is_array($token) || $token instanceof \ArrayAccess) {
+                return new \Doctrine\Common\Lexer\Token($token['value'],$token['type'],$token['position']);
+            }
+        }
+
+        if (is_array($token)) {
+            return $token;
+        }
+
+        throw new \LogicException(sprintf('unsupported type of token "%s"', get_debug_type($token)));
+    }
+
+    /**
+     * @psalm-suppress UndefinedClass
+     * @psalm-suppress UndefinedDocblockClass
+     * @psalm-param array{position: int, type: int|null|string, value: int|string}|array{position?: int, type?: int|null, value?: string}|\Doctrine\Common\Lexer\Token|null $token
+     */
+    private function normalizeToken($token): array
+    {
+        if (is_array($token)) {
+            return $token;
+        }
+
+        if (class_exists('Doctrine\Common\Lexer\Token') && $token instanceof \Doctrine\Common\Lexer\Token) {
+            return [
+                'value' => $token->value,
+                'type' => $token->type,
+                'position' => $token->position,
+            ];
+        }
+
+        throw new \LogicException(sprintf('unsupported type of token "%s"', get_debug_type($token)));
     }
 
     /**

@@ -36,12 +36,12 @@ class LocalPart extends PartParser
     {
         $this->lexer->startRecording();
 
-        while ($this->lexer->token['type'] !== EmailLexer::S_AT && null !== $this->lexer->token['type']) {
+        while ($this->lexer->getToken()['type'] !== EmailLexer::S_AT && null !== $this->lexer->getToken()['type']) {
             if ($this->hasDotAtStart()) {
-                return new InvalidEmail(new DotAtStart(), $this->lexer->token['value']);
+                return new InvalidEmail(new DotAtStart(), $this->lexer->getToken()['value']);
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_DQUOTE) {
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_DQUOTE) {
                 $dquoteParsingResult = $this->parseDoubleQuote();
 
                 //Invalid double quote parsing
@@ -50,8 +50,8 @@ class LocalPart extends PartParser
                 }
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS || 
-                $this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS ) {
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_OPENPARENTHESIS || 
+                $this->lexer->getToken()['type'] === EmailLexer::S_CLOSEPARENTHESIS ) {
                 $commentsResult = $this->parseComments();
 
                 //Invalid comment parsing
@@ -60,14 +60,14 @@ class LocalPart extends PartParser
                 }
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-                return new InvalidEmail(new ConsecutiveDot(), $this->lexer->token['value']);
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+                return new InvalidEmail(new ConsecutiveDot(), $this->lexer->getToken()['value']);
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_DOT &&
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_DOT &&
                 $this->lexer->isNextToken(EmailLexer::S_AT)
             ) {
-                return new InvalidEmail(new DotAtEnd(), $this->lexer->token['value']);
+                return new InvalidEmail(new DotAtEnd(), $this->lexer->getToken()['value']);
             }
 
             $resultEscaping = $this->validateEscaping();
@@ -99,8 +99,8 @@ class LocalPart extends PartParser
 
     protected function validateTokens(bool $hasComments) : Result
     {
-        if (isset(self::INVALID_TOKENS[$this->lexer->token['type']])) {
-            return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->token['value']);
+        if (isset(self::INVALID_TOKENS[$this->lexer->getToken()['type']])) {
+            return new InvalidEmail(new ExpectingATEXT('Invalid token found'), $this->lexer->getToken()['value']);
         }
         return new ValidEmail();
     }
@@ -122,7 +122,7 @@ class LocalPart extends PartParser
 
     private function hasDotAtStart() : bool
     {
-            return $this->lexer->token['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type'];
+            return $this->lexer->getToken()['type'] === EmailLexer::S_DOT && null === $this->lexer->getPrevious()['type'];
     }
 
     private function parseDoubleQuote() : Result
@@ -148,12 +148,12 @@ class LocalPart extends PartParser
     private function validateEscaping() : Result
     {
         //Backslash found
-        if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
+        if ($this->lexer->getToken()['type'] !== EmailLexer::S_BACKSLASH) {
             return new ValidEmail();
         }
 
         if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
-            return new InvalidEmail(new ExpectingATEXT('Found ATOM after escaping'), $this->lexer->token['value']);
+            return new InvalidEmail(new ExpectingATEXT('Found ATOM after escaping'), $this->lexer->getToken()['value']);
         }
 
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {

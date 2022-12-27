@@ -39,14 +39,14 @@ class DomainLiteral extends PartParser
         $addressLiteral = '';
 
         do {
-            if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
-                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
+            if ($this->lexer->getToken()['type'] === EmailLexer::C_NUL) {
+                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->getToken()['value']);
             }
 
             $this->addObsoleteWarnings();
 
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENBRACKET, EmailLexer::S_OPENBRACKET))) {
-                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
+                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->getToken()['value']);
             }
 
             if ($this->lexer->isNextTokenAny(
@@ -57,21 +57,21 @@ class DomainLiteral extends PartParser
             }
 
             if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
-                return new InvalidEmail(new CRNoLF(), $this->lexer->token['value']);
+                return new InvalidEmail(new CRNoLF(), $this->lexer->getToken()['value']);
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                return new InvalidEmail(new UnusualElements($this->lexer->token['value']), $this->lexer->token['value']);
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_BACKSLASH) {
+                return new InvalidEmail(new UnusualElements($this->lexer->getToken()['value']), $this->lexer->getToken()['value']);
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_IPV6TAG) {
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_IPV6TAG) {
                 $IPv6TAG = true;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEBRACKET) {
+            if ($this->lexer->getToken()['type'] === EmailLexer::S_CLOSEBRACKET) {
                 break;
             }
 
-            $addressLiteral .= $this->lexer->token['value'];
+            $addressLiteral .= $this->lexer->getToken()['value'];
 
         } while ($this->lexer->moveNext());
 
@@ -189,7 +189,7 @@ class DomainLiteral extends PartParser
 
     private function addObsoleteWarnings() : void
     {
-        if(in_array($this->lexer->token['type'], self::OBSOLETE_WARNINGS)) {
+        if(in_array($this->lexer->getToken()['type'], self::OBSOLETE_WARNINGS)) {
             $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
         }
     }
