@@ -21,12 +21,12 @@ This library aims to support RFCs:
 
 **Current major version with full support is v3**
 
-| Version |  Released  |   EOL   | Only critical bug fixes | Full  |
-| ------- | :--------: | :-----: | :---------------------: | :---: |
-| v4.x    | 2022/12/20 |    -    |            X            |   X   |
-| v3.x    | 2020/12/29 |    -    |            X            |   X   |
-| v2.1.x  | 2016/05/16 | 01/2022 |            X            |       |
-| v1.2    | 2013/19/05 |   YES   |                         |       |
+| Version |  Released  |  EOL  | Only critical bug fixes | Full  |
+| ------- | :--------: | :---: | :---------------------: | :---: |
+| v4.x    |            |   -   |            X            |   X   |
+| v3.x    | 2020/12/29 |   -   |            X            |   X   |
+| v2.1.x  | 2016/05/16 |  YES  |            X            |       |
+| v1.2    | 2013/19/05 |  YES  |                         |       |
 
 
 ## Requirements ##

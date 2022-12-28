@@ -5,13 +5,13 @@ matrix:
     - php: 8.1
       env:
         - psalm=yes
-      dist: bionic
+      dist: jammy
     #ppc64le support code
     - php: 8.1
       arch: ppc64le
       env:
         - psalm=yes
-      dist: bionic
+      dist: jammy
 
 install:
   - if [ "$deps" = "low" ]; then composer update --prefer-lowest; else composer install; fi
