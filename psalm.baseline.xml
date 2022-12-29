@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.8.3@389af1bfc739bfdff3f9e3dc7bd6499aee51a831">
+<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
   <file src="src/EmailLexer.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>self::$nullToken</code>
-    </DocblockTypeContradiction>
+    <NonInvariantDocblockPropertyType occurrences="1">
+      <code>$lookahead</code>
+    </NonInvariantDocblockPropertyType>
   </file>
-  <file src="src/Parser/Parser.php">
-    <MissingReturnType occurrences="1">
-      <code>parse</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/Validation/SpoofCheckValidation.php">
-    <UndefinedClass occurrences="2">
-      <code>Spoofchecker</code>
-      <code>Spoofchecker</code>
-    </UndefinedClass>
+  <file src="src/Parser/DomainLiteral.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>array(EmailLexer::S_HTAB, EmailLexer::S_SP, $this-&gt;lexer-&gt;token['type'] === EmailLexer::CRLF)</code>
+    </InvalidScalarArgument>
   </file>
 </files>
