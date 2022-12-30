@@ -3,5 +3,6 @@ phpunit.result.cache
 build/
 report/
 vendor/
+composer.lock
 .phpunit*
 .vscode
