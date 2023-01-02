@@ -7,11 +7,12 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ConsecutiveDot;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Warning\Warning;
 
 abstract class PartParser
 {
     /**
-     * @var array
+     * @var Warning[]
      */
     protected $warnings = [];
 
@@ -25,17 +26,17 @@ abstract class PartParser
         $this->lexer = $lexer;
     }
 
-    abstract public function parse() : Result;
+    abstract public function parse(): Result;
 
     /**
-     * @return \Egulias\EmailValidator\Warning\Warning[]
+     * @return Warning[]
      */
     public function getWarnings()
     {
         return $this->warnings;
     }
 
-    protected function parseFWS() : Result
+    protected function parseFWS(): Result
     {
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse();
@@ -43,21 +44,20 @@ abstract class PartParser
         return $resultFWS;
     }
 
-    protected function checkConsecutiveDots() : Result
+    protected function checkConsecutiveDots(): Result
     {
-        if ($this->lexer->token['type'] === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
-            return new InvalidEmail(new ConsecutiveDot(), $this->lexer->token['value']);
+        if ($this->lexer->current->isA(EmailLexer::S_DOT) && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+            return new InvalidEmail(new ConsecutiveDot(), $this->lexer->current->value);
         }
 
         return new ValidEmail();
     }
 
-    protected function escaped() : bool
+    protected function escaped(): bool
     {
         $previous = $this->lexer->getPrevious();
 
-        return $previous && $previous['type'] === EmailLexer::S_BACKSLASH
-            &&
-            $this->lexer->token['type'] !== EmailLexer::GENERIC;
+        return $previous->isA(EmailLexer::S_BACKSLASH)
+            && !$this->lexer->current->isA(EmailLexer::GENERIC);
     }
 }
