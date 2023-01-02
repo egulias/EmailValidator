@@ -16,9 +16,14 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.2, 7.3, 7.4, '8.0', 8.1, 8.2]
+        php: ['8.1', '8.2']
+        deps: [highest]
 
-    name: PHP ${{ matrix.php }}
+        include:
+          - php: '8.1'
+            deps: lowest
+
+    name: PHP ${{ matrix.php }} / ${{ matrix.deps }}
 
     steps:
       - name: Checkout code
@@ -34,6 +39,8 @@ jobs:
 
       - name: Install dependencies
         uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: ${{ matrix.deps }}
 
       - name: Setup logs directory
         run: mkdir -p build/logs

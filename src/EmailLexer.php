@@ -145,13 +145,6 @@ class EmailLexer extends AbstractLexer
     public Token $current;
 
     /**
-     * The next token in the input.
-     *
-     * @var Token<int, string>|null
-     */
-    public Token|null $lookahead;
-
-    /**
      * @var Token<int, string>
      */
     private Token $nullToken;

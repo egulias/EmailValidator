@@ -18,8 +18,8 @@
     "symfony/polyfill-intl-idn": "^1.26"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.5.8|^9.3.3",
-    "vimeo/psalm": "^4"
+    "phpunit/phpunit": "^9.5.27",
+    "vimeo/psalm": "^4.30"
   },
   "suggest": {
     "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
