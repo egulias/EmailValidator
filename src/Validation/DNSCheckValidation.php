@@ -9,6 +9,7 @@ use Egulias\EmailValidator\Result\Reason\LocalOrReservedDomain;
 use Egulias\EmailValidator\Result\Reason\NoDNSRecord as ReasonNoDNSRecord;
 use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
+use Egulias\EmailValidator\Warning\Warning;
 
 class DNSCheckValidation implements EmailValidation
 {
@@ -20,6 +21,8 @@ class DNSCheckValidation implements EmailValidation
     /**
      * Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
      * mDNS and private DNS Namespaces (https://tools.ietf.org/html/rfc6762#appendix-G)
+     * 
+     * @var string[]
      */
     public const RESERVED_DNS_TOP_LEVEL_NAMES = [
         // Reserved Top Level DNS Names
@@ -39,9 +42,9 @@ class DNSCheckValidation implements EmailValidation
         'home',
         'lan',
     ];
-    
+
     /**
-     * @var array
+     * @var Warning[]
      */
     private $warnings = [];
 
@@ -73,7 +76,7 @@ class DNSCheckValidation implements EmailValidation
         $this->dnsGetRecord = $dnsGetRecord;
     }
 
-    public function isValid(string $email, EmailLexer $emailLexer) : bool
+    public function isValid(string $email, EmailLexer $emailLexer): bool
     {
         // use the input to check DNS if we cannot extract something similar to a domain
         $host = $email;
@@ -98,12 +101,15 @@ class DNSCheckValidation implements EmailValidation
         return $this->checkDns($host);
     }
 
-    public function getError() : ?InvalidEmail
+    public function getError(): ?InvalidEmail
     {
         return $this->error;
     }
 
-    public function getWarnings() : array
+    /**
+     * @return Warning[]
+     */
+    public function getWarnings(): array
     {
         return $this->warnings;
     }
@@ -130,7 +136,7 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True on success.
      */
-    private function validateDnsRecords($host) : bool
+    private function validateDnsRecords($host): bool
     {
         $dnsRecordsResult = $this->dnsGetRecord->getRecords($host, static::DNS_RECORD_TYPES_TO_CHECK);
 
@@ -167,7 +173,7 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True if valid.
      */
-    private function validateMxRecord($dnsRecord) : bool
+    private function validateMxRecord($dnsRecord): bool
     {
         if (!isset($dnsRecord['type'])) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');

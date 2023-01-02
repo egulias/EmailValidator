@@ -1,4 +1,5 @@
 <?php
+
 namespace Egulias\EmailValidator\Parser;
 
 use Egulias\EmailValidator\EmailLexer;
@@ -31,7 +32,7 @@ class DomainLiteral extends PartParser
         EmailLexer::S_BACKSLASH
     ];
 
-    public function parse() : Result
+    public function parse(): Result
     {
         $this->addTagWarnings();
 
@@ -39,14 +40,14 @@ class DomainLiteral extends PartParser
         $addressLiteral = '';
 
         do {
-            if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
-                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
+            if ($this->lexer->current->isA(EmailLexer::C_NUL)) {
+                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->current->value);
             }
 
             $this->addObsoleteWarnings();
 
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENBRACKET, EmailLexer::S_OPENBRACKET))) {
-                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
+                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->current->value);
             }
 
             if ($this->lexer->isNextTokenAny(
@@ -57,22 +58,21 @@ class DomainLiteral extends PartParser
             }
 
             if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
-                return new InvalidEmail(new CRNoLF(), $this->lexer->token['value']);
+                return new InvalidEmail(new CRNoLF(), $this->lexer->current->value);
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                return new InvalidEmail(new UnusualElements($this->lexer->token['value']), $this->lexer->token['value']);
+            if ($this->lexer->current->isA(EmailLexer::S_BACKSLASH)) {
+                return new InvalidEmail(new UnusualElements($this->lexer->current->value), $this->lexer->current->value);
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_IPV6TAG) {
+            if ($this->lexer->current->isA(EmailLexer::S_IPV6TAG)) {
                 $IPv6TAG = true;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEBRACKET) {
+            if ($this->lexer->current->isA(EmailLexer::S_CLOSEBRACKET)) {
                 break;
             }
 
-            $addressLiteral .= $this->lexer->token['value'];
-
+            $addressLiteral .= $this->lexer->current->value;
         } while ($this->lexer->moveNext());
 
 
@@ -102,10 +102,10 @@ class DomainLiteral extends PartParser
      * @param string $addressLiteral
      * @param int $maxGroups
      */
-    public function checkIPV6Tag($addressLiteral, $maxGroups = 8) : void
+    public function checkIPV6Tag($addressLiteral, $maxGroups = 8): void
     {
         $prev = $this->lexer->getPrevious();
-        if ($prev['type'] === EmailLexer::S_COLON) {
+        if ($prev->isA(EmailLexer::S_COLON)) {
             $this->warnings[IPV6ColonEnd::CODE] = new IPV6ColonEnd();
         }
 
@@ -144,8 +144,8 @@ class DomainLiteral extends PartParser
             $this->warnings[IPV6Deprecated::CODE] = new IPV6Deprecated();
         }
     }
-    
-    public function convertIPv4ToIPv6(string $addressLiteralIPv4) : string
+
+    public function convertIPv4ToIPv6(string $addressLiteralIPv4): string
     {
         $matchesIP  = [];
         $IPv4Match = preg_match(self::IPV4_REGEX, $addressLiteralIPv4, $matchesIP);
@@ -168,7 +168,7 @@ class DomainLiteral extends PartParser
      *
      * @return bool
      */
-    protected function checkIPV4Tag($addressLiteral) : bool
+    protected function checkIPV4Tag($addressLiteral): bool
     {
         $matchesIP  = [];
         $IPv4Match = preg_match(self::IPV4_REGEX, $addressLiteral, $matchesIP);
@@ -187,14 +187,14 @@ class DomainLiteral extends PartParser
         return true;
     }
 
-    private function addObsoleteWarnings() : void
+    private function addObsoleteWarnings(): void
     {
-        if(in_array($this->lexer->token['type'], self::OBSOLETE_WARNINGS)) {
+        if (in_array($this->lexer->current->type, self::OBSOLETE_WARNINGS)) {
             $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
         }
     }
 
-    private function addTagWarnings() : void
+    private function addTagWarnings(): void
     {
         if ($this->lexer->isNextToken(EmailLexer::S_COLON)) {
             $this->warnings[IPV6ColonStart::CODE] = new IPV6ColonStart();
@@ -207,5 +207,4 @@ class DomainLiteral extends PartParser
             }
         }
     }
-
 }

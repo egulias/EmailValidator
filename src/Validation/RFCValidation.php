@@ -6,6 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\EmailParser;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ExceptionFound;
+use Egulias\EmailValidator\Warning\Warning;
 
 class RFCValidation implements EmailValidation
 {
@@ -15,16 +16,16 @@ class RFCValidation implements EmailValidation
     private $parser;
 
     /**
-     * @var array
+     * @var Warning[]
      */
-    private $warnings = [];
+    private array $warnings = [];
 
     /**
      * @var ?InvalidEmail
      */
     private $error;
 
-    public function isValid(string $email, EmailLexer $emailLexer) : bool
+    public function isValid(string $email, EmailLexer $emailLexer): bool
     {
         $this->parser = new EmailParser($emailLexer);
         try {
@@ -43,12 +44,15 @@ class RFCValidation implements EmailValidation
         return true;
     }
 
-    public function getError() : ?InvalidEmail
+    public function getError(): ?InvalidEmail
     {
         return $this->error;
     }
 
-    public function getWarnings() : array
+    /**
+     * @return Warning[]
+     */
+    public function getWarnings(): array
     {
         return $this->warnings;
     }

@@ -7,8 +7,8 @@ class QuotedPart extends Warning
     public const CODE = 36;
 
     /**
-     * @param scalar $prevToken
-     * @param scalar $postToken
+     * @param scalar|null $prevToken
+     * @param scalar|null $postToken
      */
     public function __construct($prevToken, $postToken)
     {

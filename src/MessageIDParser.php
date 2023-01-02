@@ -25,7 +25,7 @@ class MessageIDParser extends Parser
      */
     protected $idRight = '';
 
-    public function parse(string $str) : Result
+    public function parse(string $str): Result
     {
         $result = parent::parse($str);
 
@@ -33,11 +33,11 @@ class MessageIDParser extends Parser
 
         return $result;
     }
-    
+
     protected function preLeftParsing(): Result
     {
         if (!$this->hasAtToken()) {
-            return new InvalidEmail(new NoLocalPart(), $this->lexer->token["value"]);
+            return new InvalidEmail(new NoLocalPart(), $this->lexer->current->value);
         }
         return new ValidEmail();
     }
@@ -52,7 +52,7 @@ class MessageIDParser extends Parser
         return $this->processIDRight();
     }
 
-    private function processIDLeft() : Result
+    private function processIDLeft(): Result
     {
         $localPartParser = new IDLeftPart($this->lexer);
         $localPartResult = $localPartParser->parse();
@@ -62,27 +62,27 @@ class MessageIDParser extends Parser
         return $localPartResult;
     }
 
-    private function processIDRight() : Result
+    private function processIDRight(): Result
     {
         $domainPartParser = new IDRightPart($this->lexer);
         $domainPartResult = $domainPartParser->parse();
         $this->idRight = $domainPartParser->domainPart();
         $this->warnings = array_merge($domainPartParser->getWarnings(), $this->warnings);
-        
+
         return $domainPartResult;
     }
 
-    public function getLeftPart() : string
+    public function getLeftPart(): string
     {
         return $this->idLeft;
     }
 
-    public function getRightPart() : string
+    public function getRightPart(): string
     {
         return $this->idRight;
     }
 
-    private function addLongEmailWarning(string $localPart, string $parsedDomainPart) : void
+    private function addLongEmailWarning(string $localPart, string $parsedDomainPart): void
     {
         if (strlen($localPart . '@' . $parsedDomainPart) > self::EMAILID_MAX_LENGTH) {
             $this->warnings[EmailTooLong::CODE] = new EmailTooLong();

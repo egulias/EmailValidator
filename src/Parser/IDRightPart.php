@@ -10,7 +10,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 
 class IDRightPart extends DomainPart
 {
-    protected function validateTokens(bool $hasComments) : Result
+    protected function validateTokens(bool $hasComments): Result
     {
         $invalidDomainTokens = [
             EmailLexer::S_DQUOTE => true,
@@ -20,9 +20,9 @@ class IDRightPart extends DomainPart
             EmailLexer::S_GREATERTHAN => true,
             EmailLexer::S_LOWERTHAN => true,
         ];
-    
-        if (isset($invalidDomainTokens[$this->lexer->token['type']])) {
-            return new InvalidEmail(new ExpectingATEXT('Invalid token in domain: ' . $this->lexer->token['value']), $this->lexer->token['value']);
+
+        if (isset($invalidDomainTokens[$this->lexer->current->type])) {
+            return new InvalidEmail(new ExpectingATEXT('Invalid token in domain: ' . $this->lexer->current->value), $this->lexer->current->value);
         }
         return new ValidEmail();
     }

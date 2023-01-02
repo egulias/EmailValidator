@@ -6,3 +6,4 @@ phpunit.result.cache
 .phpunit*
 .idea
 .vscode
+.php-version
