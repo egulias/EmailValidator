@@ -1,0 +1,48 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - master
+      - '*.x'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  tests:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [7.2, 7.3, 7.4, '8.0', 8.1, 8.2]
+
+    name: PHP ${{ matrix.php }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: xdebug
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Setup logs directory
+        run: mkdir -p build/logs
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs
+          path: build/logs

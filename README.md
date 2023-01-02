@@ -1,6 +1,6 @@
 # EmailValidator
 
-[![Build Status](https://app.travis-ci.com/egulias/EmailValidator.svg?branch=3.x)](https://app.travis-ci.com/github/egulias/EmailValidator)
+[![Build Status](https://github.com/egulias/EmailValidator/workflows/tests/badge.svg)](https://github.com/egulias/EmailValidator/actions)
 [![Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
 [![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
 

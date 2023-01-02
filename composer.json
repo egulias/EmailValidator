@@ -18,7 +18,6 @@
     "symfony/polyfill-intl-idn": "^1.15"
   },
   "require-dev": {
-    "php-coveralls/php-coveralls": "^2.2",
     "phpunit/phpunit": "^8.5.8|^9.3.3",
     "vimeo/psalm": "^4"
   },

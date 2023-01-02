@@ -1,0 +1,35 @@
+name: static analysis
+
+on:
+  push:
+    branches:
+      - master
+      - '*.x'
+  pull_request:
+
+jobs:
+  psalm:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: true
+
+    name: Psalm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Execute Psalm
+        run: vendor/bin/psalm
