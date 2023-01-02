@@ -8,6 +8,6 @@ build:
     override:
       - command: "vendor/bin/phpunit --coverage-clover=clover.xml --exclude-group flaky"
         coverage:
-          file: "clover.xml"
+          file: "build/logs/clover.xml"
           format: "clover"
       - php-scrutinizer-run
