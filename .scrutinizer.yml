@@ -3,6 +3,8 @@ build:
     php: 
       version: "8.1"
       compile_options: '--enable-xdebug' 
+      pecl_extensions:
+        - xdebug
   tests:
     override:
       - command: "vendor/bin/phpunit --coverage-clover=clover.xml --exclude-group flaky"
