@@ -48,11 +48,13 @@ jobs:
         run: mkdir -p build/logs
 
       - name: code climate reporter
-        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
+        run: | 
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
 
       - name: Execute tests
-        run: vendor/bin/phpunit --coverage-clover clover.xml --exclude-group flaky 
-        run: ./cc-test-reporter after-build -t clover --exit-code $?
+        run: | 
+        vendor/bin/phpunit --coverage-clover clover.xml --exclude-group flaky 
+        ./cc-test-reporter after-build -t clover --exit-code $?
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
