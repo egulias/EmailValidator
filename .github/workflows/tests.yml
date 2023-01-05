@@ -12,6 +12,8 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-22.04
+    env:
+      CC_TEST_REPORTER_ID: 4e98538db53370a2c9c8187d297a014a9520d0c26424f926f8678fe043a771fe
 
     strategy:
       fail-fast: true
@@ -45,11 +47,15 @@ jobs:
       - name: Setup logs directory
         run: mkdir -p build/logs
 
+      - name: code climate reporter
+        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
+
       - name: Execute tests
-        run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
+        run: vendor/bin/phpunit --coverage-clover clover.xml --exclude-group flaky ./cc-test-reporter after-build -t clover --exit-code $?
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
         with:
           name: logs
-          path: build/logs
+          path: ./
+      
