@@ -1,8 +1,8 @@
 # EmailValidator
 
-[![Build Status](https://github.com/egulias/EmailValidator/workflows/tests/badge.svg)](https://github.com/egulias/EmailValidator/actions)
-[![Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
-[![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=3.x)
+[![Build Status](https://github.com/egulias/EmailValidator/workflows/tests/badge.svg?branch=4.x)](https://github.com/egulias/EmailValidator/actions)
+[![Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=4.x)
+[![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=4.x)
 
 A library for validating emails against several RFC.
 
@@ -25,7 +25,7 @@ This library aims to support RFCs:
 | :-----: | :--------: | :---: | :---------------------: | :---: |
 | v4.x    | 2023/01/07 |   -   |            X            |   X   |
 | v3.x    | 2020/12/29 |   -   |            X            |       |
-| v2.1.x  | 2016/05/16 |  YES  |            X            |       |
+| v2.1.x  | 2016/05/16 |  YES  |                         |       |
 | v1.2    | 2013/19/05 |  YES  |                         |       |
 
 
