@@ -22,9 +22,9 @@ This library aims to support RFCs:
 **Current major version with full support is v3**
 
 | Version |  Released  |  EOL  | Only critical bug fixes | Full  |
-| ------- | :--------: | :---: | :---------------------: | :---: |
-| v4.x    |            |   -   |            X            |   X   |
-| v3.x    | 2020/12/29 |   -   |            X            |   X   |
+| :-----: | :--------: | :---: | :---------------------: | :---: |
+| v4.x    | 2023/01/07 |   -   |            X            |   X   |
+| v3.x    | 2020/12/29 |   -   |            X            |       |
 | v2.1.x  | 2016/05/16 |  YES  |            X            |       |
 | v1.2    | 2013/19/05 |  YES  |                         |       |
 
