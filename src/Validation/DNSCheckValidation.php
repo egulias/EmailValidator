@@ -123,9 +123,20 @@ class DNSCheckValidation implements EmailValidation
     {
         $variant = INTL_IDNA_VARIANT_UTS46;
 
-        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.') . '.';
+        $host = rtrim(idn_to_ascii($host, IDNA_DEFAULT, $variant), '.');
 
-        return $this->validateDnsRecords($host);
+        $hostParts = explode('.', $host);
+        $host = array_pop($hostParts);
+
+        while (count($hostParts) > 0) {
+            $host = array_pop($hostParts) . '.' . $host;
+
+            if ($this->validateDnsRecords($host)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
