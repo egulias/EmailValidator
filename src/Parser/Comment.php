@@ -73,22 +73,21 @@ class Comment extends PartParser
 
 
     /**
-     * @return bool
+     * @return void
      */
-    private function warnEscaping(): bool
+    private function warnEscaping(): void
     {
         //Backslash found
         if (!$this->lexer->current->isA(EmailLexer::S_BACKSLASH)) {
-            return false;
+            return;
         }
 
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
-            return false;
+            return;
         }
 
         $this->warnings[QuotedPart::CODE] =
             new QuotedPart($this->lexer->getPrevious()->type, $this->lexer->current->type);
-        return true;
     }
 
     private function noClosingParenthesis(): bool
