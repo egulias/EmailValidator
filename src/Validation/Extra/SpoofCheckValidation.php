@@ -37,9 +37,6 @@ class SpoofCheckValidation implements EmailValidation
         return $this->error === null;
     }
 
-    /**
-     * @return InvalidEmail
-     */
     public function getError() : ?InvalidEmail
     {
         return $this->error;
