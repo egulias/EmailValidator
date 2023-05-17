@@ -57,7 +57,7 @@ class MessageIDParser extends Parser
         $localPartParser = new IDLeftPart($this->lexer);
         $localPartResult = $localPartParser->parse();
         $this->idLeft = $localPartParser->localPart();
-        $this->warnings = array_merge($localPartParser->getWarnings(), $this->warnings);
+        $this->warnings = [...$localPartParser->getWarnings(), ...$this->warnings];
 
         return $localPartResult;
     }
@@ -67,7 +67,7 @@ class MessageIDParser extends Parser
         $domainPartParser = new IDRightPart($this->lexer);
         $domainPartResult = $domainPartParser->parse();
         $this->idRight = $domainPartParser->domainPart();
-        $this->warnings = array_merge($domainPartParser->getWarnings(), $this->warnings);
+        $this->warnings = [...$domainPartParser->getWarnings(), ...$this->warnings];
 
         return $domainPartResult;
     }

@@ -66,7 +66,7 @@ class Comment extends PartParser
 
         $finalValidations = $this->commentStrategy->endOfLoopValidations($this->lexer);
 
-        $this->warnings = array_merge($this->warnings, $this->commentStrategy->getWarnings());
+        $this->warnings = [...$this->warnings, ...$this->commentStrategy->getWarnings()];
 
         return $finalValidations;
     }

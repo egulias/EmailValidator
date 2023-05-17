@@ -40,7 +40,7 @@ abstract class PartParser
     {
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse();
-        $this->warnings = array_merge($this->warnings, $foldingWS->getWarnings());
+        $this->warnings = [...$this->warnings, ...$foldingWS->getWarnings()];
         return $resultFWS;
     }
 
