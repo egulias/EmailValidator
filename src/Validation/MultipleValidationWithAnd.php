@@ -25,7 +25,7 @@ class MultipleValidationWithAnd implements EmailValidation
     /**
      * @var EmailValidation[]
      */
-    private $validations = [];
+    private $validations;
 
     /**
      * @var Warning[]

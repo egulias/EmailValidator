@@ -8,12 +8,12 @@ class DNSRecords
     /**
      * @var array $records
      */
-    private $records = [];
+    private $records;
 
     /**
      * @var bool $error
      */
-    private $error = false;
+    private $error;
 
     /**
      * @param array $records
