@@ -12,11 +12,7 @@ class DomainComment implements CommentStrategy
 {
     public function exitCondition(EmailLexer $lexer, int $openedParenthesis): bool
     {
-        if (($openedParenthesis === 0 && $lexer->isNextToken(EmailLexer::S_DOT))) { // || !$internalLexer->moveNext()) {
-            return false;
-        }
-
-        return true;
+        return !($openedParenthesis === 0 && $lexer->isNextToken(EmailLexer::S_DOT));
     }
 
     public function endOfLoopValidations(EmailLexer $lexer): Result
