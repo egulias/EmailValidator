@@ -142,9 +142,7 @@ class LocalPart extends PartParser
         $commentParser = new Comment($this->lexer, new LocalComment());
         $result = $commentParser->parse();
         $this->warnings = [...$this->warnings, ...$commentParser->getWarnings()];
-        if ($result->isInvalid()) {
-            return $result;
-        }
+
         return $result;
     }
 
@@ -157,10 +155,6 @@ class LocalPart extends PartParser
 
         if ($this->lexer->isNextToken(EmailLexer::GENERIC)) {
             return new InvalidEmail(new ExpectingATEXT('Found ATOM after escaping'), $this->lexer->current->value);
-        }
-
-        if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB, EmailLexer::C_DEL))) {
-            return new ValidEmail();
         }
 
         return new ValidEmail();
