@@ -157,7 +157,6 @@ class EmailLexer extends AbstractLexer
 
     public function __construct()
     {
-        /** @var Token<int, string> $nullToken */
         $nullToken = new Token('', self::S_EMPTY, 0);
         $this->nullToken = $nullToken;
 
