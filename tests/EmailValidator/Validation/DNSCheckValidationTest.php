@@ -21,6 +21,7 @@ class DNSCheckValidationTest extends TestCase
         return [
             // dot-atom
             ['Abc@ietf.org'],
+            ['Abc@fake.ietf.org'],
             ['ABC@ietf.org'],
             ['Abc.123@ietf.org'],
             ['user+mailbox/department=shipping@ietf.org'],
