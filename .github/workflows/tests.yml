@@ -52,4 +52,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: logs
-          path: build/logs
+          path: build/logs      
+      - name: Codacy Coverage Reporter
+        uses: codacy/codacy-coverage-reporter-action@v1.3.0
+
