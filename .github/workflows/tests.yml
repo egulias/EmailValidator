@@ -47,12 +47,14 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
+      - name: Coverage
+        shell: bash
+        env:
+            CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r clover.xml
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
         with:
           name: logs
           path: build/logs      
-      - name: Codacy Coverage Reporter
-        uses: codacy/codacy-coverage-reporter-action@v1.3.0
-
