@@ -47,9 +47,15 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
+      - name: Coverage
+        if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
+        shell: bash
+        env:
+            CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
         with:
           name: logs
-          path: build/logs
+          path: build/logs      
