@@ -51,7 +51,7 @@ jobs:
         shell: bash
         env:
             CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r clover.xml
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
