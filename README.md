@@ -1,8 +1,8 @@
 # EmailValidator
 
 [![Build Status](https://github.com/egulias/EmailValidator/workflows/tests/badge.svg?branch=4.x)](https://github.com/egulias/EmailValidator/actions)
-[![Code Quality](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/quality-score.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=4.x)
-[![Test Coverage](https://scrutinizer-ci.com/g/egulias/EmailValidator/badges/coverage.png?b=3.x)](https://scrutinizer-ci.com/g/egulias/EmailValidator/?branch=4.x)
+[![Quality Badge](https://app.codacy.com/project/badge/Grade/55d44898c7e44ebdb4e457523563ad63)](https://app.codacy.com/gh/egulias/EmailValidator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Test Coverage](https://app.codacy.com/project/badge/Coverage/55d44898c7e44ebdb4e457523563ad63)](https://app.codacy.com/gh/egulias/EmailValidator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 A library for validating emails against several RFC.
 
