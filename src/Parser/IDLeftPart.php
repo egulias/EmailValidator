@@ -10,6 +10,6 @@ class IDLeftPart extends LocalPart
 {
     protected function parseComments(): Result
     {
-       return new InvalidEmail(new CommentsInIDRight(), $this->lexer->token['value']);
+       return new InvalidEmail(new CommentsInIDRight(), ((array) $this->lexer->token)['value']);
     }
 }

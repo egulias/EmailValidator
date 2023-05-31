@@ -36,16 +36,16 @@ class  FoldingWhiteSpace extends PartParser
             return $resultCRLF;
         }
 
-        if ($this->lexer->token['type'] === EmailLexer::S_CR) {
-            return new InvalidEmail(new CRNoLF(), $this->lexer->token['value']);
+        if (((array) $this->lexer->token)['type'] === EmailLexer::S_CR) {
+            return new InvalidEmail(new CRNoLF(), ((array) $this->lexer->token)['value']);
         }
 
         if ($this->lexer->isNextToken(EmailLexer::GENERIC) && $previous['type']  !== EmailLexer::S_AT) {
-            return new InvalidEmail(new AtextAfterCFWS(), $this->lexer->token['value']);
+            return new InvalidEmail(new AtextAfterCFWS(), ((array) $this->lexer->token)['value']);
         }
 
-        if ($this->lexer->token['type'] === EmailLexer::S_LF || $this->lexer->token['type'] === EmailLexer::C_NUL) {
-            return new InvalidEmail(new ExpectingCTEXT(), $this->lexer->token['value']);
+        if (((array) $this->lexer->token)['type'] === EmailLexer::S_LF || ((array) $this->lexer->token)['type'] === EmailLexer::C_NUL) {
+            return new InvalidEmail(new ExpectingCTEXT(), ((array) $this->lexer->token)['value']);
         }
 
         if ($this->lexer->isNextToken(EmailLexer::S_AT) || $previous['type']  === EmailLexer::S_AT) {
@@ -59,28 +59,28 @@ class  FoldingWhiteSpace extends PartParser
 
     protected function checkCRLFInFWS() : Result
     {
-        if ($this->lexer->token['type'] !== EmailLexer::CRLF) {
+        if (((array) $this->lexer->token)['type'] !== EmailLexer::CRLF) {
             return new ValidEmail();
         }
 
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
-            return new InvalidEmail(new CRLFX2(), $this->lexer->token['value']);
+            return new InvalidEmail(new CRLFX2(), ((array) $this->lexer->token)['value']);
         }
 
         //this has no coverage. Condition is repeated from above one
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
-            return new InvalidEmail(new CRLFAtTheEnd(), $this->lexer->token['value']);
+            return new InvalidEmail(new CRLFAtTheEnd(), ((array) $this->lexer->token)['value']);
         }
 
         return new ValidEmail();
     }
-     
+
     protected function isFWS() : bool
     {
         if ($this->escaped()) {
             return false;
         }
 
-        return in_array($this->lexer->token['type'], self::FWS_TYPES);
+        return in_array(((array) $this->lexer->token)['type'], self::FWS_TYPES);
     }
 }

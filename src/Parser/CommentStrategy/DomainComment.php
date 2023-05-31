@@ -23,7 +23,7 @@ class DomainComment implements CommentStrategy
     {
         //test for end of string
         if (!$lexer->isNextToken(EmailLexer::S_DOT)) {
-            return new InvalidEmail(new ExpectingATEXT('DOT not found near CLOSEPARENTHESIS'), $lexer->token['value']);
+            return new InvalidEmail(new ExpectingATEXT('DOT not found near CLOSEPARENTHESIS'), ((array) $lexer->token)['value']);
         }
         //add warning
         //Address is valid within the message but cannot be used unmodified for the envelope

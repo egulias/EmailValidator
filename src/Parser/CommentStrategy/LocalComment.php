@@ -24,7 +24,7 @@ class LocalComment implements CommentStrategy
     public function endOfLoopValidations(EmailLexer $lexer) : Result
     {
         if (!$lexer->isNextToken(EmailLexer::S_AT)) {
-            return new InvalidEmail(new ExpectingATEXT('ATEX is not expected after closing comments'), $lexer->token['value']);
+            return new InvalidEmail(new ExpectingATEXT('ATEX is not expected after closing comments'), ((array) $lexer->token)['value']);
         }
         $this->warnings[CFWSNearAt::CODE] = new CFWSNearAt();
         return new ValidEmail();

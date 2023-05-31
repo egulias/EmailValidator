@@ -31,15 +31,15 @@ class Comment extends PartParser
 
     public function parse() : Result
     {
-        if ($this->lexer->token['type'] === EmailLexer::S_OPENPARENTHESIS) {
+        if (((array) $this->lexer->token)['type'] === EmailLexer::S_OPENPARENTHESIS) {
             $this->openedParenthesis++;
             if($this->noClosingParenthesis()) {
-                return new InvalidEmail(new UnclosedComment(), $this->lexer->token['value']);
+                return new InvalidEmail(new UnclosedComment(), ((array) $this->lexer->token)['value']);
             }
         }
 
-        if ($this->lexer->token['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
-            return new InvalidEmail(new UnOpenedComment(), $this->lexer->token['value']);
+        if (((array) $this->lexer->token)['type'] === EmailLexer::S_CLOSEPARENTHESIS) {
+            return new InvalidEmail(new UnOpenedComment(), ((array) $this->lexer->token)['value']);
         }
 
         $this->warnings[WarningComment::CODE] = new WarningComment();
@@ -58,10 +58,10 @@ class Comment extends PartParser
         }
 
         if($this->openedParenthesis >= 1) {
-            return new InvalidEmail(new UnclosedComment(), $this->lexer->token['value']);
+            return new InvalidEmail(new UnclosedComment(), ((array) $this->lexer->token)['value']);
         }
         if ($this->openedParenthesis < 0) {
-            return new InvalidEmail(new UnOpenedComment(), $this->lexer->token['value']);
+            return new InvalidEmail(new UnOpenedComment(), ((array) $this->lexer->token)['value']);
         }
 
         $finalValidations = $this->commentStrategy->endOfLoopValidations($this->lexer);
@@ -78,7 +78,7 @@ class Comment extends PartParser
     private function warnEscaping() : bool
     {
         //Backslash found
-        if ($this->lexer->token['type'] !== EmailLexer::S_BACKSLASH) {
+        if (((array) $this->lexer->token)['type'] !== EmailLexer::S_BACKSLASH) {
             return false;
         }
 
@@ -87,12 +87,12 @@ class Comment extends PartParser
         }
 
         $this->warnings[QuotedPart::CODE] =
-            new QuotedPart($this->lexer->getPrevious()['type'], $this->lexer->token['type']);
+            new QuotedPart($this->lexer->getPrevious()['type'], ((array) $this->lexer->token)['type']);
         return true;
 
     }
 
-    private function noClosingParenthesis() : bool 
+    private function noClosingParenthesis() : bool
     {
         try {
             $this->lexer->find(EmailLexer::S_CLOSEPARENTHESIS);

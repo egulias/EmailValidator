@@ -39,14 +39,14 @@ class DomainLiteral extends PartParser
         $addressLiteral = '';
 
         do {
-            if ($this->lexer->token['type'] === EmailLexer::C_NUL) {
-                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
+            if (((array) $this->lexer->token)['type'] === EmailLexer::C_NUL) {
+                return new InvalidEmail(new ExpectingDTEXT(), ((array) $this->lexer->token)['value']);
             }
 
             $this->addObsoleteWarnings();
 
             if ($this->lexer->isNextTokenAny(array(EmailLexer::S_OPENBRACKET, EmailLexer::S_OPENBRACKET))) {
-                return new InvalidEmail(new ExpectingDTEXT(), $this->lexer->token['value']);
+                return new InvalidEmail(new ExpectingDTEXT(), ((array) $this->lexer->token)['value']);
             }
 
             if ($this->lexer->isNextTokenAny(
@@ -57,21 +57,21 @@ class DomainLiteral extends PartParser
             }
 
             if ($this->lexer->isNextToken(EmailLexer::S_CR)) {
-                return new InvalidEmail(new CRNoLF(), $this->lexer->token['value']);
+                return new InvalidEmail(new CRNoLF(), ((array) $this->lexer->token)['value']);
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_BACKSLASH) {
-                return new InvalidEmail(new UnusualElements($this->lexer->token['value']), $this->lexer->token['value']);
+            if (((array) $this->lexer->token)['type'] === EmailLexer::S_BACKSLASH) {
+                return new InvalidEmail(new UnusualElements(((array) $this->lexer->token)['value']), ((array) $this->lexer->token)['value']);
             }
-            if ($this->lexer->token['type'] === EmailLexer::S_IPV6TAG) {
+            if (((array) $this->lexer->token)['type'] === EmailLexer::S_IPV6TAG) {
                 $IPv6TAG = true;
             }
 
-            if ($this->lexer->token['type'] === EmailLexer::S_CLOSEBRACKET) {
+            if (((array) $this->lexer->token)['type'] === EmailLexer::S_CLOSEBRACKET) {
                 break;
             }
 
-            $addressLiteral .= $this->lexer->token['value'];
+            $addressLiteral .= ((array) $this->lexer->token)['value'];
 
         } while ($this->lexer->moveNext());
 
@@ -144,7 +144,7 @@ class DomainLiteral extends PartParser
             $this->warnings[IPV6Deprecated::CODE] = new IPV6Deprecated();
         }
     }
-    
+
     public function convertIPv4ToIPv6(string $addressLiteralIPv4) : string
     {
         $matchesIP  = [];
@@ -189,7 +189,7 @@ class DomainLiteral extends PartParser
 
     private function addObsoleteWarnings() : void
     {
-        if(in_array($this->lexer->token['type'], self::OBSOLETE_WARNINGS)) {
+        if(in_array(((array) $this->lexer->token)['type'], self::OBSOLETE_WARNINGS)) {
             $this->warnings[ObsoleteDTEXT::CODE] = new ObsoleteDTEXT();
         }
     }

@@ -29,7 +29,7 @@ abstract class Parser
 
     public function __construct(EmailLexer $lexer)
     {
-        $this->lexer = $lexer;   
+        $this->lexer = $lexer;
     }
 
     public function parse(string $str) : Result
@@ -51,7 +51,7 @@ abstract class Parser
             return $localPartResult;
         }
 
-        $domainPartResult = $this->parseRightFromAt(); 
+        $domainPartResult = $this->parseRightFromAt();
 
         if ($domainPartResult->isInvalid()) {
             return $domainPartResult;
@@ -73,6 +73,6 @@ abstract class Parser
         $this->lexer->moveNext();
         $this->lexer->moveNext();
 
-        return $this->lexer->token['type'] !== EmailLexer::S_AT;
+        return ((array) $this->lexer->token)['type'] !== EmailLexer::S_AT;
     }
 }
