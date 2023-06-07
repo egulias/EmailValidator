@@ -56,7 +56,7 @@ class EmailParser extends Parser
         $localPartParser = new LocalPart($this->lexer);
         $localPartResult = $localPartParser->parse();
         $this->localPart = $localPartParser->localPart();
-        $this->warnings = array_merge($localPartParser->getWarnings(), $this->warnings);
+        $this->warnings = [...$localPartParser->getWarnings(), ...$this->warnings];
 
         return $localPartResult;
     }
@@ -66,7 +66,7 @@ class EmailParser extends Parser
         $domainPartParser = new DomainPart($this->lexer);
         $domainPartResult = $domainPartParser->parse();
         $this->domainPart = $domainPartParser->domainPart();
-        $this->warnings = array_merge($domainPartParser->getWarnings(), $this->warnings);
+        $this->warnings = [...$domainPartParser->getWarnings(), ...$this->warnings];
 
         return $domainPartResult;
     }

@@ -23,11 +23,6 @@ class MultipleValidationWithAnd implements EmailValidation
     public const ALLOW_ALL_ERRORS = 1;
 
     /**
-     * @var EmailValidation[]
-     */
-    private $validations = [];
-
-    /**
      * @var Warning[]
      */
     private $warnings = [];
@@ -38,22 +33,14 @@ class MultipleValidationWithAnd implements EmailValidation
     private $error;
 
     /**
-     * @var int
-     */
-    private $mode;
-
-    /**
      * @param EmailValidation[] $validations The validations.
      * @param int               $mode        The validation mode (one of the constants).
      */
-    public function __construct(array $validations, $mode = self::ALLOW_ALL_ERRORS)
+    public function __construct(private readonly array $validations, private readonly int $mode = self::ALLOW_ALL_ERRORS)
     {
         if (count($validations) == 0) {
             throw new EmptyValidationList();
         }
-
-        $this->validations = $validations;
-        $this->mode = $mode;
     }
 
     /**
@@ -66,7 +53,7 @@ class MultipleValidationWithAnd implements EmailValidation
             $emailLexer->reset();
             $validationResult = $validation->isValid($email, $emailLexer);
             $result = $result && $validationResult;
-            $this->warnings = array_merge($this->warnings, $validation->getWarnings());
+            $this->warnings = [...$this->warnings, ...$validation->getWarnings()];
             if (!$validationResult) {
                 $this->processError($validation);
             }

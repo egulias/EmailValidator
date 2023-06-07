@@ -82,9 +82,9 @@ class DomainLiteral extends PartParser
 
         if (!$isAddressLiteralIPv4) {
             return new ValidEmail();
-        } else {
-            $addressLiteral = $this->convertIPv4ToIPv6($addressLiteral);
         }
+
+        $addressLiteral = $this->convertIPv4ToIPv6($addressLiteral);
 
         if (!$IPv6TAG) {
             $this->warnings[WarningDomainLiteral::CODE] = new WarningDomainLiteral();
