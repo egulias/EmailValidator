@@ -38,7 +38,7 @@ class NoRFCWarningsValidationTest extends TestCase
         $this->assertNull($validation->getError());
     }
 
-    public function getValidEmailsWithoutWarnings()
+    public static function getValidEmailsWithoutWarnings()
     {
         return [
             ['example@example.com',],

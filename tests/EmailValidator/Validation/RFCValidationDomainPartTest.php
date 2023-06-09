@@ -62,7 +62,7 @@ class RFCValidationDomainPartTest extends TestCase
         $this->assertTrue($this->validator->isValid($email, $this->lexer));
     }
 
-    public function getValidEmails()
+    public static function getValidEmails()
     {
         return array(
             ['fabien@symfony.com'],
@@ -88,7 +88,7 @@ class RFCValidationDomainPartTest extends TestCase
         $this->assertFalse($this->validator->isValid($email, $this->lexer));
     }
 
-    public function getInvalidEmails()
+    public static function getInvalidEmails()
     {
         return [
             ['test@example.com test'],
@@ -161,7 +161,7 @@ class RFCValidationDomainPartTest extends TestCase
         $this->assertEquals($error, $this->validator->getError());
     }
 
-    public function getInvalidEmailsWithErrors()
+    public static function getInvalidEmailsWithErrors()
     {
         return [
             [new InvalidEmail(new NoDomainPart(), ''), 'example@'],
@@ -203,7 +203,7 @@ class RFCValidationDomainPartTest extends TestCase
         }
     }
 
-    public function getValidEmailsWithWarnings()
+    public static function getValidEmailsWithWarnings()
     {
         return [
             //Check if this is actually possible
@@ -232,7 +232,7 @@ class RFCValidationDomainPartTest extends TestCase
         ];
     }
 
-    public function invalidUTF16Chars()
+    public static function invalidUTF16Chars()
     {
         return [
             ['example@symƒony.com'],

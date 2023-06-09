@@ -51,11 +51,11 @@ class EmailLexerTest extends TestCase
         $this->assertEquals(EmailLexer::INVALID, $lexer->current->type);
     }
 
-    public function invalidUTF8CharsProvider()
+    public static function invalidUTF8CharsProvider()
     {
         $chars = array();
         for ($i = 0; $i < 0x100; ++$i) {
-            $c = $this->utf8Chr($i);
+            $c = self::utf8Chr($i);
             if (preg_match('/(?=\p{Cc})(?=[^\t\n\n\r])/u', $c) && !preg_match('/\x{0000}/u', $c)) {
                 $chars[] = array($c);
             }
@@ -64,7 +64,7 @@ class EmailLexerTest extends TestCase
         return $chars;
     }
 
-    protected function utf8Chr($code_point)
+    protected static function utf8Chr($code_point)
     {
 
         if ($code_point < 0 || 0x10FFFF < $code_point || (0xD800 <= $code_point && $code_point <= 0xDFFF)) {
@@ -123,7 +123,7 @@ class EmailLexerTest extends TestCase
         $this->assertTrue($lexer->find(EmailLexer::S_HTAB));
     }
 
-    public function getTokens()
+    public static function getTokens()
     {
         return array(
             array("foo", EmailLexer::GENERIC),

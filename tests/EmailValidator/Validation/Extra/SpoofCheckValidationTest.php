@@ -25,7 +25,7 @@ class SpoofCheckValidationTest extends TestCase
         $this->assertFalse($validation->isValid("Кириллица"."latin漢字"."ひらがな"."カタカナ", new EmailLexer()));
     }
 
-    public function validUTF8EmailsProvider()
+    public static function validUTF8EmailsProvider()
     {
         return [
             // Cyrillic

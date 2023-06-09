@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class EmailParserTest extends TestCase
 {
-    public function emailPartsProvider()
+    public static function emailPartsProvider()
     {
         return [
             ['test@foo.com', 'test', 'foo.com'],

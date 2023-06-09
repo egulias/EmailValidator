@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class DNSCheckValidationTest extends TestCase
 {
-    public function validEmailsProvider()
+    public static function validEmailsProvider()
     {
         return [
             // dot-atom
@@ -37,7 +37,7 @@ class DNSCheckValidationTest extends TestCase
         ];
     }
 
-    public function localOrReservedEmailsProvider()
+    public static function localOrReservedEmailsProvider()
     {
         return [
             // Reserved Top Level DNS Names

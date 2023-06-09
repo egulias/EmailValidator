@@ -19,7 +19,7 @@ class MessageIDValidationTest extends TestCase
         $this->assertTrue($validator->isValid($messageID, new EmailLexer()));
     }
 
-    public function validMessageIDs() : array
+    public static function validMessageIDs() : array
     {
         return [
             ['a@b.c+&%$.d'],
@@ -38,7 +38,7 @@ class MessageIDValidationTest extends TestCase
         $this->assertFalse($validator->isValid($messageID, new EmailLexer()));
     }
 
-    public function invalidMessageIDs() : array
+    public static function invalidMessageIDs() : array
     {
         return [
             ['example'],
