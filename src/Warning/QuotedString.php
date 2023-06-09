@@ -7,8 +7,8 @@ class QuotedString extends Warning
     public const CODE = 11;
 
     /**
-     * @param scalar $prevToken
-     * @param scalar $postToken
+     * @param string|int $prevToken
+     * @param string|int $postToken
      */
     public function __construct($prevToken, $postToken)
     {
