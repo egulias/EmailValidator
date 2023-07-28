@@ -63,7 +63,12 @@ class DNSCheckValidation implements EmailValidation
      */
     private $dnsGetRecord;
 
-    public function __construct(?DNSGetRecordWrapper $dnsGetRecord = null)
+    /**
+     * @var bool
+     */
+    private $requireMX;
+
+    public function __construct(?DNSGetRecordWrapper $dnsGetRecord = null, bool $requireMX = false)
     {
         if (!function_exists('idn_to_ascii')) {
             throw new \LogicException(sprintf('The %s class requires the Intl extension.', __CLASS__));
@@ -74,6 +79,7 @@ class DNSCheckValidation implements EmailValidation
         }
 
         $this->dnsGetRecord = $dnsGetRecord;
+        $this->requireMX = $requireMX;
     }
 
     public function isValid(string $email, EmailLexer $emailLexer): bool
@@ -174,6 +180,11 @@ class DNSCheckValidation implements EmailValidation
                 return false;
             }
         }
+
+        if (empty($this->mxRecords) && $this->requireMX) {
+            $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
+        }
+
         return true;
     }
 
