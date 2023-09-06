@@ -147,7 +147,7 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True on success.
      */
-    private function validateDnsRecords($host): bool
+    protected function validateDnsRecords($host): bool
     {
         $dnsRecordsResult = $this->dnsGetRecord->getRecords($host, static::DNS_RECORD_TYPES_TO_CHECK);
 
@@ -184,7 +184,7 @@ class DNSCheckValidation implements EmailValidation
      *
      * @return bool True if valid.
      */
-    private function validateMxRecord($dnsRecord): bool
+    protected function validateMxRecord($dnsRecord): bool
     {
         if (!isset($dnsRecord['type'])) {
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
