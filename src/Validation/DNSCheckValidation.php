@@ -13,10 +13,6 @@ use Egulias\EmailValidator\Warning\Warning;
 
 class DNSCheckValidation implements EmailValidation
 {
-    /**
-     * @var int
-     */
-    protected const DNS_RECORD_TYPES_TO_CHECK = DNS_MX + DNS_A + DNS_AAAA;
 
     /**
      * Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
@@ -149,7 +145,7 @@ class DNSCheckValidation implements EmailValidation
      */
     private function validateDnsRecords($host): bool
     {
-        $dnsRecordsResult = $this->dnsGetRecord->getRecords($host, static::DNS_RECORD_TYPES_TO_CHECK);
+        $dnsRecordsResult = $this->dnsGetRecord->getRecords($host, DNS_A + DNS_MX);
 
         if ($dnsRecordsResult->withError()) {
             $this->error = new InvalidEmail(new UnableToGetDNSRecord(), '');
@@ -157,6 +153,13 @@ class DNSCheckValidation implements EmailValidation
         }
 
         $dnsRecords = $dnsRecordsResult->getRecords();
+
+        // Combined check for A+MX+AAAA can fail with SERVFAIL, even in the presence of valid A/MX records
+        $aaaaRecordsResult = $this->dnsGetRecord->getRecords($host, DNS_AAAA);
+
+        if (! $aaaaRecordsResult->withError()) {
+            $dnsRecords = array_merge($dnsRecords, $aaaaRecordsResult->getRecords());
+        }
 
         // No MX, A or AAAA DNS records
         if ($dnsRecords === []) {
