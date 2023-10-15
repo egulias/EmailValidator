@@ -22,9 +22,6 @@ class SpoofCheckValidation implements EmailValidation
         }
     }
 
-    /**
-     * @psalm-suppress InvalidArgument
-     */
     public function isValid(string $email, EmailLexer $emailLexer) : bool
     {
         $checker = new Spoofchecker();
