@@ -38,7 +38,7 @@ jobs:
           coverage: xdebug
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
         with:
           dependency-versions: ${{ matrix.deps }}
 
