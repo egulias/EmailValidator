@@ -1,6 +1,6 @@
 # EmailValidator
 
-[![Build Status](https://github.com/egulias/EmailValidator/workflows/tests/badge.svg?branch=4.x)](https://github.com/egulias/EmailValidator/actions)
+[![Build Status](https://github.com/egulias/EmailValidator/actions/workflows/tests.yml/badge.svg)](https://github.com/egulias/EmailValidator/actions/workflows/tests.yml)
 [![Quality Badge](https://app.codacy.com/project/badge/Grade/55d44898c7e44ebdb4e457523563ad63)](https://app.codacy.com/gh/egulias/EmailValidator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Test Coverage](https://app.codacy.com/project/badge/Coverage/55d44898c7e44ebdb4e457523563ad63)](https://app.codacy.com/gh/egulias/EmailValidator/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
