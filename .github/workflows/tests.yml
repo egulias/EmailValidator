@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.1', '8.2', '8.3']
+        php: ['8.1', '8.2', '8.3', '8.4']
         deps: [highest]
 
         include:
@@ -47,15 +47,17 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
+
       - name: Coverage
         if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
         shell: bash
         env:
-            CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover_${{ matrix.php }} / ${{ matrix.deps }}.xml
 
       - name: Store artifacts
+        if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs
-          path: build/logs      
+          name: clover_${{ matrix.php }}_${{ matrix.deps }}.xml
+          path: build/logs
