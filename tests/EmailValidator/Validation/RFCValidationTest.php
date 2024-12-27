@@ -150,6 +150,8 @@ class RFCValidationTest extends TestCase
             ['\r\n \r\n test@iana.org'],
             ['test;123@foobar.com'],
             ['examp║le@symfony.com'],
+            ['example@invalid-.domain.com'],
+            ['example@-invalid.com'],
             ['0'],
             [0],
         ];
