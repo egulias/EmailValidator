@@ -11,9 +11,21 @@ jobs:
     strategy:
       fail-fast: true
     name: upload-coverage
+    
     steps:
+      - name: Setup logs directory
+        run: mkdir -p build/logs
+
+      - name: Download clover.xml artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: clover.xml
+          path: build/logs
+          to: build/logs
+
       - name: Upload Coverage to Codacy
         shell: bash
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
