@@ -1,13 +1,10 @@
-name: build
+name: unit-tests
 
 on:
   push:
     branches:
-      - master
       - '*.x'
   pull_request:
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   tests:
@@ -25,7 +22,6 @@ jobs:
 
     name: PHP ${{ matrix.php }} / ${{ matrix.deps }}
 
-    environment: Test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,13 +44,6 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
-
-      - name: Coverage
-        if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
-        shell: bash
-        env:
-          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
 
       - name: Store artifacts
         if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}

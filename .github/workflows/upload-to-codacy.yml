@@ -1,0 +1,19 @@
+name: upload-to-codacy
+on:
+  workflow_run:
+    workflows: ["unit-tests"]
+    types:
+      - completed
+
+jobs:
+  upload:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: true
+    name: uploader
+    steps:
+      - name: Coverage
+        shell: bash
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
