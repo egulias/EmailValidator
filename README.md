@@ -109,7 +109,6 @@ Validations not present in the RFCs
 1. [SpoofCheckValidation](/src/Validation/Extra/SpoofCheckValidation.php): 
 Will check for multi-utf-8 chars that can signal an erroneous email name.
 
-
 ### How to extend
 
 It's easy! You just need to implement
