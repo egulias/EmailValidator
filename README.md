@@ -34,7 +34,7 @@ This library aims to support RFCs:
 * [Spoofchecking](/src/Validation/Extra/SpoofCheckValidation.php) and
 [DNSCheckValidation](/src/Validation/DNSCheckValidation.php) validation
 requires that your PHP system has the
-[PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php) 
+[PHP Internationalization Libraries](https://php.net/manual/en/book.intl.php)
 (also known as PHP Intl)
 
 **Note**: `PHP version upgrades will happen to accomodate to the pace of major
