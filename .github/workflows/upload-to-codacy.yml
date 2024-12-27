@@ -1,4 +1,4 @@
-name: upload-to-codacy
+name: upload-coverage-to-codacy
 on:
   workflow_run:
     workflows: ["unit-tests"]
@@ -7,12 +7,12 @@ on:
 
 jobs:
   upload:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-    name: uploader
+    name: upload-coverage
     steps:
-      - name: Coverage
+      - name: Upload Coverage to Codacy
         shell: bash
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}

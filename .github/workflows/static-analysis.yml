@@ -3,7 +3,6 @@ name: static analysis
 on:
   push:
     branches:
-      - master
       - '*.x'
   pull_request:
 
