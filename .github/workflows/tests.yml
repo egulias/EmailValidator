@@ -25,6 +25,7 @@ jobs:
 
     name: PHP ${{ matrix.php }} / ${{ matrix.deps }}
 
+    environment: Test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
