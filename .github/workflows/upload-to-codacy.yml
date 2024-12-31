@@ -23,11 +23,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: clover.xml
-          path: build/coverage
+          path: build/logs
 
       - name: Upload Coverage to Codacy
         shell: bash
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/coverage/clover.xml
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/logs/clover.xml
