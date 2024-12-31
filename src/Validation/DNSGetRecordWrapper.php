@@ -15,7 +15,7 @@ class DNSGetRecordWrapper
         // A workaround to fix https://bugs.php.net/bug.php?id=73149
         set_error_handler(
             static function (int $errorLevel, string $errorMessage): never {
-                throw new \RuntimeException("Unable to get DNS record for the host: $errorMessage");
+                throw new \RuntimeException(sprintf('Unable to get DNS record for the host: %s', $errorMessage));
             }
         );
         try {
