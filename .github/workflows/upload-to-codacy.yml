@@ -22,7 +22,7 @@ jobs:
       - name: Download clover.xml artifact
         uses: dawidd6/action-download-artifact@v7
         with:
-          pr: ${{github.event.pull_request.number}}
+          workflow: unit-tests 
           name: clover.xml
           path: build/coverage
 
