@@ -34,6 +34,7 @@ class LocalPart extends PartParser
 
     public function parse(): Result
     {
+        $this->lexer->clearRecorded();
         $this->lexer->startRecording();
 
         while (!$this->lexer->current->isA(EmailLexer::S_AT) && !$this->lexer->current->isA(EmailLexer::S_EMPTY)) {

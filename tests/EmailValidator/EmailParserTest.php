@@ -28,4 +28,18 @@ class EmailParserTest extends TestCase
         $this->assertEquals($local, $parser->getLocalPart());
         $this->assertEquals($domain, $parser->getDomainPart());
     }
+
+    public function testMultipleEmailAddresses()
+    {
+        $parser = new EmailParser(new EmailLexer());
+        $parser->parse('some-local-part@some-random-but-large-domain-part.example.com');
+
+        $this->assertSame('some-local-part', $parser->getLocalPart());
+        $this->assertSame('some-random-but-large-domain-part.example.com', $parser->getDomainPart());
+
+        $parser->parse('another-local-part@another.example.com');
+
+        $this->assertSame('another-local-part', $parser->getLocalPart());
+        $this->assertSame('another.example.com', $parser->getDomainPart());
+    }
 }
