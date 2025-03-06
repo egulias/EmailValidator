@@ -181,6 +181,11 @@ class DNSCheckValidation implements EmailValidation
             return false;
         }
 
+        return $this->validateMxRecords($dnsRecords);
+    }
+
+    private function validateMxRecords($dnsRecords): bool
+    {
         // For each DNS record
         foreach ($dnsRecords as $dnsRecord) {
             if (!$this->validateMXRecord($dnsRecord)) {
@@ -191,6 +196,7 @@ class DNSCheckValidation implements EmailValidation
                 return false;
             }
         }
+
         return true;
     }
 
