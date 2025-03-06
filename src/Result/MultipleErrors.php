@@ -41,12 +41,7 @@ class MultipleErrors extends InvalidEmail
 
     public function description() : string
     {
-        $description = '';
-        foreach($this->reasons as $reason) {
-            $description .= $reason->description() . PHP_EOL;
-        }
-
-        return $description;
+        return implode(PHP_EOL, array_map(fn(Reason $reason) => $reason->description(), $this->reasons));
     }
 
     public function code() : int
