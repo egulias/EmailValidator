@@ -85,8 +85,9 @@ class DNSCheckValidation implements EmailValidation
         // Get the domain parts
         $hostParts = explode('.', $host);
 
-        $isLocalDomain = count($hostParts) <= 1;
-        $isReservedTopLevel = in_array($hostParts[(count($hostParts) - 1)], self::RESERVED_DNS_TOP_LEVEL_NAMES, true);
+        $countHostParts = count($hostParts);
+        $isLocalDomain = $countHostParts <= 1;
+        $isReservedTopLevel = in_array($hostParts[($countHostParts - 1)], self::RESERVED_DNS_TOP_LEVEL_NAMES, true);
 
         // Exclude reserved top level DNS names
         if ($isLocalDomain || $isReservedTopLevel) {
