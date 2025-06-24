@@ -184,6 +184,11 @@ class DNSCheckValidation implements EmailValidation
         return $this->validateMxRecords($dnsRecords);
     }
 
+    /**
+     * @param array<array> $dnsRecords
+     *
+     * @return bool True if valid.
+     */
     private function validateMxRecords($dnsRecords): bool
     {
         // For each DNS record
