@@ -17,7 +17,7 @@ class DNSCheckValidation implements EmailValidation
     /**
      * Reserved Top Level DNS Names (https://tools.ietf.org/html/rfc2606#section-2),
      * mDNS and private DNS Namespaces (https://tools.ietf.org/html/rfc6762#appendix-G)
-     * 
+     *
      * @var string[]
      */
     public const RESERVED_DNS_TOP_LEVEL_NAMES = [
@@ -145,14 +145,20 @@ class DNSCheckValidation implements EmailValidation
      */
     private function validateDnsRecords($host): bool
     {
-        $dnsRecordsResult = $this->dnsGetRecord->getRecords($host, DNS_A + DNS_MX);
+        $dnsRecords = [];
 
-        if ($dnsRecordsResult->withError()) {
-            $this->error = new InvalidEmail(new UnableToGetDNSRecord(), '');
-            return false;
+        $mxRecordsResult = $this->dnsGetRecord->getRecords($host, DNS_MX);
+
+        if (! $mxRecordsResult->withError()) {
+            $dnsRecords = $mxRecordsResult->getRecords();
         }
 
-        $dnsRecords = $dnsRecordsResult->getRecords();
+        // Combined check for A+MX can fail with connection timed out, even in the presence of valid MX record
+        $aRecordsResult = $this->dnsGetRecord->getRecords($host, DNS_A);
+
+        if (! $aRecordsResult->withError()) {
+            $dnsRecords = array_merge($dnsRecords, $aRecordsResult->getRecords());
+        }
 
         // Combined check for A+MX+AAAA can fail with SERVFAIL, even in the presence of valid A/MX records
         $aaaaRecordsResult = $this->dnsGetRecord->getRecords($host, DNS_AAAA);
@@ -163,10 +169,28 @@ class DNSCheckValidation implements EmailValidation
 
         // No MX, A or AAAA DNS records
         if ($dnsRecords === []) {
+            if ($mxRecordsResult->withError()
+                && $aRecordsResult->withError()
+                && $aaaaRecordsResult->withError()
+            ) {
+                $this->error = new InvalidEmail(new UnableToGetDNSRecord(), '');
+                return false;
+            }
+
             $this->error = new InvalidEmail(new ReasonNoDNSRecord(), '');
             return false;
         }
 
+        return $this->validateMxRecords($dnsRecords);
+    }
+
+    /**
+     * @param array<array> $dnsRecords
+     *
+     * @return bool True if valid.
+     */
+    private function validateMxRecords($dnsRecords): bool
+    {
         // For each DNS record
         foreach ($dnsRecords as $dnsRecord) {
             if (!$this->validateMXRecord($dnsRecord)) {
@@ -177,6 +201,7 @@ class DNSCheckValidation implements EmailValidation
                 return false;
             }
         }
+
         return true;
     }
 
