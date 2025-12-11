@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class CharNotAllowed implements Reason
+final class CharNotAllowed implements Reason
 {
     public function code() : int
     {

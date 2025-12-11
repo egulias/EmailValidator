@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class TLD extends Warning
+final class TLD extends Warning
 {
     public const CODE = 9;
 

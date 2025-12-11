@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class EmptyReason implements Reason
+final class EmptyReason implements Reason
 {
     public function code() : int
     {

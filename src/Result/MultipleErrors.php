@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Result\Reason\Reason;
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class MultipleErrors extends InvalidEmail
+final class MultipleErrors extends InvalidEmail
 {
     /**
      * @var Reason[]

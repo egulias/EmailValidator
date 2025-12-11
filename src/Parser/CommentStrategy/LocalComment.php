@@ -10,7 +10,7 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 use Egulias\EmailValidator\Warning\Warning;
 
-class LocalComment implements CommentStrategy
+final class LocalComment implements CommentStrategy
 {
     /**
      * @var array<int, Warning>

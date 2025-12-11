@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class NoDNSMXRecord extends Warning
+final class NoDNSMXRecord extends Warning
 {
     public const CODE = 6;
 

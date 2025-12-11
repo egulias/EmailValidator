@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class IPV6MaxGroups extends Warning
+final class IPV6MaxGroups extends Warning
 {
     public const CODE = 75;
 

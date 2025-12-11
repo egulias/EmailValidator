@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class QuotedString extends Warning
+final class QuotedString extends Warning
 {
     public const CODE = 11;
 

@@ -6,7 +6,7 @@ use Doctrine\Common\Lexer\AbstractLexer;
 use Doctrine\Common\Lexer\Token;
 
 /** @extends AbstractLexer<int, string> */
-class EmailLexer extends AbstractLexer
+final class EmailLexer extends AbstractLexer
 {
     //ASCII values
     public const S_EMPTY            = -1;

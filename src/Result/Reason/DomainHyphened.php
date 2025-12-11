@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class DomainHyphened extends DetailedReason
+final class DomainHyphened extends DetailedReason
 {
     public function code() : int
     {

@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Validation;
 
-class DNSRecords
+final class DNSRecords
 {
     /**
      * @param list<array<array-key, mixed>> $records

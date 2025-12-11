@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class DomainAcceptsNoMail implements Reason
+final class DomainAcceptsNoMail implements Reason
 {
     public function code() : int
     {

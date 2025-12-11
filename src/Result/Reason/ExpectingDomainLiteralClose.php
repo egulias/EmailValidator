@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class ExpectingDomainLiteralClose implements Reason
+final class ExpectingDomainLiteralClose implements Reason
 {
     public function code() : int
     {

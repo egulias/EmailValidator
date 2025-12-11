@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class CommaInDomain implements Reason
+final class CommaInDomain implements Reason
 {
     public function code() : int
     {

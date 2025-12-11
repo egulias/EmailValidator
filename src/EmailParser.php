@@ -10,7 +10,7 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Warning\EmailTooLong;
 use Egulias\EmailValidator\Result\Reason\NoLocalPart;
 
-class EmailParser extends Parser
+final class EmailParser extends Parser
 {
     public const EMAIL_MAX_LENGTH = 254;
 

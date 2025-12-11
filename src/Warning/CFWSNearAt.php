@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class CFWSNearAt extends Warning
+final class CFWSNearAt extends Warning
 {
     public const CODE = 49;
 

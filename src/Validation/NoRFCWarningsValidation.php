@@ -6,7 +6,7 @@ use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\RFCWarnings;
 
-class NoRFCWarningsValidation extends RFCValidation
+final class NoRFCWarningsValidation extends RFCValidation
 {
     /**
      * @var InvalidEmail|null

@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Warning;
 
 use UnitEnum;
 
-class QuotedPart extends Warning
+final class QuotedPart extends Warning
 {
     public const CODE = 36;
 

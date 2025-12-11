@@ -11,7 +11,7 @@ use Egulias\EmailValidator\Result\Reason\UnableToGetDNSRecord;
 use Egulias\EmailValidator\Warning\NoDNSMXRecord;
 use Egulias\EmailValidator\Warning\Warning;
 
-class DNSCheckValidation implements EmailValidation
+final class DNSCheckValidation implements EmailValidation
 {
 
     /**

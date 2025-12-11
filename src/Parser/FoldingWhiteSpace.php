@@ -14,7 +14,7 @@ use Egulias\EmailValidator\Result\Reason\ExpectingCTEXT;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
 
-class  FoldingWhiteSpace extends PartParser
+final class FoldingWhiteSpace extends PartParser
 {
     public const FWS_TYPES = [
         EmailLexer::S_SP,

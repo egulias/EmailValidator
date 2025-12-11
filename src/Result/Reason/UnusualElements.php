@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class UnusualElements implements Reason
+final class UnusualElements implements Reason
 {
     /**
      * @var string $element

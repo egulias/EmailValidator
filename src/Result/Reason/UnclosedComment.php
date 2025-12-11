@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class UnclosedComment implements Reason 
+final class UnclosedComment implements Reason
 {
     public function code() : int
     {

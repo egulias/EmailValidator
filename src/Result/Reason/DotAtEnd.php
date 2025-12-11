@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class DotAtEnd implements Reason
+final class DotAtEnd implements Reason
 {
     public function code() : int
     {
