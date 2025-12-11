@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 use Egulias\EmailValidator\Result\MultipleErrors;
 use Egulias\EmailValidator\Warning\Warning;
 
-class MultipleValidationWithAnd implements EmailValidation
+final class MultipleValidationWithAnd implements EmailValidation
 {
     /**
      * If one of validations fails, the remaining validations will be skipped.

@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Result\SpoofEmail;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\EmailValidation;
 
-class SpoofCheckValidation implements EmailValidation
+final class SpoofCheckValidation implements EmailValidation
 {
     /**
      * @var InvalidEmail|null

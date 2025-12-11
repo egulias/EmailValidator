@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class ExceptionFound implements Reason
+final class ExceptionFound implements Reason
 {
     /**
      * @var \Exception

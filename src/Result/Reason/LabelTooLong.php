@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class LabelTooLong implements Reason
+final class LabelTooLong implements Reason
 {
     public function code() : int
     {

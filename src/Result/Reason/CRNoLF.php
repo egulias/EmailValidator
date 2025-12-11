@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class CRNoLF implements Reason
+final class CRNoLF implements Reason
 {
     public function code() : int
     {

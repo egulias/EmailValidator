@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class CommentsInIDRight implements Reason
+final class CommentsInIDRight implements Reason
 {
     public function code() : int
     {

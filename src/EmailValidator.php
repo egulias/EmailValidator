@@ -5,7 +5,7 @@ namespace Egulias\EmailValidator;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Validation\EmailValidation;
 
-class EmailValidator
+final class EmailValidator
 {
     /**
      * @var EmailLexer

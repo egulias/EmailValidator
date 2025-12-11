@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class RFCWarnings implements Reason
+final class RFCWarnings implements Reason
 {
     public function code() : int
     {

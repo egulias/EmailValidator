@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class ExpectingATEXT extends DetailedReason
+final class ExpectingATEXT extends DetailedReason
 {
     public function code() : int
     {

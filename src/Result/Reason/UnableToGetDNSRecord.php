@@ -5,7 +5,7 @@ namespace Egulias\EmailValidator\Result\Reason;
 /**
  * Used on SERVFAIL, TIMEOUT or other runtime and network errors
  */
-class UnableToGetDNSRecord extends NoDNSRecord
+final class UnableToGetDNSRecord extends NoDNSRecord
 {
     public function code() : int
     {

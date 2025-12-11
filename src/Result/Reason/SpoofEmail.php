@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class SpoofEmail implements Reason
+final class SpoofEmail implements Reason
 {
     public function code() : int
     {

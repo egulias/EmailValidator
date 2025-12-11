@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Validation\Exception;
 
 use Exception;
 
-class EmptyValidationList extends \InvalidArgumentException
+final class EmptyValidationList extends \InvalidArgumentException
 {
     /**
     * @param int $code

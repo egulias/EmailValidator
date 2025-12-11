@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class ConsecutiveAt implements Reason
+final class ConsecutiveAt implements Reason
 {
     public function code() : int
     {

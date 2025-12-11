@@ -4,7 +4,7 @@ namespace Egulias\EmailValidator\Warning;
 
 use Egulias\EmailValidator\EmailParser;
 
-class EmailTooLong extends Warning
+final class EmailTooLong extends Warning
 {
     public const CODE = 66;
 

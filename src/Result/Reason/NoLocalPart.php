@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result\Reason;
 
-class NoLocalPart implements Reason 
+final class NoLocalPart implements Reason
 {
     public function code() : int
     {

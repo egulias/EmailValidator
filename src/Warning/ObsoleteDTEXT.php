@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class ObsoleteDTEXT extends Warning
+final class ObsoleteDTEXT extends Warning
 {
     public const CODE = 71;
 

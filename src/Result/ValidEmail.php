@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Result;
 
-class ValidEmail implements Result
+final class ValidEmail implements Result
 {
     public function isValid(): bool
     {

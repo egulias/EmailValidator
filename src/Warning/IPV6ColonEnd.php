@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class IPV6ColonEnd extends Warning
+final class IPV6ColonEnd extends Warning
 {
     public const CODE = 77;
 

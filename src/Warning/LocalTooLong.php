@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class LocalTooLong extends Warning
+final class LocalTooLong extends Warning
 {
     public const CODE = 64;
     public const LOCAL_PART_LENGTH = 64;

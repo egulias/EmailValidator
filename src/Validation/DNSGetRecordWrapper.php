@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Validation;
 
-class DNSGetRecordWrapper
+final class DNSGetRecordWrapper
 {
     /**
      * @param string $host

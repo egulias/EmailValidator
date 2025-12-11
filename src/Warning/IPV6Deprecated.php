@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class IPV6Deprecated extends Warning
+final class IPV6Deprecated extends Warning
 {
     public const CODE = 13;
 

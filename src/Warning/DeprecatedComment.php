@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class DeprecatedComment extends Warning
+final class DeprecatedComment extends Warning
 {
     public const CODE = 37;
 

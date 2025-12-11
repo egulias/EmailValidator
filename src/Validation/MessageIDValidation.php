@@ -8,7 +8,7 @@ use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Result\Reason\ExceptionFound;
 use Egulias\EmailValidator\Warning\Warning;
 
-class MessageIDValidation implements EmailValidation
+final class MessageIDValidation implements EmailValidation
 {
 
     /**

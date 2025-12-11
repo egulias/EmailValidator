@@ -2,7 +2,7 @@
 
 namespace Egulias\EmailValidator\Warning;
 
-class IPV6GroupCount extends Warning
+final class IPV6GroupCount extends Warning
 {
     public const CODE = 72;
 
