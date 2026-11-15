@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -39,7 +39,7 @@ jobs:
           coverage: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' && 'xdebug' || 'none' }}
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
         with:
           dependency-versions: ${{ matrix.deps }}
 
@@ -57,7 +57,7 @@ jobs:
 
       - name: Store artifacts
         if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: clover.xml
           path: build/logs/clover.xml

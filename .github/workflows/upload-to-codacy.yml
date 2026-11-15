@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Download clover.xml artifact
-        uses: dawidd6/action-download-artifact@80620a5d27ce0ae443b965134db88467fc607b43 # v7
+        uses: dawidd6/action-download-artifact@a92c7ae74cf1df8810783758581e485ac3aaa309 # v28
         with:
           workflow: tests.yml
           run_id: ${{ github.event.workflow_run.id }}
