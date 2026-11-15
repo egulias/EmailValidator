@@ -6,12 +6,13 @@ on:
       - '*.x'
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   psalm:
     runs-on: ubuntu-22.04
-
-    strategy:
-      fail-fast: true
+    timeout-minutes: 10
 
     name: Psalm
 
@@ -28,7 +29,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
 
       - name: Execute Psalm
         run: vendor/bin/psalm
