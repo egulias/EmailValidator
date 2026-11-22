@@ -12,13 +12,16 @@ class DomainComment implements CommentStrategy
 {
     public function exitCondition(EmailLexer $lexer, int $openedParenthesis): bool
     {
-        return !($openedParenthesis === 0 && $lexer->isNextToken(EmailLexer::S_DOT));
+        return !(
+            $openedParenthesis === 0 &&
+            $lexer->isNextTokenAny([EmailLexer::S_DOT, EmailLexer::S_OPENBRACKET])
+        );
     }
 
     public function endOfLoopValidations(EmailLexer $lexer): Result
     {
         //test for end of string
-        if (!$lexer->isNextToken(EmailLexer::S_DOT)) {
+        if (!$lexer->isNextTokenAny([EmailLexer::S_DOT, EmailLexer::S_OPENBRACKET])) {
             return new InvalidEmail(new ExpectingATEXT('DOT not found near CLOSEPARENTHESIS'), $lexer->current->value);
         }
         //add warning

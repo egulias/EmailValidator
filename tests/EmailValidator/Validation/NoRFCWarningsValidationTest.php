@@ -18,12 +18,25 @@ class NoRFCWarningsValidationTest extends TestCase
         $this->assertInstanceOf(NoDomainPart::class, $validation->getError()->reason());
     }
 
-    public function testEmailWithWarningsIsInvalid()
+    /**
+     * @dataProvider getEmailsWithWarnings
+     */
+    public function testEmailWithWarningsIsInvalid(string $email)
     {
         $validation = new NoRFCWarningsValidation();
 
-        $this->assertFalse($validation->isValid('test()@example.com', new EmailLexer()));
+        $this->assertFalse($validation->isValid($email, new EmailLexer()));
         $this->assertInstanceOf(RFCWarnings::class, $validation->getError()->reason());
+    }
+
+    public static function getEmailsWithWarnings(): array
+    {
+        return [
+            ['test()@example.com'],
+            [' test @iana.org'],
+            ['test . test@iana.org'],
+            ['test@(comment)[255.255.255.255]'],
+        ];
     }
 
     /**

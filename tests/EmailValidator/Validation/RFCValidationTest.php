@@ -79,6 +79,12 @@ class RFCValidationTest extends TestCase
             ['müller@möller.de'],
             ["1500111@профи-инвест.рф"],
             [sprintf('example@%s.com', str_repeat('ъ', 40))],
+            [' test @iana.org'],
+            ['  test  @iana.org'],
+            ['test . test@iana.org'],
+            ['test .  test@iana.org'],
+            ["\r\n test@iana.org"],
+            ["\r\n \r\n test@iana.org"],
         );
     }
 
@@ -97,6 +103,7 @@ class RFCValidationTest extends TestCase
             ['a5aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com', [new LocalTooLong()]],
             ['example@example', [new TLD()]],
             ['example @invalid.example.com', [new CFWSNearAt()]],
+            [' test @iana.org', [new CFWSWithFWS(), new CFWSNearAt()]],
             ['example(examplecomment)@invalid.example.com',[new Comment(), new CFWSNearAt()]],
             ["\"\t\"@invalid.example.com", [new QuotedString("", '"'), new CFWSWithFWS(),]],
             ["\"\r\"@invalid.example.com", [new QuotedString('', '"'), new CFWSWithFWS(),]],
@@ -152,6 +159,11 @@ class RFCValidationTest extends TestCase
             ['examp║le@symfony.com'],
             ['example@invalid-.domain.com'],
             ['example@-invalid.com'],
+            ['test . . test@iana.org'],
+            ["user\r\n name@example.com"],
+            ['a+ b@example.com'],
+            [' .test@iana.org'],
+            ['test. @iana.org'],
             ['0'],
             [0],
         ];

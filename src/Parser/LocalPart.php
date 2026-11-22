@@ -2,6 +2,7 @@
 
 namespace Egulias\EmailValidator\Parser;
 
+use Doctrine\Common\Lexer\Token;
 use Egulias\EmailValidator\EmailLexer;
 use Egulias\EmailValidator\Result\Result;
 use Egulias\EmailValidator\Result\ValidEmail;
@@ -37,8 +38,10 @@ class LocalPart extends PartParser
         $this->lexer->clearRecorded();
         $this->lexer->startRecording();
 
+        $lastNonFWS = $this->lexer->getPrevious();
+
         while (!$this->lexer->current->isA(EmailLexer::S_AT) && !$this->lexer->current->isA(EmailLexer::S_EMPTY)) {
-            if ($this->hasDotAtStart()) {
+            if ($this->hasDotAtStart($lastNonFWS)) {
                 return new InvalidEmail(new DotAtStart(), $this->lexer->current->value);
             }
 
@@ -63,7 +66,10 @@ class LocalPart extends PartParser
                 }
             }
 
-            if ($this->lexer->current->isA(EmailLexer::S_DOT) && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+            if (
+                $this->lexer->current->isA(EmailLexer::S_DOT)
+                && ($this->lexer->isNextToken(EmailLexer::S_DOT) || $lastNonFWS->isA(EmailLexer::S_DOT))
+            ) {
                 return new InvalidEmail(new ConsecutiveDot(), $this->lexer->current->value);
             }
 
@@ -84,12 +90,16 @@ class LocalPart extends PartParser
                 return $resultToken;
             }
 
-            $resultFWS = $this->parseLocalFWS();
+            $resultFWS = $this->parseLocalFWS($lastNonFWS);
             if ($resultFWS->isInvalid()) {
                 return $resultFWS;
             }
 
             $this->lexer->moveNext();
+        }
+
+        if ($this->lexer->current->isA(EmailLexer::S_AT) && $lastNonFWS->isA(EmailLexer::S_DOT)) {
+            return new InvalidEmail(new DotAtEnd(), $lastNonFWS->value);
         }
 
         $this->lexer->stopRecording();
@@ -114,19 +124,33 @@ class LocalPart extends PartParser
         return $this->localPart;
     }
 
-    private function parseLocalFWS(): Result
+    /**
+     * @param Token<int, string> $lastNonFWS
+     */
+    private function parseLocalFWS(Token &$lastNonFWS): Result
     {
         $foldingWS = new FoldingWhiteSpace($this->lexer);
-        $resultFWS = $foldingWS->parse();
+        if (!$foldingWS->isFWS()) {
+            $lastNonFWS = $this->lexer->current;
+            return new ValidEmail();
+        }
+
+        $allowAtextAfterFWS = $lastNonFWS->isA(EmailLexer::S_EMPTY)
+            || $lastNonFWS->isA(EmailLexer::S_DOT)
+            || $lastNonFWS->isA(EmailLexer::S_AT);
+        $resultFWS = $foldingWS->parse($allowAtextAfterFWS);
         if ($resultFWS->isValid()) {
             $this->warnings = [...$this->warnings, ...$foldingWS->getWarnings()];
         }
         return $resultFWS;
     }
 
-    private function hasDotAtStart(): bool
+    /**
+     * @param Token<int, string> $lastNonFWS
+     */
+    private function hasDotAtStart(Token $lastNonFWS): bool
     {
-        return $this->lexer->current->isA(EmailLexer::S_DOT) && $this->lexer->getPrevious()->isA(EmailLexer::S_EMPTY);
+        return $this->lexer->current->isA(EmailLexer::S_DOT) && $lastNonFWS->isA(EmailLexer::S_EMPTY);
     }
 
     private function parseDoubleQuote(): Result

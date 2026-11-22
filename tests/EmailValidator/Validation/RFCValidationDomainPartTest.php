@@ -19,6 +19,7 @@ use Egulias\EmailValidator\Warning\IPV6ColonStart;
 use Egulias\EmailValidator\Warning\IPV6Deprecated;
 use Egulias\EmailValidator\Warning\IPV6GroupCount;
 use Egulias\EmailValidator\Warning\IPV6DoubleColon;
+use Egulias\EmailValidator\Warning\DeprecatedComment;
 use Egulias\EmailValidator\Result\Reason\DotAtStart;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Egulias\EmailValidator\Result\Reason\LabelTooLong;
@@ -76,7 +77,11 @@ class RFCValidationDomainPartTest extends TestCase
             ['validipv4@[127.0.0.0]'],
             ['validipv4@127.0.0.0'],
             ['withhyphen@domain-exam.com'],
-            ['valid_long_domain@71846jnrsoj91yfhc18rkbrf90ue3onl8y46js38kae8inz0t1.5a-xdycuau.na49.le.example.com']
+            ['valid_long_domain@71846jnrsoj91yfhc18rkbrf90ue3onl8y46js38kae8inz0t1.5a-xdycuau.na49.le.example.com'],
+            ['test@(comment)[255.255.255.255]'],
+            ['test@((comment))[255.255.255.255]'],
+            ['test@(comment1)(comment2)[255.255.255.255]'],
+            ['test@(comment)[IPv6:2001:db8:1ff::a0b:dbd0]'],
         );
     }
 
@@ -157,6 +162,9 @@ class RFCValidationDomainPartTest extends TestCase
             ['test@email€a.com'],
             ['test@email$a.com'],
             ['test@email£a.com'],
+            ['test@a[255.255.255.255]'],
+            ['test@example(comment)[255.255.255.255]'],
+            ['test@(comment)iana[255.255.255.255]'],
         ];
     }
 
@@ -217,6 +225,7 @@ class RFCValidationDomainPartTest extends TestCase
             //Check if this is actually possible
             //[[CFWSNearAt::CODE], 'example@ invalid.example.com'],
             [[Comment::CODE], 'example@invalid.example(examplecomment).com'],
+            [[DeprecatedComment::CODE, Comment::CODE, AddressLiteral::CODE, TLD::CODE], 'test@(comment)[255.255.255.255]'],
             [[AddressLiteral::CODE, TLD::CODE], 'example@[127.0.0.1]'],
             [[AddressLiteral::CODE, TLD::CODE], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]'],
             [[AddressLiteral::CODE, IPV6Deprecated::CODE, TLD::CODE], 'example@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370::]'],
