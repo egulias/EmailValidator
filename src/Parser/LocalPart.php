@@ -90,18 +90,9 @@ class LocalPart extends PartParser
                 return $resultToken;
             }
 
-            $allowAtextAfterFWS = $lastNonFWS->isA(EmailLexer::S_EMPTY)
-                || $lastNonFWS->isA(EmailLexer::S_DOT)
-                || $lastNonFWS->isA(EmailLexer::S_AT);
-
-            $foldingWS = new FoldingWhiteSpace($this->lexer);
-            $resultFWS = $this->parseLocalFWS($foldingWS, $allowAtextAfterFWS);
+            $resultFWS = $this->parseLocalFWS($lastNonFWS);
             if ($resultFWS->isInvalid()) {
                 return $resultFWS;
-            }
-
-            if (!$foldingWS->isFWS()) {
-                $lastNonFWS = $this->lexer->current;
             }
 
             $this->lexer->moveNext();
@@ -133,8 +124,20 @@ class LocalPart extends PartParser
         return $this->localPart;
     }
 
-    private function parseLocalFWS(FoldingWhiteSpace $foldingWS, bool $allowAtextAfterFWS): Result
+    /**
+     * @param Token<int, string> $lastNonFWS
+     */
+    private function parseLocalFWS(Token &$lastNonFWS): Result
     {
+        $foldingWS = new FoldingWhiteSpace($this->lexer);
+        if (!$foldingWS->isFWS()) {
+            $lastNonFWS = $this->lexer->current;
+            return new ValidEmail();
+        }
+
+        $allowAtextAfterFWS = $lastNonFWS->isA(EmailLexer::S_EMPTY)
+            || $lastNonFWS->isA(EmailLexer::S_DOT)
+            || $lastNonFWS->isA(EmailLexer::S_AT);
         $resultFWS = $foldingWS->parse($allowAtextAfterFWS);
         if ($resultFWS->isValid()) {
             $this->warnings = [...$this->warnings, ...$foldingWS->getWarnings()];
