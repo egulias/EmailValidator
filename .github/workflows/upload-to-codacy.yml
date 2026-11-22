@@ -5,29 +5,32 @@ on:
     types:
       - completed
 
+permissions:
+  actions: read
+
 jobs:
   upload:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
     if: >
       github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
-    strategy:
-      fail-fast: true
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
     name: upload-coverage
-    
+
     steps:
-      - name: Setup logs directory
-        run: mkdir -p build/coverage
       - name: Download clover.xml artifact
-        uses: dawidd6/action-download-artifact@v7
+        uses: dawidd6/action-download-artifact@a92c7ae74cf1df8810783758581e485ac3aaa309 # v28
         with:
           workflow: tests.yml
+          run_id: ${{ github.event.workflow_run.id }}
+          github_token: ${{ github.token }}
           name: clover.xml
           path: build/coverage
+          if_no_artifact_found: fail
 
       - name: Upload Coverage to Codacy
-        shell: bash
-        env:
-          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r build/coverage/clover.xml
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: build/coverage/clover.xml

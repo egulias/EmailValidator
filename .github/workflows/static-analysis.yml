@@ -6,18 +6,19 @@ on:
       - '*.x'
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   psalm:
     runs-on: ubuntu-22.04
-
-    strategy:
-      fail-fast: true
+    timeout-minutes: 10
 
     name: Psalm
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -28,7 +29,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v4
 
       - name: Execute Psalm
         run: vendor/bin/psalm

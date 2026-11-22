@@ -6,9 +6,13 @@ on:
       - '*.x'
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   tests:
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
     strategy:
       fail-fast: true
@@ -24,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -32,22 +36,29 @@ jobs:
           php-version: ${{ matrix.php }}
           ini-values: error_reporting=E_ALL
           tools: composer:v2
-          coverage: xdebug
+          coverage: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' && 'xdebug' || 'none' }}
 
       - name: Install dependencies
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
         with:
           dependency-versions: ${{ matrix.deps }}
 
       - name: Setup logs directory
+        if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
         run: mkdir -p build/logs
 
       - name: Execute tests
+        if: ${{ matrix.php != '8.1' || matrix.deps != 'lowest' }}
+        run: vendor/bin/phpunit --exclude-group flaky
+
+      - name: Execute tests with coverage
+        if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
         run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --exclude-group flaky
 
       - name: Store artifacts
         if: ${{ matrix.php == '8.1' && matrix.deps == 'lowest' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: clover.xml
-          path: build/logs
+          path: build/logs/clover.xml
+          if-no-files-found: error
