@@ -177,6 +177,18 @@ class DomainPart extends PartParser
                 $literalResult = $this->parseDomainLiteral();
 
                 $this->addTLDWarnings($tldMissing);
+                if ($literalResult->isInvalid()) {
+                    return $literalResult;
+                }
+
+                $this->lexer->moveNext();
+                if (!$this->lexer->current->isA(EmailLexer::S_EMPTY)) {
+                    return new InvalidEmail(
+                        new ExpectingATEXT('Unexpected data after domain literal'),
+                        $this->lexer->current->value
+                    );
+                }
+
                 return $literalResult;
             }
 
