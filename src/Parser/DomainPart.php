@@ -146,6 +146,7 @@ class DomainPart extends PartParser
     {
         $tldMissing = true;
         $hasComments = false;
+        $canParseDomainLiteral = true;
         $domain = '';
         do {
             $prev = $this->lexer->getPrevious();
@@ -155,6 +156,7 @@ class DomainPart extends PartParser
                 return $notAllowedChars;
             }
 
+            $isCommentToken = false;
             if (
                 $this->lexer->current->isA(EmailLexer::S_OPENPARENTHESIS) ||
                 $this->lexer->current->isA(EmailLexer::S_CLOSEPARENTHESIS)
@@ -166,6 +168,8 @@ class DomainPart extends PartParser
                 if ($commentsResult->isInvalid()) {
                     return $commentsResult;
                 }
+
+                $isCommentToken = $this->lexer->current->isA(EmailLexer::S_CLOSEPARENTHESIS);
             }
 
             $dotsResult = $this->checkConsecutiveDots();
@@ -174,10 +178,18 @@ class DomainPart extends PartParser
             }
 
             if ($this->lexer->current->isA(EmailLexer::S_OPENBRACKET)) {
+                if (!$canParseDomainLiteral) {
+                    return new InvalidEmail(new ExpectingATEXT('OPENBRACKET not after AT'), $this->lexer->current->value);
+                }
+
                 $literalResult = $this->parseDomainLiteral();
 
                 $this->addTLDWarnings($tldMissing);
                 return $literalResult;
+            }
+
+            if (!$isCommentToken) {
+                $canParseDomainLiteral = false;
             }
 
             $labelCheck = $this->checkLabelLength();

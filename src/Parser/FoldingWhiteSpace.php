@@ -24,7 +24,7 @@ class  FoldingWhiteSpace extends PartParser
         EmailLexer::CRLF
     ];
 
-    public function parse(): Result
+    public function parse(bool $allowAtextAfterFWS = false): Result
     {
         if (!$this->isFWS()) {
             return new ValidEmail();
@@ -41,7 +41,11 @@ class  FoldingWhiteSpace extends PartParser
             return new InvalidEmail(new CRNoLF(), $this->lexer->current->value);
         }
 
-        if ($this->lexer->isNextToken(EmailLexer::GENERIC) && !$previous->isA(EmailLexer::S_AT)) {
+        if (
+            $this->lexer->isNextToken(EmailLexer::GENERIC)
+            && !$previous->isA(EmailLexer::S_AT)
+            && !$allowAtextAfterFWS
+        ) {
             return new InvalidEmail(new AtextAfterCFWS(), $this->lexer->current->value);
         }
 
@@ -76,7 +80,7 @@ class  FoldingWhiteSpace extends PartParser
         return new ValidEmail();
     }
 
-    protected function isFWS(): bool
+    public function isFWS(): bool
     {
         if ($this->escaped()) {
             return false;
