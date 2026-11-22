@@ -97,6 +97,14 @@ class RFCValidationDomainPartTest extends TestCase
             ['example@local\host'],
             ['example@localhost\\'],
             ['example@localhost.'],
+            ['example@[127.0.0.1]X'],
+            ["example@[127.0.0.1]\r\n"],
+            [
+                "user@[127.0.0.1]>\r\nRSET\r\nMAIL FROM:<spoofed@victim.test>\r\n"
+                . "RCPT TO:<attacker@evil.test>\r\nDATA\r\nSubject: smuggled through the tail\r\n"
+                . "From: ceo@victim.test\r\nTo: attacker@evil.test\r\n\r\n"
+                . "body written by the attacker\r\n.\r\nNOOP"
+            ],
             ['username@ example . com'],
             ['username@ example.com'],
             ['example@(fake].com'],
