@@ -7,11 +7,45 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Result\InvalidEmail;
 use Egulias\EmailValidator\Tests\EmailValidator\Dummy\DummyReason;
 use Egulias\EmailValidator\Validation\EmailValidation;
+use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Result\Reason\LabelTooLong;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 
 class EmailValidatorTest extends TestCase
 {
 
+
+    /**
+     * @dataProvider domainLabelLengths
+     */
+    public function testDomainLabelLengths(string $email, bool $valid): void
+    {
+        $validator = new EmailValidator();
+        $this->assertSame($valid, $validator->isValid($email, new RFCValidation()));
+        if (!$valid) {
+            $this->assertInstanceOf(LabelTooLong::class, $validator->getError()->reason());
+        }
+        // A failed parse must not affect the next address validated by this instance.
+        $this->assertTrue($validator->isValid('test@example.org', new RFCValidation()));
+    }
+
+    public static function domainLabelLengths(): array
+    {
+        $cases = [];
+        foreach ([62, 63, 64] as $length) {
+            $labels = [
+                'ascii' => str_repeat('a', $length),
+                'multiple-tokens' => str_repeat('a', $length - 2) . '-1',
+                'idn' => str_repeat('ü', $length - 6),
+            ];
+            foreach ($labels as $kind => $label) {
+                foreach ([$label . '.org', 'x.' . $label . '.org', 'x.y.' . $label] as $position => $domain) {
+                    $cases[$kind . '-' . $length . '-' . $position] = ['test@' . $domain, $length <= 63];
+                }
+            }
+        }
+        return $cases;
+    }
 
     public function testValidationIsUsed()
     {

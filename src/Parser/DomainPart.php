@@ -309,6 +309,7 @@ class DomainPart extends PartParser
                 return new InvalidEmail(new LabelTooLong(), $this->lexer->current->value);
             }
             $this->label = '';
+            return new ValidEmail();
         }
         $this->label .= $this->lexer->current->value;
         return new ValidEmail();
