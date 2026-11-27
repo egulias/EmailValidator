@@ -111,6 +111,8 @@ class EmailLexer extends AbstractLexer
 
     public const INVALID_CHARS_REGEX = "/[^\p{S}\p{C}\p{Cc}]+/iu";
 
+    private const ASCII_ALNUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
     public const VALID_UTF8_REGEX = '/\p{Cc}+/u';
 
     public const CATCHABLE_PATTERNS = [
@@ -225,6 +227,14 @@ class EmailLexer extends AbstractLexer
      */
     protected function getType(&$value): int
     {
+        if (isset($this->charValue[$value])) {
+            return $this->charValue[$value];
+        }
+
+        if ($value !== '' && strspn($value, self::ASCII_ALNUM) === strlen($value)) {
+            return self::GENERIC;
+        }
+
         $encoded = $value;
 
         if (mb_detect_encoding($value, 'auto', true) !== 'UTF-8') {

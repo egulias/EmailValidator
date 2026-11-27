@@ -12,9 +12,8 @@ use Egulias\EmailValidator\Result\Reason\CRLFAtTheEnd;
 use Egulias\EmailValidator\Result\Reason\CRLFX2;
 use Egulias\EmailValidator\Result\Reason\ExpectingCTEXT;
 use Egulias\EmailValidator\Result\Result;
-use Egulias\EmailValidator\Result\ValidEmail;
 
-class  FoldingWhiteSpace extends PartParser
+class FoldingWhiteSpace extends PartParser
 {
     public const FWS_TYPES = [
         EmailLexer::S_SP,
@@ -24,10 +23,23 @@ class  FoldingWhiteSpace extends PartParser
         EmailLexer::CRLF
     ];
 
+    private const FWS_TYPES_MAP = [
+        EmailLexer::S_SP => true,
+        EmailLexer::S_HTAB => true,
+        EmailLexer::S_CR => true,
+        EmailLexer::S_LF => true,
+        EmailLexer::CRLF => true,
+    ];
+
+    public static function isFWSType(?int $type): bool
+    {
+        return isset(self::FWS_TYPES_MAP[$type]);
+    }
+
     public function parse(): Result
     {
         if (!$this->isFWS()) {
-            return new ValidEmail();
+            return $this->validEmail();
         }
 
         $previous = $this->lexer->getPrevious();
@@ -55,13 +67,13 @@ class  FoldingWhiteSpace extends PartParser
             $this->warnings[CFWSWithFWS::CODE] = new CFWSWithFWS();
         }
 
-        return new ValidEmail();
+        return $this->validEmail();
     }
 
     protected function checkCRLFInFWS(): Result
     {
         if (!$this->lexer->current->isA(EmailLexer::CRLF)) {
-            return new ValidEmail();
+            return $this->validEmail();
         }
 
         if (!$this->lexer->isNextTokenAny(array(EmailLexer::S_SP, EmailLexer::S_HTAB))) {
@@ -73,7 +85,7 @@ class  FoldingWhiteSpace extends PartParser
             return new InvalidEmail(new CRLFAtTheEnd(), $this->lexer->current->value);
         }
 
-        return new ValidEmail();
+        return $this->validEmail();
     }
 
     protected function isFWS(): bool
@@ -82,6 +94,6 @@ class  FoldingWhiteSpace extends PartParser
             return false;
         }
 
-        return in_array($this->lexer->current->type, self::FWS_TYPES);
+        return self::isFWSType($this->lexer->current->type);
     }
 }

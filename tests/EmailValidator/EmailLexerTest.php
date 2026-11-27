@@ -164,10 +164,12 @@ class EmailLexerTest extends TestCase
             array('#', EmailLexer::NUMBER_SIGN),
             array('¡', EmailLexer::INVERT_EXCLAMATION),
             array('_', EmailLexer::S_UNDERSCORE),
-            array('',  EmailLexer::S_EMPTY),
-            array(chr(31),  EmailLexer::INVALID),
-            array(chr(226),  EmailLexer::GENERIC),
-            array(chr(0),  EmailLexer::C_NUL)
+            array('0', EmailLexer::GENERIC),
+            array('user123', EmailLexer::GENERIC),
+            array('', EmailLexer::S_EMPTY),
+            array(chr(31), EmailLexer::INVALID),
+            array(chr(226), EmailLexer::GENERIC),
+            array(chr(0), EmailLexer::C_NUL)
         );
     }
 

@@ -21,12 +21,19 @@ abstract class PartParser
      */
     protected $lexer;
 
+    private static ?ValidEmail $validEmail = null;
+
     public function __construct(EmailLexer $lexer)
     {
         $this->lexer = $lexer;
     }
 
     abstract public function parse(): Result;
+
+    protected function validEmail(): ValidEmail
+    {
+        return self::$validEmail ??= new ValidEmail();
+    }
 
     /**
      * @return Warning[]
@@ -38,26 +45,35 @@ abstract class PartParser
 
     protected function parseFWS(): Result
     {
+        if (!FoldingWhiteSpace::isFWSType($this->lexer->current->type)) {
+            return $this->validEmail();
+        }
+
         $foldingWS = new FoldingWhiteSpace($this->lexer);
         $resultFWS = $foldingWS->parse();
-        $this->warnings = [...$this->warnings, ...$foldingWS->getWarnings()];
+        if ($resultFWS->isValid()) {
+            $warnings = $foldingWS->getWarnings();
+            if ($warnings !== []) {
+                $this->warnings = [...$this->warnings, ...$warnings];
+            }
+        }
         return $resultFWS;
     }
 
     protected function checkConsecutiveDots(): Result
     {
-        if ($this->lexer->current->isA(EmailLexer::S_DOT) && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
+        if ($this->lexer->current->type === EmailLexer::S_DOT && $this->lexer->isNextToken(EmailLexer::S_DOT)) {
             return new InvalidEmail(new ConsecutiveDot(), $this->lexer->current->value);
         }
 
-        return new ValidEmail();
+        return $this->validEmail();
     }
 
     protected function escaped(): bool
     {
         $previous = $this->lexer->getPrevious();
 
-        return $previous->isA(EmailLexer::S_BACKSLASH)
-            && !$this->lexer->current->isA(EmailLexer::GENERIC);
+        return $previous->type === EmailLexer::S_BACKSLASH
+            && $this->lexer->current->type !== EmailLexer::GENERIC;
     }
 }
